@@ -5,7 +5,7 @@
  */
 package com.tienda.loaddata;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,34 +20,41 @@ import java.util.logging.Logger;
 public class ReadFile {
     private LoadFile loadFile;
     private  FileReader fileReader;
+    
+
+    public ReadFile() {
+       
+    }
 
     public ReadFile(LoadFile loadFile) {
         this.loadFile = loadFile;
     }
     
-    public void read() throws FileNotFoundException, IOException{
+    
+    public void read(String pathFile) throws FileNotFoundException, IOException{
         
-      //  fileReader = new FileReader(loadFile.getFile());
-        //BufferedReader bufferReader = new BufferedReader(fileReader);
-        Scanner scanner = new Scanner(loadFile.getFile());
-        String linea = "";
-        while (scanner.hasNext()) {
-          //  linea = bufferReader.readLine();
-          linea = scanner.nextLine();
-            System.out.println(linea);
-            
-            //Object nextElement = bufferReader.nextElement();
-            
+
+        
+        try {
+            File file = new File(pathFile);
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNext()) {
+                System.out.println(scanner.nextLine());
+                
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ReadFile.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
     
+    
     public static void main(String[] args) {
-        ReadFile readFile = new ReadFile(new LoadFile("/home/julio/Descargas/simple data.txt"));
+       
+        String direccion = "/home/julio/Descargas/simple data.txt";
         try {
-            
-            readFile.read();
-            
+            ReadFile readfile = new ReadFile();
+            readfile.read(direccion);
         } catch (IOException ex) {
             Logger.getLogger(ReadFile.class.getName()).log(Level.SEVERE, null, ex);
         }
