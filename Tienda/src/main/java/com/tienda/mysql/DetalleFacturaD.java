@@ -1,7 +1,7 @@
 package com.tienda.mysql;
 
-import com.tienda.dao.*;
-import Entities.DetalleFactura;
+import com.tienda.dao.DetalleFacturaDAO;
+import com.tienda.entities.DetalleFactura;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

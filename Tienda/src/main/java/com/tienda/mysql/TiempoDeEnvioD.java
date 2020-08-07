@@ -1,7 +1,7 @@
 package com.tienda.mysql;
 
-import com.tienda.dao.*;
-import Entities.TiempoDeEnvio;
+import com.tienda.dao.TiempoDeEnvioDAO;
+import com.tienda.entities.TiempoDeEnvio;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

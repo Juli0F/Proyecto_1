@@ -1,6 +1,8 @@
 package com.tienda.dao;
 
-import Entities.Cliente;
+import com.tienda.entities.Cliente;
+
+
 
 /**
  *

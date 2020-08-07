@@ -1,6 +1,8 @@
 package com.tienda.dao;
 
-import Entities.Tienda;
+import com.tienda.entities.Tienda;
+
+
 
 /**
  *

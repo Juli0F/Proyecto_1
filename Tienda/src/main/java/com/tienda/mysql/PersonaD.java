@@ -1,7 +1,7 @@
 package com.tienda.mysql;
 
-import com.tienda.dao.*;
-import Entities.Persona;
+import com.tienda.dao.PersonaDAO;
+import com.tienda.entities.Persona;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

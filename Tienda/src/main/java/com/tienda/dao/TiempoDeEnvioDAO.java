@@ -1,6 +1,7 @@
 package com.tienda.dao;
 
-import Entities.TiempoDeEnvio;
+
+import com.tienda.entities.TiempoDeEnvio;
 
 /**
  *
