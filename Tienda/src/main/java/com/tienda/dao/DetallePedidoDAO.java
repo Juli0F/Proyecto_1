@@ -1,6 +1,7 @@
 package com.tienda.dao;
 
-import Entities.DetallePedido;
+
+import com.tienda.entities.DetallePedido;
 
 /**
  *

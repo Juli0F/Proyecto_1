@@ -1,7 +1,7 @@
 package com.tienda.mysql;
 
-import com.tienda.dao.*;
-import Entities.Factura;
+import com.tienda.dao.FacturaDAO;
+import com.tienda.entities.Factura;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,8 +14,8 @@ import java.util.logging.Logger;
 public class FacturaD implements FacturaDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Factura (descripcion,estado,Usuario_idUsuario,) VALUES (?,?,?)";
-    private final String UPDATE = "UPDATE Factura set descripcion = ?, set estado = ?, set Usuario_idUsuario = ? WHERE idFactura = ? ";
+    private final String INSERT = "INSERT INTO Factura (descripcion,estado,Usuario_idUsuario,Tienda_codigo,) VALUES (?,?,?,?)";
+    private final String UPDATE = "UPDATE Factura set descripcion = ?, set estado = ?, set Usuario_idUsuario = ?, set Tienda_codigo = ? WHERE idFactura = ? ";
     private final String DELETE = "DELETE Factura WHERE idFactura = ? ";
     private final String GETALL = "SELECT * FROM  Factura  ";
     private final String GETONE = GETALL + "WHERE idFactura = ?";
@@ -32,6 +32,7 @@ public class FacturaD implements FacturaDAO {
             stat.setString(1, object.getDescripcion());
             stat.setBoolean(2, object.isEstado());
             stat.setInt(3, object.getUsuario_idUsuario());
+            stat.setString(4, object.getTienda_codigo());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Factura");
 
@@ -49,7 +50,8 @@ public class FacturaD implements FacturaDAO {
             stat.setString(1, object.getDescripcion());
             stat.setBoolean(2, object.isEstado());
             stat.setInt(3, object.getUsuario_idUsuario());
-            stat.setInt(4, object.getIdFactura());
+            stat.setString(4, object.getTienda_codigo());
+            stat.setInt(5, object.getIdFactura());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Factura");
 
@@ -114,7 +116,7 @@ public class FacturaD implements FacturaDAO {
     public Factura convertir(ResultSet rs) {
 
         try {
-            Factura factura = new Factura(rs.getInt("idFactura"), rs.getString("descripcion"), rs.getBoolean("estado"), rs.getInt("Usuario_idUsuario"));
+            Factura factura = new Factura(rs.getInt("idFactura"), rs.getString("descripcion"), rs.getBoolean("estado"), rs.getInt("Usuario_idUsuario"), rs.getString("Tienda_codigo"));
 
             return factura;
         } catch (SQLException ex) {

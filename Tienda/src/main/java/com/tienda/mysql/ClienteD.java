@@ -1,7 +1,7 @@
 package com.tienda.mysql;
 
 import com.tienda.dao.ClienteDAO;
-import Entities.Cliente;
+import com.tienda.entities.Cliente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
