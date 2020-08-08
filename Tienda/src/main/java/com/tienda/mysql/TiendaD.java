@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class TiendaD implements TiendaDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Tienda (nombre,direccion,telefono,telefono2,email,horario,estado,) VALUES (?,?,?,?,?,?,?)";
+    private final String INSERT = "INSERT INTO Tienda (nombre,direccion,telefono,telefono2,email,horario,estado,codigo) VALUES (?,?,?,?,?,?,?,?)";
     private final String UPDATE = "UPDATE Tienda set nombre = ?, set direccion = ?, set telefono = ?, set telefono2 = ?, set email = ?, set horario = ?, set estado = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Tienda WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Tienda  ";
@@ -36,6 +36,7 @@ public class TiendaD implements TiendaDAO {
             stat.setString(5, object.getEmail());
             stat.setString(6, object.getHorario());
             stat.setBoolean(7, object.isEstado());
+            stat.setString(7, object.getCodigo());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Tienda");
 
@@ -87,13 +88,13 @@ public class TiendaD implements TiendaDAO {
     }
 
     @Override
-    public Tienda obtener(Integer id) {
+    public Tienda obtener(String id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
 
         try {
             stat = connection.prepareStatement(GETONE);
-            stat.setInt(1, id);
+            stat.setString(1, id);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));
@@ -132,7 +133,7 @@ public class TiendaD implements TiendaDAO {
     }
 
     @Override
-    public Integer lastInsertId() {
+    public String lastInsertId() {
         String ultimo = "SELECT last_insert_id()";
         PreparedStatement stat = null;
         ResultSet rs = null;
@@ -141,12 +142,14 @@ public class TiendaD implements TiendaDAO {
             stat = connection.prepareStatement(ultimo);
             rs = stat.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
+                return rs.getString(1);
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(TiendaD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+        return "";
     }
+
+   
 }

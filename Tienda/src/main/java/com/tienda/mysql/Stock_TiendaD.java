@@ -2,6 +2,7 @@ package com.tienda.mysql;
 
 import com.tienda.dao.Stock_TiendaDAO;
 import com.tienda.entities.Stock_Tienda;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
 public class Stock_TiendaD implements Stock_TiendaDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Stock_Tienda (tienda_codigo,producto_codigo,estado,cantidad,) VALUES (?,?,?,?)";
+    private final String INSERT = "INSERT INTO Stock_Tienda (tienda_codigo,producto_codigo,estado,cantidad,precio) VALUES (?,?,?,?,?)";
     private final String UPDATE = "UPDATE Stock_Tienda set tienda_codigo = ?, set producto_codigo = ?, set estado = ?, set cantidad = ? WHERE idStockTienda = ? ";
     private final String DELETE = "DELETE Stock_Tienda WHERE idStockTienda = ? ";
     private final String GETALL = "SELECT * FROM  Stock_Tienda  ";
@@ -32,7 +33,8 @@ public class Stock_TiendaD implements Stock_TiendaDAO {
             stat.setString(1, object.getTienda_codigo());
             stat.setString(2, object.getProducto_codigo());
             stat.setBoolean(3, object.isEstado());
-            stat.setString(4, object.getCantidad());
+            stat.setInt(4, object.getCantidad());
+            stat.setBigDecimal(5, object.getPrecio());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Stock_Tienda");
 
@@ -50,7 +52,7 @@ public class Stock_TiendaD implements Stock_TiendaDAO {
             stat.setString(1, object.getTienda_codigo());
             stat.setString(2, object.getProducto_codigo());
             stat.setBoolean(3, object.isEstado());
-            stat.setString(4, object.getCantidad());
+            stat.setInt(4, object.getCantidad());
             stat.setInt(5, object.getIdStockTienda());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Stock_Tienda");
@@ -116,7 +118,7 @@ public class Stock_TiendaD implements Stock_TiendaDAO {
     public Stock_Tienda convertir(ResultSet rs) {
 
         try {
-            Stock_Tienda stock_Tienda = new Stock_Tienda(rs.getInt("idStockTienda"), rs.getString("tienda_codigo"), rs.getString("producto_codigo"), rs.getBoolean("estado"), rs.getString("cantidad"));
+            Stock_Tienda stock_Tienda = new Stock_Tienda(rs.getInt("idStockTienda"), rs.getString("tienda_codigo"), rs.getString("producto_codigo"), rs.getBoolean("estado"), rs.getInt("cantidad"),rs.getBigDecimal("precio"));
 
             return stock_Tienda;
         } catch (SQLException ex) {

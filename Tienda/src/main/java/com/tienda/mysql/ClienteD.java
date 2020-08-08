@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class ClienteD implements ClienteDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Cliente (email,estado,Pedido_codigo,Persona_dpi,) VALUES (?,?,?,?)";
+    private final String INSERT = "INSERT INTO Cliente (email,estado,Pedido_codigo,Persona_dpi) VALUES (?,?,?,?)";
     private final String UPDATE = "UPDATE Cliente set email = ?, set estado = ?, set Pedido_codigo = ?, set Persona_dpi = ? WHERE nit = ? ";
     private final String DELETE = "DELETE Cliente WHERE nit = ? ";
     private final String GETALL = "SELECT * FROM  Cliente  ";

@@ -9,10 +9,10 @@ import java.io.Serializable;
 public class TiempoDeEnvio implements Serializable {
 
     private int idTiempoDeEnvio;
-    private String tiempo;
+    private int tiempo;
     private boolean estado;
 
-    public TiempoDeEnvio(int idTiempoDeEnvio, String tiempo, boolean estado) {
+    public TiempoDeEnvio(int idTiempoDeEnvio, int tiempo, boolean estado) {
 
         this.idTiempoDeEnvio = idTiempoDeEnvio;
         this.tiempo = tiempo;
@@ -27,11 +27,11 @@ public class TiempoDeEnvio implements Serializable {
         this.idTiempoDeEnvio = idTiempoDeEnvio;
     }
 
-    public String getTiempo() {
+    public int getTiempo() {
         return this.tiempo;
     }
 
-    public void setTiempo(String tiempo) {
+    public void setTiempo(int tiempo) {
         this.tiempo = tiempo;
     }
 

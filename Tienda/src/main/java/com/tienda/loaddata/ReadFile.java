@@ -1,63 +1,61 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.tienda.loaddata;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author julio
  */
+
+
+// esta clase carga el archivo desde una que el usuario elige
 public class ReadFile {
-    private LoadFile loadFile;
-    private  FileReader fileReader;
     
+    private FileReader entrada;
+    private String path;
+    
+    //el constructor recibe como parametro la ruta del archivo a leer
+    //la ruta se la envia el FileChooser
 
-    public ReadFile() {
-       
+
+
+    public ReadFile( String path) {
+        
+        this.path = path;
     }
 
-    public ReadFile(LoadFile loadFile) {
-        this.loadFile = loadFile;
-    }
     
     
-    public void read(String pathFile) throws FileNotFoundException, IOException{
+    public void leerArchivo(){
         
+    try {
+        entrada = new FileReader((path));
+        BufferedReader bufferEntrada = new BufferedReader(entrada);
+        
+            String linea = "";
+        
+            int cont=0;
+            while (linea != null){            
+                ///----lee una linea y la envia al interprete
+                //-----hasta leer todo el documento de texto
+                linea = bufferEntrada.readLine();
+                cont++;
 
-        
-        try {
-            File file = new File(pathFile);
-            Scanner scanner = new Scanner(file);
-            while (scanner.hasNext()) {
-                System.out.println(scanner.nextLine());
-                
+
+                System.out.println("linea: "+cont);
+
+                if(linea!=null ){
+                    Interprete enviarLinea = new Interprete(linea);
+                    enviarLinea.splitLinea(linea, cont);
+                }       
             }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ReadFile.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        entrada.close();
+    } catch (Exception e) {
+        e.printStackTrace();
     }
-    
-    
-    public static void main(String[] args) {
-       
-        String direccion = "/home/julio/Descargas/simple data.txt";
-        try {
-            ReadFile readfile = new ReadFile();
-            readfile.read(direccion);
-        } catch (IOException ex) {
-            Logger.getLogger(ReadFile.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
+}
+
+
 }

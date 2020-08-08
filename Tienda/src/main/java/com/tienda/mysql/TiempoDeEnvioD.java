@@ -29,7 +29,7 @@ public class TiempoDeEnvioD implements TiempoDeEnvioDAO {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
-            stat.setString(1, object.getTiempo());
+            stat.setInt(1, object.getTiempo());
             stat.setBoolean(2, object.isEstado());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover TiempoDeEnvio");
@@ -45,7 +45,7 @@ public class TiempoDeEnvioD implements TiempoDeEnvioDAO {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
-            stat.setString(1, object.getTiempo());
+            stat.setInt(1, object.getTiempo());
             stat.setBoolean(2, object.isEstado());
             stat.setInt(3, object.getIdTiempoDeEnvio());
             if (stat.executeUpdate() == 0) {
@@ -112,7 +112,7 @@ public class TiempoDeEnvioD implements TiempoDeEnvioDAO {
     public TiempoDeEnvio convertir(ResultSet rs) {
 
         try {
-            TiempoDeEnvio tiempoDeEnvio = new TiempoDeEnvio(rs.getInt("idTiempoDeEnvio"), rs.getString("tiempo"), rs.getBoolean("estado"));
+            TiempoDeEnvio tiempoDeEnvio = new TiempoDeEnvio(rs.getInt("idTiempoDeEnvio"), rs.getInt("tiempo"), rs.getBoolean("estado"));
 
             return tiempoDeEnvio;
         } catch (SQLException ex) {

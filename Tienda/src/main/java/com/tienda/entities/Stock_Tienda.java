@@ -1,6 +1,7 @@
 package com.tienda.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  *
@@ -12,15 +13,17 @@ public class Stock_Tienda implements Serializable {
     private String tienda_codigo;
     private String producto_codigo;
     private boolean estado;
-    private String cantidad;
+    private int cantidad;
+    private BigDecimal precio;
 
-    public Stock_Tienda(int idStockTienda, String tienda_codigo, String producto_codigo, boolean estado, String cantidad) {
+    public Stock_Tienda(int idStockTienda, String tienda_codigo, String producto_codigo, boolean estado, int cantidad, BigDecimal precio) {
 
         this.idStockTienda = idStockTienda;
         this.tienda_codigo = tienda_codigo;
         this.producto_codigo = producto_codigo;
         this.estado = estado;
         this.cantidad = cantidad;
+        this.precio = precio;
     }
 
     public int getIdStockTienda() {
@@ -55,12 +58,21 @@ public class Stock_Tienda implements Serializable {
         this.estado = estado;
     }
 
-    public String getCantidad() {
+    public int getCantidad() {
         return this.cantidad;
     }
 
-    public void setCantidad(String cantidad) {
+    public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
+
+    public BigDecimal getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(BigDecimal precio) {
+        this.precio = precio;
+    }
+    
 
 }
