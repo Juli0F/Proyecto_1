@@ -9,4 +9,5 @@ import com.tienda.entities.TiempoDeEnvio;
 public interface TiempoDeEnvioDAO extends DAO<TiempoDeEnvio,Integer> {
 
 
+    
 }

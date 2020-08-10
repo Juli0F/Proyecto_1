@@ -15,7 +15,7 @@ public class FacturaD implements FacturaDAO {
 
     private Connection connection;
     private final String INSERT = "INSERT INTO Factura (descripcion,estado,Usuario_idUsuario,Tienda_codigo,) VALUES (?,?,?,?)";
-    private final String UPDATE = "UPDATE Factura set descripcion = ?, set estado = ?, set Usuario_idUsuario = ?, set Tienda_codigo = ? WHERE idFactura = ? ";
+    private final String UPDATE = "UPDATE Factura SET descripcion = ?, estado = ?, Usuario_idUsuario = ?, Tienda_codigo = ? WHERE idFactura = ? ";
     private final String DELETE = "DELETE Factura WHERE idFactura = ? ";
     private final String GETALL = "SELECT * FROM  Factura  ";
     private final String GETONE = GETALL + "WHERE idFactura = ?";

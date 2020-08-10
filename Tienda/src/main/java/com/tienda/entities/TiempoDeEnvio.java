@@ -13,6 +13,7 @@ public class TiempoDeEnvio implements Serializable {
     private boolean estado;
     private String descripcion;
 
+
     public TiempoDeEnvio(int idTiempoDeEnvio, int tiempo, boolean estado, String descripcion) {
 
         this.idTiempoDeEnvio = idTiempoDeEnvio;
@@ -52,6 +53,6 @@ public class TiempoDeEnvio implements Serializable {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-    
+
 
 }

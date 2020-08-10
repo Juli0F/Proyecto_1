@@ -7,12 +7,12 @@ import java.io.Serializable;
  */
 public class DetallePedido implements Serializable{
   private int idDetallePedido;
-  private String cantidad;
+  private int cantidad;
   private boolean estado;
   private String Producto_codigo;
   private String Pedido_codigo;
 
-  public DetallePedido (int idDetallePedido, String cantidad, boolean estado, String Producto_codigo, String Pedido_codigo ){
+  public DetallePedido (int idDetallePedido, int cantidad, boolean estado, String Producto_codigo, String Pedido_codigo ){
 
   this.idDetallePedido = idDetallePedido;
   this.cantidad = cantidad;
@@ -29,11 +29,11 @@ public class DetallePedido implements Serializable{
       this.idDetallePedido = idDetallePedido;
   }
 
-  public String getCantidad(){
+  public int getCantidad(){
       return this.cantidad;
   }
 
-  public void setCantidad(String cantidad){
+  public void setCantidad(int cantidad){
       this.cantidad = cantidad;
   }
 

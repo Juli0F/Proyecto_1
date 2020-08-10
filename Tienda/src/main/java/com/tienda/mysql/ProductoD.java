@@ -15,7 +15,7 @@ public class ProductoD implements ProductoDAO {
 
     private Connection connection;
     private final String INSERT = "INSERT INTO Producto (nombre,fabricante,Descripcion,Garantia,estado,) VALUES (?,?,?,?,?)";
-    private final String UPDATE = "UPDATE Producto set nombre = ?, set fabricante = ?, set Descripcion = ?, set Garantia = ?, set estado = ? WHERE codigo = ? ";
+    private final String UPDATE = "UPDATE Producto SET nombre = ?, fabricante = ?, Descripcion = ?, Garantia = ?, estado = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Producto WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Producto  ";
     private final String GETONE = GETALL + "WHERE codigo = ?";

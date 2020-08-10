@@ -15,10 +15,11 @@ public class StockTiendaD implements StockTiendaDAO {
 
     private Connection connection;
     private final String INSERT = "INSERT INTO StockTienda (Tienda_codigo,Producto_codigo,estado,cantidad,precio) VALUES (?,?,?,?,?)";
-    private final String UPDATE = "UPDATE StockTienda set Tienda_codigo = ?, set Producto_codigo = ?, set estado = ?, set cantidad = ? WHERE idStockTienda = ? ";
+    private final String UPDATE = "UPDATE StockTienda SET Tienda_codigo = ?, Producto_codigo = ?, estado = ?, cantidad = ? WHERE idStockTienda = ? ";
     private final String DELETE = "DELETE StockTienda WHERE idStockTienda = ? ";
     private final String GETALL = "SELECT * FROM  StockTienda  ";
     private final String GETONE = GETALL + "WHERE idStockTienda = ?";
+    
 
     public StockTiendaD(Connection connection) {
         this.connection = connection;
@@ -144,4 +145,25 @@ public class StockTiendaD implements StockTiendaDAO {
         }
         return 0;
     }
+
+    @Override
+    public StockTienda existencia(String codigoTienda, String codigoProducot) {
+     
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(GETONE);
+            //stat.setInt(1, id);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                return (convertir(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
 }

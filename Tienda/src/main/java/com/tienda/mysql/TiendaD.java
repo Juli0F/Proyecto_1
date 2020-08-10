@@ -15,7 +15,7 @@ public class TiendaD implements TiendaDAO {
 
     private Connection connection;
     private final String INSERT = "INSERT INTO Tienda (nombre,direccion,telefono,telefono2,email,horario,estado,codigo) VALUES (?,?,?,?,?,?,?,?)";
-    private final String UPDATE = "UPDATE Tienda set nombre = ?, set direccion = ?, set telefono = ?, set telefono2 = ?, set email = ?, set horario = ?, set estado = ? WHERE codigo = ? ";
+    private final String UPDATE = "UPDATE Tienda SET nombre = ?,  direccion = ?, telefono = ?, telefono2 = ?, email = ?, horario = ?, estado = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Tienda WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Tienda  ";
     private final String GETONE = GETALL + "WHERE codigo = ?";

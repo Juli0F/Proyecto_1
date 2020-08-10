@@ -14,8 +14,8 @@ import java.util.logging.Logger;
 public class PedidoD implements PedidoDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Pedido (fecha,entregado,retraso,destino,estado,TiempoDeEnvio_idTiempoDeEnvio,Cliente_nit,) VALUES (?,?,?,?,?,?,?)";
-    private final String UPDATE = "UPDATE Pedido set fecha = ?, set entregado = ?, set retraso = ?, set destino = ?, set estado = ?, set TiempoDeEnvio_idTiempoDeEnvio = ?, set Cliente_nit = ? WHERE codigo = ? ";
+    private final String INSERT = "INSERT INTO Pedido (fecha,entregado,retraso,destino,estado,TiempoDeEnvio_idTiempoDeEnvio,Cliente_nit,subtotal,anticipo) VALUES (?,?,?,?,?,?,?,?,?)";
+    private final String UPDATE = "UPDATE Pedido SET fecha = ?, entregado = ?, retraso = ?, destino = ?, estado = ?, TiempoDeEnvio_idTiempoDeEnvio = ?, Cliente_nit = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Pedido WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Pedido  ";
     private final String GETONE = GETALL + "WHERE codigo = ?";
@@ -36,6 +36,8 @@ public class PedidoD implements PedidoDAO {
             stat.setBoolean(5, object.isEstado());
             stat.setInt(6, object.getTiempoDeEnvio_idTiempoDeEnvio());
             stat.setString(7, object.getCliente_nit());
+            stat.setBigDecimal(8, object.getSubtotal());
+            stat.setBigDecimal(9, object.getAnticipo());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Pedido");
 
@@ -122,7 +124,7 @@ public class PedidoD implements PedidoDAO {
     public Pedido convertir(ResultSet rs) {
 
         try {
-            Pedido pedido = new Pedido(rs.getString("codigo"), rs.getDate("fecha"), rs.getBoolean("entregado"), rs.getInt("retraso"), rs.getBoolean("destino"), rs.getBoolean("estado"), rs.getInt("TiempoDeEnvio_idTiempoDeEnvio"), rs.getString("Cliente_nit"));
+            Pedido pedido = new Pedido(rs.getString("codigo"), rs.getDate("fecha"), rs.getBoolean("entregado"), rs.getInt("retraso"), rs.getBoolean("destino"), rs.getBoolean("estado"), rs.getInt("TiempoDeEnvio_idTiempoDeEnvio"), rs.getString("Cliente_nit"), rs.getBigDecimal("anticipo"),rs.getBigDecimal("subtotal"));
 
             return pedido;
         } catch (SQLException ex) {

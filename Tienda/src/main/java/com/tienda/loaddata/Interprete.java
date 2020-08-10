@@ -8,6 +8,8 @@ package com.tienda.loaddata;
 //import administradores.SeparadorDeParametros;
 import com.google.protobuf.TextFormat.ParseException;
 import com.tienda.entities.Cliente;
+import com.tienda.entities.DetalleFactura;
+import com.tienda.entities.DetallePedido;
 import com.tienda.entities.Pedido;
 import com.tienda.entities.Persona;
 import com.tienda.entities.Producto;
@@ -166,14 +168,12 @@ public class Interprete {
                                 //ublic TiempoDeEnvio(int idTiempoDeEnvio, String tiempo, boolean estado) {
                                 TiempoDeEnvio tiempoDeEnvio = new TiempoDeEnvio(1, Integer.valueOf(datos[datos.length - 1]), true, datos[1]);
                                 manager.getTiempoDeEnvioDAO().insert(tiempoDeEnvio);
-                                int idtiempo = manager.getTiempoDeEnvioDAO().lastInsertId();
+                                // int idtiempo = manager.getTiempoDeEnvioDAO().lastInsertId();
 
-                                TiempoEntreTiendas entreTiendas = new TiempoEntreTiendas(0, idtiempo, datos[0], "Origen");
-                                manager.getTiempoEntreTiendasDAO().insert(entreTiendas);
-
-                                entreTiendas = new TiempoEntreTiendas(0, idtiempo, datos[1], "Destino");
-                                manager.getTiempoEntreTiendasDAO().insert(entreTiendas);
-
+                                //TiempoEntreTiendas entreTiendas = new TiempoEntreTiendas(0, idtiempo, datos[0], "Origen");
+                                //manager.getTiempoEntreTiendasDAO().insert(entreTiendas);
+                                //entreTiendas = new TiempoEntreTiendas(0, idtiempo, datos[1], "Destino");
+                                //manager.getTiempoEntreTiendasDAO().insert(entreTiendas);
                             } else {
                                 System.out.println("Error: Linea " + cont + " -> Debe Crear Primero la Tienda");
                             }
@@ -185,25 +185,46 @@ public class Interprete {
                     break;
                 case 5:
                     System.out.println("Pedido");
-                    if (verificarCantidad(datos, 8, cont)) {
+
+                    if (verificarCantidad(datos, 9, cont)) {
                         //Pedido pedido = new Pedido(data[0], fecha, true, cont, true, true, cont, CLIENTE);
                         Tienda tiendaPrueba = manager.getTiendaDAO().obtener(datos[1]);
                         if (tiendaPrueba != null) {
                             tiendaPrueba = manager.getTiendaDAO().obtener(datos[2]);
                             if (tiendaPrueba != null) {
 
-                                if (manager.getClienteDAO().obtener(datos[5]) != null) {
+                                if (existenciaSuficiente(datos[1], datos[5], Integer.valueOf(datos[6]))) {
 
-                                    if (manager.getPedidoDAO().obtener(datos[0]) != null) {
-                                        //el pedido ya existe
+                                    if (manager.getClienteDAO().obtener(datos[5]) != null) {
 
+                                        if (manager.getPedidoDAO().obtener(datos[0]) != null) {
+                                            //el pedido ya existe
+                                            DetallePedido articulos = new DetallePedido(0, Integer.valueOf(datos[6]), true, datos[5], datos[0]);
+                                            manager.getDetallePedidoDAO().insert(articulos);
+                                            
+                                            descontarPedido(datos[1], datos[5], Integer.valueOf(datos[6]));
+
+                                        } else {
+                                            //  crea el pedido
+                                            Integer envio = manager.getTiempoEntreTiendasDAO().getTiempoByTwoStore(datos[1], datos[2]);
+                                            if (envio != null) {
+
+                                                Pedido pedido = new Pedido(datos[0], java.sql.Date.valueOf(datos[3]), false, 0, false, true, envio, datos[5], BigDecimal.valueOf(Double.valueOf(datos[datos.length - 1])), BigDecimal.valueOf(Double.valueOf(datos[datos.length - 2])));
+                                                DetallePedido articulos = new DetallePedido(0, Integer.valueOf(datos[6]), true, datos[5], datos[0]);
+
+                                                manager.getPedidoDAO().insert(pedido);
+                                                manager.getDetallePedidoDAO().insert(articulos);
+                                                
+                                                descontarPedido(datos[1], datos[5], Integer.valueOf(datos[6]));
+                                            } else {
+                                                System.out.println("Error: Linea " + cont + " -> Debe Crear Primero un Tiempo De Envio");
+                                            }
+                                        }
                                     } else {
-                                        //crea el pedido
-                                        //(String codigo, java.sql.Date fecha,                boolean entregado retraso,destino,estado, TiempoDeEnvio_idTiempoDeEnvio, String Cliente_nit)
-                                        Pedido pedido = new Pedido(datos[0], java.sql.Date.valueOf(datos[3]), false, 0, false, true, cont, CLIENTE);
+                                        System.out.println("Error: Linea " + cont + " -> Debe Crear Primero Al Cliente");
                                     }
                                 } else {
-                                    System.out.println("Error: Linea " + cont + " -> Debe Crear Primero Al Cliente");
+                                    System.out.println("Error: Linea " + cont + " -> Verificar Existencia");
                                 }
 
                             } else {
@@ -249,6 +270,30 @@ public class Interprete {
         }
         //return datos.length==cantidad;
 
+    }
+
+    public boolean existenciaSuficiente(String codigoTienda, String codigoProducto, int cantidadDeProducto) {
+
+        Manager manager = new Manager();
+
+        StockTienda stock = manager.getStockTiendaDAO().existencia(codigoTienda, codigoProducto);
+        if (stock != null && stock.getCantidad() >= cantidadDeProducto) {
+            return true;
+        }
+
+        return false;
+    }
+    
+    public void descontarPedido(String codigoTienda, String codigoProducto, int cantidadDeProducto) {
+
+        Manager manager = new Manager();
+
+        StockTienda stock = manager.getStockTiendaDAO().existencia(codigoTienda, codigoProducto);
+        stock.setCantidad(stock.getCantidad()-cantidadDeProducto);
+        
+        manager.getStockTiendaDAO().modify(stock);
+
+        
     }
 
 }

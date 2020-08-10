@@ -15,12 +15,13 @@ public class TiempoEntreTiendasD implements TiempoEntreTiendasDAO {
 
     private Connection connection;
     private final String INSERT = "INSERT INTO TiempoEntreTiendas (TiempoDeEnvio_idTiempoDeEnvio,Tienda_codigo, descripcion) VALUES (?,?,?)";
-    private final String UPDATE = "UPDATE TiempoEntreTiendas set TiempoDeEnvio_idTiempoDeEnvio = ?, set Tienda_codigo = ? WHERE idTiempoEntreTiendas = ? ";
+    private final String UPDATE = "UPDATE TiempoEntreTiendas SET TiempoDeEnvio_idTiempoDeEnvio = ?, Tienda_codigo = ? WHERE idTiempoEntreTiendas = ? ";
     private final String DELETE = "DELETE TiempoEntreTiendas WHERE idTiempoEntreTiendas = ? ";
     private final String GETALL = "SELECT * FROM  TiempoEntreTiendas  ";
     private final String GETONE = GETALL + "WHERE idTiempoEntreTiendas = ?";
     private final String GET_BY_CODIGO_TIENDA_AND_DESCRIPCION = GETALL + " WHERE Tienda_codigo = ? AND descripcion = ? ";
     private final String GETTIMEBETWEENSTOREs = GETALL;
+    private final String GETIDTIEMPO = "SELECT t.TiempoDeEnvio_idTiempoDeEnvio from TiempoEntreTiendas as t inner join TiempoEntreTiendas e on t.TiempoDeEnvio_idTiempoDeEnvio = e.TiempoDeEnvio_idTiempoDeEnvio where (t.Tienda_codigo=? and t.descripcion = \"Origen\") and (e.Tienda_codigo = ? and e.descripcion = \"Destino\")";
 
     public TiempoEntreTiendasD(Connection connection) {
         this.connection = connection;
@@ -142,20 +143,19 @@ public class TiempoEntreTiendasD implements TiempoEntreTiendasDAO {
         }
         return 0;
     }
+
     @Override
-    public TiempoEntreTiendas getByIdAndDescripcion(String codigoTienda, String descripcion){
-        
-        
+    public Integer getTiempoByTwoStore(String codigoTiendaA, String codigoTiendaB) {
         PreparedStatement stat = null;
         ResultSet rs = null;
 
         try {
-            stat = connection.prepareStatement(GET_BY_CODIGO_TIENDA_AND_DESCRIPCION);
-            stat.setString(1,codigoTienda);
-            stat.setString(2,descripcion);
+            stat = connection.prepareStatement(GETIDTIEMPO);
+            stat.setString(1, codigoTiendaA);
+            stat.setString(2, codigoTiendaB);
             rs = stat.executeQuery();
-            while (rs.next()) {
-                return (convertir(rs));
+            if (rs.next()) {
+                return rs.getInt(1);
             }
 
         } catch (Exception e) {
@@ -163,4 +163,5 @@ public class TiempoEntreTiendasD implements TiempoEntreTiendasDAO {
         }
         return null;
     }
+    
 }

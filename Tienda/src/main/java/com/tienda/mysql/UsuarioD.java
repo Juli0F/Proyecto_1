@@ -15,7 +15,7 @@ public class UsuarioD implements UsuarioDAO {
 
     private Connection connection;
     private final String INSERT = "INSERT INTO Usuario (usuario,password,tipo,estado,Persona_dpi,) VALUES (?,?,?,?,?)";
-    private final String UPDATE = "UPDATE Usuario set usuario = ?, set password = ?, set tipo = ?, set estado = ?, set Persona_dpi = ? WHERE idUsuario = ? ";
+    private final String UPDATE = "UPDATE Usuario SET usuario = ?, password = ?, tipo = ?, estado = ?, Persona_dpi = ? WHERE idUsuario = ? ";
     private final String DELETE = "DELETE Usuario WHERE idUsuario = ? ";
     private final String GETALL = "SELECT * FROM  Usuario  ";
     private final String GETONE = GETALL + "WHERE idUsuario = ?";

@@ -15,7 +15,7 @@ public class ClienteD implements ClienteDAO {
 
     private Connection connection;
     private final String INSERT = "INSERT INTO Cliente (email,estado,Persona_dpi,credito,nit) VALUES (?,?,?,?,?)";
-    private final String UPDATE = "UPDATE Cliente set email = ?, set estado = ?, set Persona_dpi = ? WHERE nit = ? ";
+    private final String UPDATE = "UPDATE Cliente set email = ?,  estado = ?, Persona_dpi = ? WHERE nit = ? ";
     private final String DELETE = "DELETE Cliente WHERE nit = ? ";
     private final String GETALL = "SELECT * FROM  Cliente  ";
     private final String GETONE = GETALL + "WHERE nit = ?";

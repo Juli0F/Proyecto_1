@@ -35,9 +35,8 @@ public class Conexion {
                    Class.forName("com.mysql.jdbc.Driver");
               
                connection = DriverManager.getConnection(
-                       "jdbc:mysql://localhost:3306/tienda?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+                       "jdbc:mysql://localhost:3306/TiendaProyecto?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
                        , "root","Usuario_Root_3");
-               //leerArchivo("."+File.separatorChar+"data"+File.separatorChar+"conect.txt");
             } catch (ClassNotFoundException ex) {
                Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
            }

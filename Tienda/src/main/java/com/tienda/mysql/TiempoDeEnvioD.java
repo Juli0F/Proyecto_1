@@ -15,10 +15,11 @@ public class TiempoDeEnvioD implements TiempoDeEnvioDAO {
 
     private Connection connection;
     private final String INSERT = "INSERT INTO TiempoDeEnvio (tiempo,estado,descripcion) VALUES (?,?,?)";
-    private final String UPDATE = "UPDATE TiempoDeEnvio set tiempo = ?, set estado = ?, SET descripcion = ? WHERE idTiempoDeEnvio = ? ";
+    private final String UPDATE = "UPDATE TiempoDeEnvio SET tiempo = ?, estado = ?, SET descripcion = ? WHERE idTiempoDeEnvio = ? ";
     private final String DELETE = "DELETE TiempoDeEnvio WHERE idTiempoDeEnvio = ? ";
     private final String GETALL = "SELECT * FROM  TiempoDeEnvio  ";
     private final String GETONE = GETALL + "WHERE idTiempoDeEnvio = ?";
+    private final String GETBYIDTIENDAANDDESCRIPCION = GETALL + " WHERE origen = ? AND  descripcion = ?";
 
     public TiempoDeEnvioD(Connection connection) {
         this.connection = connection;
@@ -32,6 +33,7 @@ public class TiempoDeEnvioD implements TiempoDeEnvioDAO {
             stat.setInt(1, object.getTiempo());
             stat.setBoolean(2, object.isEstado());
             stat.setString(3, object.getDescripcion());
+
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover TiempoDeEnvio");
 
@@ -49,7 +51,8 @@ public class TiempoDeEnvioD implements TiempoDeEnvioDAO {
             stat.setInt(1, object.getTiempo());
             stat.setBoolean(2, object.isEstado());
             stat.setString(3, object.getDescripcion());
-            stat.setInt(4, object.getIdTiempoDeEnvio());
+            
+            stat.setInt(5, object.getIdTiempoDeEnvio());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover TiempoDeEnvio");
 
@@ -141,4 +144,6 @@ public class TiempoDeEnvioD implements TiempoDeEnvioDAO {
         }
         return 0;
     }
+
+    
 }

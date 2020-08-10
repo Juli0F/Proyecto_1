@@ -15,7 +15,7 @@ public class DetallePedidoD implements DetallePedidoDAO {
 
     private Connection connection;
     private final String INSERT = "INSERT INTO DetallePedido (cantidad,estado,Producto_codigo,Pedido_codigo,) VALUES (?,?,?,?)";
-    private final String UPDATE = "UPDATE DetallePedido set cantidad = ?, set estado = ?, set Producto_codigo = ?, set Pedido_codigo = ? WHERE idDetallePedido = ? ";
+    private final String UPDATE = "UPDATE DetallePedido SET cantidad = ?, estado = ?, Producto_codigo = ?, Pedido_codigo = ? WHERE idDetallePedido = ? ";
     private final String DELETE = "DELETE DetallePedido WHERE idDetallePedido = ? ";
     private final String GETALL = "SELECT * FROM  DetallePedido  ";
     private final String GETONE = GETALL + "WHERE idDetallePedido = ?";
@@ -29,7 +29,7 @@ public class DetallePedidoD implements DetallePedidoDAO {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
-            stat.setString(1, object.getCantidad());
+            stat.setInt(1, object.getCantidad());
             stat.setBoolean(2, object.isEstado());
             stat.setString(3, object.getProducto_codigo());
             stat.setString(4, object.getPedido_codigo());
@@ -47,7 +47,7 @@ public class DetallePedidoD implements DetallePedidoDAO {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
-            stat.setString(1, object.getCantidad());
+            stat.setInt(1, object.getCantidad());
             stat.setBoolean(2, object.isEstado());
             stat.setString(3, object.getProducto_codigo());
             stat.setString(4, object.getPedido_codigo());
@@ -116,7 +116,7 @@ public class DetallePedidoD implements DetallePedidoDAO {
     public DetallePedido convertir(ResultSet rs) {
 
         try {
-            DetallePedido detallePedido = new DetallePedido(rs.getInt("idDetallePedido"), rs.getString("cantidad"), rs.getBoolean("estado"), rs.getString("Producto_codigo"), rs.getString("Pedido_codigo"));
+            DetallePedido detallePedido = new DetallePedido(rs.getInt("idDetallePedido"), rs.getInt("cantidad"), rs.getBoolean("estado"), rs.getString("Producto_codigo"), rs.getString("Pedido_codigo"));
 
             return detallePedido;
         } catch (SQLException ex) {

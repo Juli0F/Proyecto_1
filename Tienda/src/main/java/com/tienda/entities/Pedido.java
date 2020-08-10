@@ -1,6 +1,7 @@
 package com.tienda.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  *
@@ -16,8 +17,10 @@ public class Pedido implements Serializable {
     private boolean estado;
     private int TiempoDeEnvio_idTiempoDeEnvio;
     private String Cliente_nit;
-
-    public Pedido(String codigo, java.sql.Date fecha, boolean entregado, int retraso, boolean destino, boolean estado, int TiempoDeEnvio_idTiempoDeEnvio, String Cliente_nit) {
+    private BigDecimal anticipo;
+    private BigDecimal subtotal;
+    
+    public Pedido(String codigo, java.sql.Date fecha, boolean entregado, int retraso, boolean destino, boolean estado, int TiempoDeEnvio_idTiempoDeEnvio, String Cliente_nit, BigDecimal anticipo,BigDecimal subtotal) {
 
         this.codigo = codigo;
         this.fecha = fecha;
@@ -27,6 +30,8 @@ public class Pedido implements Serializable {
         this.estado = estado;
         this.TiempoDeEnvio_idTiempoDeEnvio = TiempoDeEnvio_idTiempoDeEnvio;
         this.Cliente_nit = Cliente_nit;
+        this.anticipo = anticipo;
+        this.subtotal = subtotal;
     }
 
     public String getCodigo() {
@@ -92,5 +97,23 @@ public class Pedido implements Serializable {
     public void setCliente_nit(String Cliente_nit) {
         this.Cliente_nit = Cliente_nit;
     }
+
+    public BigDecimal getAnticipo() {
+        return anticipo;
+    }
+
+    public void setAnticipo(BigDecimal anticipo) {
+        this.anticipo = anticipo;
+    }
+
+    public BigDecimal getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(BigDecimal subtotal) {
+        this.subtotal = subtotal;
+    }
+    
+    
 
 }
