@@ -20,6 +20,7 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
      
         
+        
         //setSize(800,900);
     }
 
@@ -65,6 +66,8 @@ public class MainFrame extends javax.swing.JFrame {
         setTitle("SistemControl");
         setSize(new java.awt.Dimension(600, 500));
 
+        ///home/julio/Escritorio/Proyecto 1/Proyecto_1/Tienda/src/main/java/com/tienda/recursos/clientes32.png
+        catalogo.setIcon(new javax.swing.ImageIcon(getClass().getResource(".../java/com/tienda/recursos/prodcu640px.png")));
         catalogo.setMnemonic('f');
         catalogo.setText("Catalago");
 
