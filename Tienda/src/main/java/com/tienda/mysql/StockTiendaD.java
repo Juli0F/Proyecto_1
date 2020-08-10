@@ -1,8 +1,7 @@
 package com.tienda.mysql;
 
-import com.tienda.dao.Stock_TiendaDAO;
-import com.tienda.entities.Stock_Tienda;
-import java.math.BigDecimal;
+import com.tienda.dao.StockTiendaDAO;
+import com.tienda.entities.StockTienda;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,21 +11,21 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Stock_TiendaD implements Stock_TiendaDAO {
+public class StockTiendaD implements StockTiendaDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Stock_Tienda (tienda_codigo,producto_codigo,estado,cantidad,precio) VALUES (?,?,?,?,?)";
-    private final String UPDATE = "UPDATE Stock_Tienda set tienda_codigo = ?, set producto_codigo = ?, set estado = ?, set cantidad = ? WHERE idStockTienda = ? ";
-    private final String DELETE = "DELETE Stock_Tienda WHERE idStockTienda = ? ";
-    private final String GETALL = "SELECT * FROM  Stock_Tienda  ";
+    private final String INSERT = "INSERT INTO StockTienda (Tienda_codigo,Producto_codigo,estado,cantidad,precio) VALUES (?,?,?,?,?)";
+    private final String UPDATE = "UPDATE StockTienda set Tienda_codigo = ?, set Producto_codigo = ?, set estado = ?, set cantidad = ? WHERE idStockTienda = ? ";
+    private final String DELETE = "DELETE StockTienda WHERE idStockTienda = ? ";
+    private final String GETALL = "SELECT * FROM  StockTienda  ";
     private final String GETONE = GETALL + "WHERE idStockTienda = ?";
 
-    public Stock_TiendaD(Connection connection) {
+    public StockTiendaD(Connection connection) {
         this.connection = connection;
     }
 
     @Override
-    public void insert(Stock_Tienda object) {
+    public void insert(StockTienda object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
@@ -34,9 +33,9 @@ public class Stock_TiendaD implements Stock_TiendaDAO {
             stat.setString(2, object.getProducto_codigo());
             stat.setBoolean(3, object.isEstado());
             stat.setInt(4, object.getCantidad());
-            stat.setBigDecimal(5, object.getPrecio());
+            stat.setBigDecimal(4, object.getPrecio());
             if (stat.executeUpdate() == 0) {
-                System.out.println("crear popover Stock_Tienda");
+                System.out.println("crear popover StockTienda");
 
             }
         } catch (Exception e) {
@@ -45,7 +44,7 @@ public class Stock_TiendaD implements Stock_TiendaDAO {
     }
 
     @Override
-    public void modify(Stock_Tienda object) {
+    public void modify(StockTienda object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
@@ -55,7 +54,7 @@ public class Stock_TiendaD implements Stock_TiendaDAO {
             stat.setInt(4, object.getCantidad());
             stat.setInt(5, object.getIdStockTienda());
             if (stat.executeUpdate() == 0) {
-                System.out.println("crear popover Stock_Tienda");
+                System.out.println("crear popover StockTienda");
 
             }
         } catch (Exception e) {
@@ -64,10 +63,10 @@ public class Stock_TiendaD implements Stock_TiendaDAO {
     }
 
     @Override
-    public List<Stock_Tienda> obtenerTodo() {
+    public List<StockTienda> obtenerTodo() {
         PreparedStatement stat = null;
         ResultSet rs = null;
-        List<Stock_Tienda> lst = new ArrayList<>();
+        List<StockTienda> lst = new ArrayList<>();
         try {
             stat = connection.prepareStatement(GETALL);
             rs = stat.executeQuery();
@@ -83,7 +82,7 @@ public class Stock_TiendaD implements Stock_TiendaDAO {
     }
 
     @Override
-    public Stock_Tienda obtener(Integer id) {
+    public StockTienda obtener(Integer id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
 
@@ -102,7 +101,7 @@ public class Stock_TiendaD implements Stock_TiendaDAO {
     }
 
     @Override
-    public void delete(Stock_Tienda object) {
+    public void delete(StockTienda object) {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
@@ -111,18 +110,18 @@ public class Stock_TiendaD implements Stock_TiendaDAO {
 
             }
         } catch (SQLException ex) {
-            Logger.getLogger(Stock_TiendaD.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StockTiendaD.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public Stock_Tienda convertir(ResultSet rs) {
+    public StockTienda convertir(ResultSet rs) {
 
         try {
-            Stock_Tienda stock_Tienda = new Stock_Tienda(rs.getInt("idStockTienda"), rs.getString("tienda_codigo"), rs.getString("producto_codigo"), rs.getBoolean("estado"), rs.getInt("cantidad"),rs.getBigDecimal("precio"));
+            StockTienda stockTienda = new StockTienda(rs.getInt("idStockTienda"), rs.getString("Tienda_codigo"), rs.getString("Producto_codigo"), rs.getBoolean("estado"), rs.getInt("cantidad"), rs.getBigDecimal("precio"));
 
-            return stock_Tienda;
+            return stockTienda;
         } catch (SQLException ex) {
-            Logger.getLogger(Stock_TiendaD.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StockTiendaD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -141,7 +140,7 @@ public class Stock_TiendaD implements Stock_TiendaDAO {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(Stock_TiendaD.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StockTiendaD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return 0;
     }

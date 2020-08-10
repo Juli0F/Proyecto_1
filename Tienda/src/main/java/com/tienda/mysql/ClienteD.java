@@ -14,8 +14,8 @@ import java.util.logging.Logger;
 public class ClienteD implements ClienteDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Cliente (email,estado,Pedido_codigo,Persona_dpi) VALUES (?,?,?,?)";
-    private final String UPDATE = "UPDATE Cliente set email = ?, set estado = ?, set Pedido_codigo = ?, set Persona_dpi = ? WHERE nit = ? ";
+    private final String INSERT = "INSERT INTO Cliente (email,estado,Persona_dpi,credito,nit) VALUES (?,?,?,?,?)";
+    private final String UPDATE = "UPDATE Cliente set email = ?, set estado = ?, set Persona_dpi = ? WHERE nit = ? ";
     private final String DELETE = "DELETE Cliente WHERE nit = ? ";
     private final String GETALL = "SELECT * FROM  Cliente  ";
     private final String GETONE = GETALL + "WHERE nit = ?";
@@ -31,8 +31,9 @@ public class ClienteD implements ClienteDAO {
             stat = connection.prepareStatement(INSERT);
             stat.setString(1, object.getEmail());
             stat.setBoolean(2, object.isEstado());
-            stat.setString(3, object.getPedido_codigo());
-            stat.setInt(4, object.getPersona_dpi());
+            stat.setString(3, object.getPersona_dpi());
+            stat.setBigDecimal(4, object.getCredito());
+            stat.setString(5, object.getNit());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Cliente");
 
@@ -49,9 +50,8 @@ public class ClienteD implements ClienteDAO {
             stat = connection.prepareStatement(UPDATE);
             stat.setString(1, object.getEmail());
             stat.setBoolean(2, object.isEstado());
-            stat.setString(3, object.getPedido_codigo());
-            stat.setInt(4, object.getPersona_dpi());
-            stat.setString(5, object.getNit());
+            stat.setString(3, object.getPersona_dpi());
+            stat.setString(4, object.getNit());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Cliente");
 
@@ -81,13 +81,13 @@ public class ClienteD implements ClienteDAO {
     }
 
     @Override
-    public Cliente obtener(Integer id) {
+    public Cliente obtener(String nit) {
         PreparedStatement stat = null;
         ResultSet rs = null;
 
         try {
             stat = connection.prepareStatement(GETONE);
-            stat.setInt(1, id);
+            stat.setString(1, nit);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));
@@ -116,7 +116,7 @@ public class ClienteD implements ClienteDAO {
     public Cliente convertir(ResultSet rs) {
 
         try {
-            Cliente cliente = new Cliente(rs.getString("nit"), rs.getString("email"), rs.getBoolean("estado"), rs.getString("Pedido_codigo"), rs.getInt("Persona_dpi"));
+            Cliente cliente = new Cliente(rs.getString("nit"), rs.getString("email"), rs.getBoolean("estado"), rs.getString("Persona_dpi"),rs.getBigDecimal("credito"));
 
             return cliente;
         } catch (SQLException ex) {
@@ -126,7 +126,7 @@ public class ClienteD implements ClienteDAO {
     }
 
     @Override
-    public Integer lastInsertId() {
+    public String lastInsertId() {
         String ultimo = "SELECT last_insert_id()";
         PreparedStatement stat = null;
         ResultSet rs = null;
@@ -135,12 +135,12 @@ public class ClienteD implements ClienteDAO {
             stat = connection.prepareStatement(ultimo);
             rs = stat.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
+                return rs.getString(1);
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(ClienteD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+        return "";
     }
 }

@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class DetalleFacturaD implements DetalleFacturaDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO DetalleFactura (Factura_idFactura,Producto_codigo) VALUES (?,?)";
+    private final String INSERT = "INSERT INTO DetalleFactura (Factura_idFactura,Producto_codigo,) VALUES (?,?)";
     private final String UPDATE = "UPDATE DetalleFactura set Factura_idFactura = ?, set Producto_codigo = ? WHERE idDetalleFactura = ? ";
     private final String DELETE = "DELETE DetalleFactura WHERE idDetalleFactura = ? ";
     private final String GETALL = "SELECT * FROM  DetalleFactura  ";

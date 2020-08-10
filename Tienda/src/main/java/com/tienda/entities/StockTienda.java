@@ -7,20 +7,20 @@ import java.math.BigDecimal;
  *
  * @author Julio
  */
-public class Stock_Tienda implements Serializable {
+public class StockTienda implements Serializable {
 
     private int idStockTienda;
-    private String tienda_codigo;
-    private String producto_codigo;
+    private String Tienda_codigo;
+    private String Producto_codigo;
     private boolean estado;
     private int cantidad;
     private BigDecimal precio;
 
-    public Stock_Tienda(int idStockTienda, String tienda_codigo, String producto_codigo, boolean estado, int cantidad, BigDecimal precio) {
+    public StockTienda(int idStockTienda, String Tienda_codigo, String Producto_codigo, boolean estado, int cantidad, BigDecimal precio) {
 
         this.idStockTienda = idStockTienda;
-        this.tienda_codigo = tienda_codigo;
-        this.producto_codigo = producto_codigo;
+        this.Tienda_codigo = Tienda_codigo;
+        this.Producto_codigo = Producto_codigo;
         this.estado = estado;
         this.cantidad = cantidad;
         this.precio = precio;
@@ -35,19 +35,19 @@ public class Stock_Tienda implements Serializable {
     }
 
     public String getTienda_codigo() {
-        return this.tienda_codigo;
+        return this.Tienda_codigo;
     }
 
-    public void setTienda_codigo(String tienda_codigo) {
-        this.tienda_codigo = tienda_codigo;
+    public void setTienda_codigo(String Tienda_codigo) {
+        this.Tienda_codigo = Tienda_codigo;
     }
 
     public String getProducto_codigo() {
-        return this.producto_codigo;
+        return this.Producto_codigo;
     }
 
-    public void setProducto_codigo(String producto_codigo) {
-        this.producto_codigo = producto_codigo;
+    public void setProducto_codigo(String Producto_codigo) {
+        this.Producto_codigo = Producto_codigo;
     }
 
     public boolean isEstado() {
@@ -73,6 +73,5 @@ public class Stock_Tienda implements Serializable {
     public void setPrecio(BigDecimal precio) {
         this.precio = precio;
     }
-    
 
 }

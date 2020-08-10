@@ -2,8 +2,6 @@ package com.tienda.dao;
 
 import com.tienda.entities.Factura;
 
-
-
 /**
  *
  * @author Julio

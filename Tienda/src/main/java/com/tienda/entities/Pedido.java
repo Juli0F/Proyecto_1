@@ -15,8 +15,9 @@ public class Pedido implements Serializable {
     private boolean destino;
     private boolean estado;
     private int TiempoDeEnvio_idTiempoDeEnvio;
+    private String Cliente_nit;
 
-    public Pedido(String codigo, java.sql.Date fecha, boolean entregado, int retraso, boolean destino, boolean estado, int TiempoDeEnvio_idTiempoDeEnvio) {
+    public Pedido(String codigo, java.sql.Date fecha, boolean entregado, int retraso, boolean destino, boolean estado, int TiempoDeEnvio_idTiempoDeEnvio, String Cliente_nit) {
 
         this.codigo = codigo;
         this.fecha = fecha;
@@ -25,6 +26,7 @@ public class Pedido implements Serializable {
         this.destino = destino;
         this.estado = estado;
         this.TiempoDeEnvio_idTiempoDeEnvio = TiempoDeEnvio_idTiempoDeEnvio;
+        this.Cliente_nit = Cliente_nit;
     }
 
     public String getCodigo() {
@@ -81,6 +83,14 @@ public class Pedido implements Serializable {
 
     public void setTiempoDeEnvio_idTiempoDeEnvio(int TiempoDeEnvio_idTiempoDeEnvio) {
         this.TiempoDeEnvio_idTiempoDeEnvio = TiempoDeEnvio_idTiempoDeEnvio;
+    }
+
+    public String getCliente_nit() {
+        return this.Cliente_nit;
+    }
+
+    public void setCliente_nit(String Cliente_nit) {
+        this.Cliente_nit = Cliente_nit;
     }
 
 }

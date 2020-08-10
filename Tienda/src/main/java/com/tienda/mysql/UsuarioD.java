@@ -32,8 +32,8 @@ public class UsuarioD implements UsuarioDAO {
             stat.setString(1, object.getUsuario());
             stat.setString(2, object.getPassword());
             stat.setInt(3, object.getTipo());
-            stat.setString(4, object.getEstado());
-            stat.setInt(5, object.getPersona_dpi());
+            stat.setBoolean(4, object.isEstado());
+            stat.setString(5, object.getPersona_dpi());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Usuario");
 
@@ -51,8 +51,8 @@ public class UsuarioD implements UsuarioDAO {
             stat.setString(1, object.getUsuario());
             stat.setString(2, object.getPassword());
             stat.setInt(3, object.getTipo());
-            stat.setString(4, object.getEstado());
-            stat.setInt(5, object.getPersona_dpi());
+            stat.setBoolean(4, object.isEstado());
+            stat.setString(5, object.getPersona_dpi());
             stat.setInt(6, object.getIdUsuario());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Usuario");
@@ -118,7 +118,7 @@ public class UsuarioD implements UsuarioDAO {
     public Usuario convertir(ResultSet rs) {
 
         try {
-            Usuario usuario = new Usuario(rs.getInt("idUsuario"), rs.getString("usuario"), rs.getString("password"), rs.getInt("tipo"), rs.getString("estado"), rs.getInt("Persona_dpi"));
+            Usuario usuario = new Usuario(rs.getInt("idUsuario"), rs.getString("usuario"), rs.getString("password"), rs.getInt("tipo"), rs.getBoolean("estado"), rs.getString("Persona_dpi"));
 
             return usuario;
         } catch (SQLException ex) {

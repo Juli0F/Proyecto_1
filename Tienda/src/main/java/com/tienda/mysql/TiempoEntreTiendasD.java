@@ -14,11 +14,13 @@ import java.util.logging.Logger;
 public class TiempoEntreTiendasD implements TiempoEntreTiendasDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO TiempoEntreTiendas (tiempoDeEnvio_idTiempoDeEnvio,tienda_codigo,) VALUES (?,?)";
-    private final String UPDATE = "UPDATE TiempoEntreTiendas set tiempoDeEnvio_idTiempoDeEnvio = ?, set tienda_codigo = ? WHERE idTiempoEntreTiendas = ? ";
+    private final String INSERT = "INSERT INTO TiempoEntreTiendas (TiempoDeEnvio_idTiempoDeEnvio,Tienda_codigo, descripcion) VALUES (?,?,?)";
+    private final String UPDATE = "UPDATE TiempoEntreTiendas set TiempoDeEnvio_idTiempoDeEnvio = ?, set Tienda_codigo = ? WHERE idTiempoEntreTiendas = ? ";
     private final String DELETE = "DELETE TiempoEntreTiendas WHERE idTiempoEntreTiendas = ? ";
     private final String GETALL = "SELECT * FROM  TiempoEntreTiendas  ";
     private final String GETONE = GETALL + "WHERE idTiempoEntreTiendas = ?";
+    private final String GET_BY_CODIGO_TIENDA_AND_DESCRIPCION = GETALL + " WHERE Tienda_codigo = ? AND descripcion = ? ";
+    private final String GETTIMEBETWEENSTOREs = GETALL;
 
     public TiempoEntreTiendasD(Connection connection) {
         this.connection = connection;
@@ -31,6 +33,7 @@ public class TiempoEntreTiendasD implements TiempoEntreTiendasDAO {
             stat = connection.prepareStatement(INSERT);
             stat.setInt(1, object.getTiempoDeEnvio_idTiempoDeEnvio());
             stat.setString(2, object.getTienda_codigo());
+            stat.setString(3, object.getDescripcion());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover TiempoEntreTiendas");
 
@@ -112,7 +115,7 @@ public class TiempoEntreTiendasD implements TiempoEntreTiendasDAO {
     public TiempoEntreTiendas convertir(ResultSet rs) {
 
         try {
-            TiempoEntreTiendas tiempoEntreTiendas = new TiempoEntreTiendas(rs.getInt("idTiempoEntreTiendas"), rs.getInt("tiempoDeEnvio_idTiempoDeEnvio"), rs.getString("tienda_codigo"));
+            TiempoEntreTiendas tiempoEntreTiendas = new TiempoEntreTiendas(rs.getInt("idTiempoEntreTiendas"), rs.getInt("TiempoDeEnvio_idTiempoDeEnvio"), rs.getString("Tienda_codigo"),rs.getString("descripcion"));
 
             return tiempoEntreTiendas;
         } catch (SQLException ex) {
@@ -135,8 +138,29 @@ public class TiempoEntreTiendasD implements TiempoEntreTiendasDAO {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(TiempoEntreTiendasD.class.getName()).log(Level.SEVERE, null, ex);
+           Logger.getLogger(TiempoEntreTiendasD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return 0;
+    }
+    @Override
+    public TiempoEntreTiendas getByIdAndDescripcion(String codigoTienda, String descripcion){
+        
+        
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(GET_BY_CODIGO_TIENDA_AND_DESCRIPCION);
+            stat.setString(1,codigoTienda);
+            stat.setString(2,descripcion);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                return (convertir(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -11,12 +11,14 @@ public class TiempoDeEnvio implements Serializable {
     private int idTiempoDeEnvio;
     private int tiempo;
     private boolean estado;
+    private String descripcion;
 
-    public TiempoDeEnvio(int idTiempoDeEnvio, int tiempo, boolean estado) {
+    public TiempoDeEnvio(int idTiempoDeEnvio, int tiempo, boolean estado, String descripcion) {
 
         this.idTiempoDeEnvio = idTiempoDeEnvio;
         this.tiempo = tiempo;
         this.estado = estado;
+        this.descripcion = descripcion;
     }
 
     public int getIdTiempoDeEnvio() {
@@ -42,5 +44,14 @@ public class TiempoDeEnvio implements Serializable {
     public void setEstado(boolean estado) {
         this.estado = estado;
     }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+    
 
 }

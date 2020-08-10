@@ -51,7 +51,7 @@ public class PersonaD implements PersonaDAO {
             stat.setString(2, object.getTelefono());
             stat.setString(3, object.getDireccion());
             stat.setBoolean(4, object.isEstado());
-            stat.setInt(5, object.getDpi());
+            stat.setString(5, object.getDpi());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Persona");
 
@@ -104,7 +104,7 @@ public class PersonaD implements PersonaDAO {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
-            stat.setInt(1, object.getDpi());
+            stat.setString(1, object.getDpi());
             if (stat.executeUpdate() == 0) {
 
             }
@@ -116,7 +116,7 @@ public class PersonaD implements PersonaDAO {
     public Persona convertir(ResultSet rs) {
 
         try {
-            Persona persona = new Persona(rs.getInt("dpi"), rs.getString("nombre"), rs.getString("telefono"), rs.getString("direccion"), rs.getBoolean("estado"));
+            Persona persona = new Persona(rs.getString("dpi"), rs.getString("nombre"), rs.getString("telefono"), rs.getString("direccion"), rs.getBoolean("estado"));
 
             return persona;
         } catch (SQLException ex) {

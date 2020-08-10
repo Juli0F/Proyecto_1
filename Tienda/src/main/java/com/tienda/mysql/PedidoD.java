@@ -14,8 +14,8 @@ import java.util.logging.Logger;
 public class PedidoD implements PedidoDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Pedido (fecha,entregado,retraso,destino,estado,TiempoDeEnvio_idTiempoDeEnvio,) VALUES (?,?,?,?,?,?)";
-    private final String UPDATE = "UPDATE Pedido set fecha = ?, set entregado = ?, set retraso = ?, set destino = ?, set estado = ?, set TiempoDeEnvio_idTiempoDeEnvio = ? WHERE codigo = ? ";
+    private final String INSERT = "INSERT INTO Pedido (fecha,entregado,retraso,destino,estado,TiempoDeEnvio_idTiempoDeEnvio,Cliente_nit,) VALUES (?,?,?,?,?,?,?)";
+    private final String UPDATE = "UPDATE Pedido set fecha = ?, set entregado = ?, set retraso = ?, set destino = ?, set estado = ?, set TiempoDeEnvio_idTiempoDeEnvio = ?, set Cliente_nit = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Pedido WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Pedido  ";
     private final String GETONE = GETALL + "WHERE codigo = ?";
@@ -35,6 +35,7 @@ public class PedidoD implements PedidoDAO {
             stat.setBoolean(4, object.isDestino());
             stat.setBoolean(5, object.isEstado());
             stat.setInt(6, object.getTiempoDeEnvio_idTiempoDeEnvio());
+            stat.setString(7, object.getCliente_nit());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Pedido");
 
@@ -55,7 +56,8 @@ public class PedidoD implements PedidoDAO {
             stat.setBoolean(4, object.isDestino());
             stat.setBoolean(5, object.isEstado());
             stat.setInt(6, object.getTiempoDeEnvio_idTiempoDeEnvio());
-            stat.setString(7, object.getCodigo());
+            stat.setString(7, object.getCliente_nit());
+            stat.setString(8, object.getCodigo());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Pedido");
 
@@ -85,13 +87,13 @@ public class PedidoD implements PedidoDAO {
     }
 
     @Override
-    public Pedido obtener(Integer id) {
+    public Pedido obtener(String id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
 
         try {
             stat = connection.prepareStatement(GETONE);
-            stat.setInt(1, id);
+            stat.setString(1, id);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));
@@ -120,7 +122,7 @@ public class PedidoD implements PedidoDAO {
     public Pedido convertir(ResultSet rs) {
 
         try {
-            Pedido pedido = new Pedido(rs.getString("codigo"), rs.getDate("fecha"), rs.getBoolean("entregado"), rs.getInt("retraso"), rs.getBoolean("destino"), rs.getBoolean("estado"), rs.getInt("TiempoDeEnvio_idTiempoDeEnvio"));
+            Pedido pedido = new Pedido(rs.getString("codigo"), rs.getDate("fecha"), rs.getBoolean("entregado"), rs.getInt("retraso"), rs.getBoolean("destino"), rs.getBoolean("estado"), rs.getInt("TiempoDeEnvio_idTiempoDeEnvio"), rs.getString("Cliente_nit"));
 
             return pedido;
         } catch (SQLException ex) {
@@ -130,7 +132,7 @@ public class PedidoD implements PedidoDAO {
     }
 
     @Override
-    public Integer lastInsertId() {
+    public String lastInsertId() {
         String ultimo = "SELECT last_insert_id()";
         PreparedStatement stat = null;
         ResultSet rs = null;
@@ -139,12 +141,12 @@ public class PedidoD implements PedidoDAO {
             stat = connection.prepareStatement(ultimo);
             rs = stat.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
+                return rs.getString(1);
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(PedidoD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+        return "";
     }
 }

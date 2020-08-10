@@ -1,6 +1,5 @@
 package com.tienda.dao;
 
-
 import com.tienda.entities.TiempoEntreTiendas;
 
 /**
@@ -9,5 +8,6 @@ import com.tienda.entities.TiempoEntreTiendas;
  */
 public interface TiempoEntreTiendasDAO extends DAO<TiempoEntreTiendas,Integer> {
 
+    public TiempoEntreTiendas getByIdAndDescripcion(String codigoTienda, String descripcion);
 
 }

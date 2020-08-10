@@ -11,9 +11,9 @@ public interface DAOManager{
    TiendaDAO getTiendaDAO();
   // DAOManager getDAOManager();
    FacturaDAO getFacturaDAO();
-   Stock_TiendaDAO getStock_TiendaDAO();
    TiempoEntreTiendasDAO getTiempoEntreTiendasDAO();
    TiempoDeEnvioDAO getTiempoDeEnvioDAO();
+   StockTiendaDAO getStockTiendaDAO();
    UsuarioDAO getUsuarioDAO();
    ClienteDAO getClienteDAO();
    DetallePedidoDAO getDetallePedidoDAO();

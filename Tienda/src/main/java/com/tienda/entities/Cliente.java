@@ -1,6 +1,7 @@
 package com.tienda.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  *
@@ -11,16 +12,16 @@ public class Cliente implements Serializable {
     private String nit;
     private String email;
     private boolean estado;
-    private String Pedido_codigo;
-    private int Persona_dpi;
+    private String Persona_dpi;
+    private BigDecimal credito;
 
-    public Cliente(String nit, String email, boolean estado, String Pedido_codigo, int Persona_dpi) {
+    public Cliente(String nit, String email, boolean estado, String Persona_dpi, BigDecimal credito) {
 
         this.nit = nit;
         this.email = email;
         this.estado = estado;
-        this.Pedido_codigo = Pedido_codigo;
         this.Persona_dpi = Persona_dpi;
+        this.credito = credito;
     }
 
     public String getNit() {
@@ -47,20 +48,21 @@ public class Cliente implements Serializable {
         this.estado = estado;
     }
 
-    public String getPedido_codigo() {
-        return this.Pedido_codigo;
-    }
-
-    public void setPedido_codigo(String Pedido_codigo) {
-        this.Pedido_codigo = Pedido_codigo;
-    }
-
-    public int getPersona_dpi() {
+    public String getPersona_dpi() {
         return this.Persona_dpi;
     }
 
-    public void setPersona_dpi(int Persona_dpi) {
+    public void setPersona_dpi(String Persona_dpi) {
         this.Persona_dpi = Persona_dpi;
     }
+
+    public BigDecimal getCredito() {
+        return credito;
+    }
+
+    public void setCredito(BigDecimal credito) {
+        this.credito = credito;
+    }
+    
 
 }

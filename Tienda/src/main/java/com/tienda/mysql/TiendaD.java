@@ -36,7 +36,7 @@ public class TiendaD implements TiendaDAO {
             stat.setString(5, object.getEmail());
             stat.setString(6, object.getHorario());
             stat.setBoolean(7, object.isEstado());
-            stat.setString(7, object.getCodigo());
+            stat.setString(8, object.getCodigo());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Tienda");
 
@@ -150,6 +150,4 @@ public class TiendaD implements TiendaDAO {
         }
         return "";
     }
-
-   
 }

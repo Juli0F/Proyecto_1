@@ -6,14 +6,21 @@
 package com.tienda.loaddata;
 
 //import administradores.SeparadorDeParametros;
+import com.google.protobuf.TextFormat.ParseException;
+import com.tienda.entities.Cliente;
+import com.tienda.entities.Pedido;
 import com.tienda.entities.Persona;
 import com.tienda.entities.Producto;
-import com.tienda.entities.Stock_Tienda;
+import com.tienda.entities.StockTienda;
 import com.tienda.entities.TiempoDeEnvio;
 import com.tienda.entities.TiempoEntreTiendas;
 import com.tienda.entities.Tienda;
+import com.tienda.entities.Usuario;
 import com.tienda.mysql.Manager;
 import java.math.BigDecimal;
+//import java.sql.Date;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -115,24 +122,36 @@ public class Interprete {
             Manager manager = new Manager();
             switch (i) {
                 case 1:
-                    System.out.println("empleado");
-                    Persona persona = new Persona(i, CLIENTE, TIEMPO, instruccion, true);
-                    //public Persona(int dpi, String nombre, String telefono, String direccion, boolean estado)
+                    System.out.println("Empleado");
+
+                    Persona tipoEmpleado = new Persona(datos[1], datos[0], datos[2], "", true);
+                    Usuario empleado = new Usuario(0, datos[0], datos[1], 2, true, datos[1]);
+
+                    manager.getPersonaDAO().insert(tipoEmpleado);
+                    manager.getUsuarioDAO().insert(empleado);
+
                     break;
                 case 2:
                     System.out.println("Cliente");
+                    if (verificarCantidad(datos, 4, cont)) {
+
+                        Persona tipoCliente = new Persona(datos[1], datos[0], datos[2], "", true);
+                        Cliente cliente = new Cliente(datos[1], "", true, datos[1], BigDecimal.valueOf(Double.valueOf(datos[3])));
+
+                        manager.getPersonaDAO().insert(tipoCliente);
+                        manager.getClienteDAO().insert(cliente);
+                    }
                     break;
                 case 3:
                     System.out.println("Producto");
                     if (verificarCantidad(datos, 6, cont)) {
-                        //public Producto(String codigo, String nombre, String fabricante, String Descripcion, int Garantia, boolean estado) {
 
                         Producto producto = new Producto(datos[2], datos[0], datos[1], "", 0, true);
 
-                        Stock_Tienda stock_Tienda = new Stock_Tienda(0, datos[5], datos[2], true, Integer.valueOf(datos[3]), BigDecimal.valueOf(Double.valueOf(datos[4])));
-                        
+                        StockTienda stock_Tienda = new StockTienda(0, datos[5], datos[2], true, Integer.valueOf(datos[3]), BigDecimal.valueOf(Double.valueOf(datos[4])));
+
                         manager.getProductoDAO().insert(producto);
-                        manager.getStock_TiendaDAO().insert(stock_Tienda);
+                        manager.getStockTiendaDAO().insert(stock_Tienda);
                     }
 
                     break;
@@ -145,13 +164,14 @@ public class Interprete {
                             tienda1 = manager.getTiendaDAO().obtener(datos[1]);
                             if (tienda1 != null) {
                                 //ublic TiempoDeEnvio(int idTiempoDeEnvio, String tiempo, boolean estado) {
-                                TiempoDeEnvio tiempoDeEnvio = new TiempoDeEnvio(1, Integer.valueOf(datos[datos.length - 1]), true);
+                                TiempoDeEnvio tiempoDeEnvio = new TiempoDeEnvio(1, Integer.valueOf(datos[datos.length - 1]), true, datos[1]);
                                 manager.getTiempoDeEnvioDAO().insert(tiempoDeEnvio);
                                 int idtiempo = manager.getTiempoDeEnvioDAO().lastInsertId();
 
-                                TiempoEntreTiendas entreTiendas = new TiempoEntreTiendas(0, idtiempo, datos[0]);
+                                TiempoEntreTiendas entreTiendas = new TiempoEntreTiendas(0, idtiempo, datos[0], "Origen");
                                 manager.getTiempoEntreTiendasDAO().insert(entreTiendas);
-                                entreTiendas = new TiempoEntreTiendas(0, idtiempo, datos[1]);
+
+                                entreTiendas = new TiempoEntreTiendas(0, idtiempo, datos[1], "Destino");
                                 manager.getTiempoEntreTiendasDAO().insert(entreTiendas);
 
                             } else {
@@ -165,6 +185,35 @@ public class Interprete {
                     break;
                 case 5:
                     System.out.println("Pedido");
+                    if (verificarCantidad(datos, 8, cont)) {
+                        //Pedido pedido = new Pedido(data[0], fecha, true, cont, true, true, cont, CLIENTE);
+                        Tienda tiendaPrueba = manager.getTiendaDAO().obtener(datos[1]);
+                        if (tiendaPrueba != null) {
+                            tiendaPrueba = manager.getTiendaDAO().obtener(datos[2]);
+                            if (tiendaPrueba != null) {
+
+                                if (manager.getClienteDAO().obtener(datos[5]) != null) {
+
+                                    if (manager.getPedidoDAO().obtener(datos[0]) != null) {
+                                        //el pedido ya existe
+
+                                    } else {
+                                        //crea el pedido
+                                        //(String codigo, java.sql.Date fecha,                boolean entregado retraso,destino,estado, TiempoDeEnvio_idTiempoDeEnvio, String Cliente_nit)
+                                        Pedido pedido = new Pedido(datos[0], java.sql.Date.valueOf(datos[3]), false, 0, false, true, cont, CLIENTE);
+                                    }
+                                } else {
+                                    System.out.println("Error: Linea " + cont + " -> Debe Crear Primero Al Cliente");
+                                }
+
+                            } else {
+                                System.out.println("Error: Linea " + cont + " -> Debe Crear Primero la Tienda");
+                            }
+                        } else {
+                            System.out.println("Error: Linea " + cont + " -> Debe Crear Primero la Tienda");
+                        }
+                    }
+
                     break;
                 case 6:
                     System.out.println("Tiendda: " + instruccion);
@@ -201,4 +250,5 @@ public class Interprete {
         //return datos.length==cantidad;
 
     }
+
 }

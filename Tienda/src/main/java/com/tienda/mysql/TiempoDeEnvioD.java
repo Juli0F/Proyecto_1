@@ -14,8 +14,8 @@ import java.util.logging.Logger;
 public class TiempoDeEnvioD implements TiempoDeEnvioDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO TiempoDeEnvio (tiempo,estado,) VALUES (?,?)";
-    private final String UPDATE = "UPDATE TiempoDeEnvio set tiempo = ?, set estado = ? WHERE idTiempoDeEnvio = ? ";
+    private final String INSERT = "INSERT INTO TiempoDeEnvio (tiempo,estado,descripcion) VALUES (?,?,?)";
+    private final String UPDATE = "UPDATE TiempoDeEnvio set tiempo = ?, set estado = ?, SET descripcion = ? WHERE idTiempoDeEnvio = ? ";
     private final String DELETE = "DELETE TiempoDeEnvio WHERE idTiempoDeEnvio = ? ";
     private final String GETALL = "SELECT * FROM  TiempoDeEnvio  ";
     private final String GETONE = GETALL + "WHERE idTiempoDeEnvio = ?";
@@ -31,6 +31,7 @@ public class TiempoDeEnvioD implements TiempoDeEnvioDAO {
             stat = connection.prepareStatement(INSERT);
             stat.setInt(1, object.getTiempo());
             stat.setBoolean(2, object.isEstado());
+            stat.setString(3, object.getDescripcion());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover TiempoDeEnvio");
 
@@ -47,7 +48,8 @@ public class TiempoDeEnvioD implements TiempoDeEnvioDAO {
             stat = connection.prepareStatement(UPDATE);
             stat.setInt(1, object.getTiempo());
             stat.setBoolean(2, object.isEstado());
-            stat.setInt(3, object.getIdTiempoDeEnvio());
+            stat.setString(3, object.getDescripcion());
+            stat.setInt(4, object.getIdTiempoDeEnvio());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover TiempoDeEnvio");
 
@@ -112,7 +114,7 @@ public class TiempoDeEnvioD implements TiempoDeEnvioDAO {
     public TiempoDeEnvio convertir(ResultSet rs) {
 
         try {
-            TiempoDeEnvio tiempoDeEnvio = new TiempoDeEnvio(rs.getInt("idTiempoDeEnvio"), rs.getInt("tiempo"), rs.getBoolean("estado"));
+            TiempoDeEnvio tiempoDeEnvio = new TiempoDeEnvio(rs.getInt("idTiempoDeEnvio"), rs.getInt("tiempo"), rs.getBoolean("estado"), rs.getString("descripcion"));
 
             return tiempoDeEnvio;
         } catch (SQLException ex) {

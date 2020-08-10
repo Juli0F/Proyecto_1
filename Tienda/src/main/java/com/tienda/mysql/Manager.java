@@ -1,18 +1,18 @@
 package com.tienda.mysql;
 
-import com.tienda.dao.ClienteDAO;
-import com.tienda.dao.DAOManager;
-import com.tienda.dao.DetalleFacturaDAO;
-import com.tienda.dao.DetallePedidoDAO;
-import com.tienda.dao.FacturaDAO;
-import com.tienda.dao.PedidoDAO;
 import com.tienda.dao.PersonaDAO;
 import com.tienda.dao.ProductoDAO;
-import com.tienda.dao.Stock_TiendaDAO;
-import com.tienda.dao.TiempoDeEnvioDAO;
-import com.tienda.dao.TiempoEntreTiendasDAO;
+import com.tienda.dao.DetalleFacturaDAO;
 import com.tienda.dao.TiendaDAO;
+import com.tienda.dao.DAOManager;
+import com.tienda.dao.FacturaDAO;
+import com.tienda.dao.TiempoEntreTiendasDAO;
+import com.tienda.dao.TiempoDeEnvioDAO;
+import com.tienda.dao.StockTiendaDAO;
 import com.tienda.dao.UsuarioDAO;
+import com.tienda.dao.ClienteDAO;
+import com.tienda.dao.DetallePedidoDAO;
+import com.tienda.dao.PedidoDAO;
 import java.sql.Connection;
 
 public class Manager implements DAOManager {
@@ -23,9 +23,9 @@ public class Manager implements DAOManager {
     private TiendaDAO tiendadao;
     private DAOManager daomanager;
     private FacturaDAO facturadao;
-    private Stock_TiendaDAO stock_tiendadao;
     private TiempoEntreTiendasDAO tiempoentretiendasdao;
     private TiempoDeEnvioDAO tiempodeenviodao;
+    private StockTiendaDAO stocktiendadao;
     private UsuarioDAO usuariodao;
     private ClienteDAO clientedao;
     private DetallePedidoDAO detallepedidodao;
@@ -85,14 +85,6 @@ public class Manager implements DAOManager {
     }
 
     @Override
-    public Stock_TiendaDAO getStock_TiendaDAO() {
-        if (stock_tiendadao == null) {
-            stock_tiendadao = new Stock_TiendaD(connection);
-        }
-        return stock_tiendadao;
-    }
-
-    @Override
     public TiempoEntreTiendasDAO getTiempoEntreTiendasDAO() {
         if (tiempoentretiendasdao == null) {
             tiempoentretiendasdao = new TiempoEntreTiendasD(connection);
@@ -106,6 +98,14 @@ public class Manager implements DAOManager {
             tiempodeenviodao = new TiempoDeEnvioD(connection);
         }
         return tiempodeenviodao;
+    }
+
+    @Override
+    public StockTiendaDAO getStockTiendaDAO() {
+        if (stocktiendadao == null) {
+            stocktiendadao = new StockTiendaD(connection);
+        }
+        return stocktiendadao;
     }
 
     @Override

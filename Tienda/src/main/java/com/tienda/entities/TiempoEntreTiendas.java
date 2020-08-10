@@ -9,14 +9,16 @@ import java.io.Serializable;
 public class TiempoEntreTiendas implements Serializable {
 
     private int idTiempoEntreTiendas;
-    private int tiempoDeEnvio_idTiempoDeEnvio;
-    private String tienda_codigo;
+    private int TiempoDeEnvio_idTiempoDeEnvio;
+    private String Tienda_codigo;
+    private String descripcion;
 
-    public TiempoEntreTiendas(int idTiempoEntreTiendas, int tiempoDeEnvio_idTiempoDeEnvio, String tienda_codigo) {
+    public TiempoEntreTiendas(int idTiempoEntreTiendas, int TiempoDeEnvio_idTiempoDeEnvio, String Tienda_codigo, String descripcion) {
 
         this.idTiempoEntreTiendas = idTiempoEntreTiendas;
-        this.tiempoDeEnvio_idTiempoDeEnvio = tiempoDeEnvio_idTiempoDeEnvio;
-        this.tienda_codigo = tienda_codigo;
+        this.TiempoDeEnvio_idTiempoDeEnvio = TiempoDeEnvio_idTiempoDeEnvio;
+        this.Tienda_codigo = Tienda_codigo;
+        this.descripcion = descripcion;
     }
 
     public int getIdTiempoEntreTiendas() {
@@ -28,19 +30,28 @@ public class TiempoEntreTiendas implements Serializable {
     }
 
     public int getTiempoDeEnvio_idTiempoDeEnvio() {
-        return this.tiempoDeEnvio_idTiempoDeEnvio;
+        return this.TiempoDeEnvio_idTiempoDeEnvio;
     }
 
-    public void setTiempoDeEnvio_idTiempoDeEnvio(int tiempoDeEnvio_idTiempoDeEnvio) {
-        this.tiempoDeEnvio_idTiempoDeEnvio = tiempoDeEnvio_idTiempoDeEnvio;
+    public void setTiempoDeEnvio_idTiempoDeEnvio(int TiempoDeEnvio_idTiempoDeEnvio) {
+        this.TiempoDeEnvio_idTiempoDeEnvio = TiempoDeEnvio_idTiempoDeEnvio;
     }
 
     public String getTienda_codigo() {
-        return this.tienda_codigo;
+        return this.Tienda_codigo;
     }
 
-    public void setTienda_codigo(String tienda_codigo) {
-        this.tienda_codigo = tienda_codigo;
+    public void setTienda_codigo(String Tienda_codigo) {
+        this.Tienda_codigo = Tienda_codigo;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    
 }

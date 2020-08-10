@@ -12,10 +12,10 @@ public class Usuario implements Serializable {
     private String usuario;
     private String password;
     private int tipo;
-    private String estado;
-    private int Persona_dpi;
+    private boolean estado;
+    private String Persona_dpi;
 
-    public Usuario(int idUsuario, String usuario, String password, int tipo, String estado, int Persona_dpi) {
+    public Usuario(int idUsuario, String usuario, String password, int tipo, boolean estado, String Persona_dpi) {
 
         this.idUsuario = idUsuario;
         this.usuario = usuario;
@@ -57,19 +57,19 @@ public class Usuario implements Serializable {
         this.tipo = tipo;
     }
 
-    public String getEstado() {
+    public boolean isEstado() {
         return this.estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(boolean estado) {
         this.estado = estado;
     }
 
-    public int getPersona_dpi() {
+    public String getPersona_dpi() {
         return this.Persona_dpi;
     }
 
-    public void setPersona_dpi(int Persona_dpi) {
+    public void setPersona_dpi(String Persona_dpi) {
         this.Persona_dpi = Persona_dpi;
     }
 
