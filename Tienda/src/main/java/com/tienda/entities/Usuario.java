@@ -14,8 +14,9 @@ public class Usuario implements Serializable {
     private int tipo;
     private boolean estado;
     private String Persona_dpi;
+    private String email;
 
-    public Usuario(int idUsuario, String usuario, String password, int tipo, boolean estado, String Persona_dpi) {
+    public Usuario(int idUsuario, String usuario, String password, int tipo, boolean estado, String Persona_dpi,String email) {
 
         this.idUsuario = idUsuario;
         this.usuario = usuario;
@@ -23,6 +24,7 @@ public class Usuario implements Serializable {
         this.tipo = tipo;
         this.estado = estado;
         this.Persona_dpi = Persona_dpi;
+        this.email = email;
     }
 
     public int getIdUsuario() {
@@ -73,4 +75,13 @@ public class Usuario implements Serializable {
         this.Persona_dpi = Persona_dpi;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    
 }

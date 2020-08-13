@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class PersonaD implements PersonaDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Persona (nombre,telefono,direccion,estado,) VALUES (?,?,?,?)";
+    private final String INSERT = "INSERT INTO Persona (nombre,telefono,direccion,estado,dpi) VALUES (?,?,?,?,?)";
     private final String UPDATE = "UPDATE Persona SET nombre = ?, telefono = ?, direccion = ?, estado = ? WHERE dpi = ? ";
     private final String DELETE = "DELETE Persona WHERE dpi = ? ";
     private final String GETALL = "SELECT * FROM  Persona  ";
@@ -33,6 +33,7 @@ public class PersonaD implements PersonaDAO {
             stat.setString(2, object.getTelefono());
             stat.setString(3, object.getDireccion());
             stat.setBoolean(4, object.isEstado());
+            stat.setString(5, object.getDpi());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Persona");
 
@@ -81,13 +82,13 @@ public class PersonaD implements PersonaDAO {
     }
 
     @Override
-    public Persona obtener(Integer id) {
+    public Persona obtener(String id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
 
         try {
             stat = connection.prepareStatement(GETONE);
-            stat.setInt(1, id);
+            stat.setString(1, id);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));
@@ -126,7 +127,7 @@ public class PersonaD implements PersonaDAO {
     }
 
     @Override
-    public Integer lastInsertId() {
+    public String lastInsertId() {
         String ultimo = "SELECT last_insert_id()";
         PreparedStatement stat = null;
         ResultSet rs = null;
@@ -135,12 +136,12 @@ public class PersonaD implements PersonaDAO {
             stat = connection.prepareStatement(ultimo);
             rs = stat.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
+                return rs.getString(1);
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(PersonaD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+        return "";
     }
 }

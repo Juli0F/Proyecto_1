@@ -14,11 +14,18 @@ import java.util.logging.Logger;
 public class ProductoD implements ProductoDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Producto (nombre,fabricante,Descripcion,Garantia,estado,) VALUES (?,?,?,?,?)";
+    private final String INSERT = "INSERT INTO Producto (nombre,fabricante,Descripcion,Garantia,estado , codigo) VALUES (?,?,?,?,?,?)";
     private final String UPDATE = "UPDATE Producto SET nombre = ?, fabricante = ?, Descripcion = ?, Garantia = ?, estado = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Producto WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Producto  ";
     private final String GETONE = GETALL + "WHERE codigo = ?";
+    private final String GETBYPARAMETER = GETALL + 
+            
+            "WHERE nombre LIKE ?"+
+            "OR fabricante LIKE ?"+
+            "OR Descripcion LIKE ?"+
+            "OR codigo LIKE ? ";
+            
 
     public ProductoD(Connection connection) {
         this.connection = connection;
@@ -34,6 +41,8 @@ public class ProductoD implements ProductoDAO {
             stat.setString(3, object.getDescripcion());
             stat.setInt(4, object.getGarantia());
             stat.setBoolean(5, object.isEstado());
+            stat.setString(6, object.getCodigo());
+            
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Producto");
 
@@ -83,13 +92,13 @@ public class ProductoD implements ProductoDAO {
     }
 
     @Override
-    public Producto obtener(Integer id) {
+    public Producto obtener(String id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
 
         try {
             stat = connection.prepareStatement(GETONE);
-            stat.setInt(1, id);
+            stat.setString(1, id);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));
@@ -128,7 +137,7 @@ public class ProductoD implements ProductoDAO {
     }
 
     @Override
-    public Integer lastInsertId() {
+    public String lastInsertId() {
         String ultimo = "SELECT last_insert_id()";
         PreparedStatement stat = null;
         ResultSet rs = null;
@@ -137,12 +146,36 @@ public class ProductoD implements ProductoDAO {
             stat = connection.prepareStatement(ultimo);
             rs = stat.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
+                return rs.getString(1);
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(ProductoD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+        return "";
     }
+
+    @Override
+    public List<Producto> getSearchWithLike(String parameterOfSearch) {
+       PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<Producto> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GETBYPARAMETER);
+            stat.setString(1, "%"+parameterOfSearch+"%");
+            stat.setString(2, "%"+parameterOfSearch+"%");
+            stat.setString(3, "%"+parameterOfSearch+"%");
+            stat.setString(4, "%"+parameterOfSearch+"%");
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertir(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    
 }

@@ -1,6 +1,8 @@
 package com.tienda.dao;
 
+import com.tienda.dto.ClienteDTO;
 import com.tienda.entities.Cliente;
+import java.util.List;
 
 /**
  *
@@ -8,5 +10,6 @@ import com.tienda.entities.Cliente;
  */
 public interface ClienteDAO extends DAO<Cliente,String> {
 
-
+    public List<ClienteDTO> getClienteForDto();
+    public List<ClienteDTO> getClienteForDtoWhitLike(String parameter);
 }

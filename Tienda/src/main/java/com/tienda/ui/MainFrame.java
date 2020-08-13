@@ -5,6 +5,9 @@
  */
 package com.tienda.ui;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 /**
  *
  * @author julio
@@ -15,12 +18,17 @@ public class MainFrame extends javax.swing.JFrame {
      * Creates new form DeskInit
      */
     public MainFrame() {
-     
-            
+
         initComponents();
-     
+
+        Toolkit t = Toolkit.getDefaultToolkit();
+        Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         
+        int h = (int) screenSize.getHeight()/2;
+        int w =(int) screenSize.getWidth()/2;
         
+        this.setSize(screenSize);
+
         //setSize(800,900);
     }
 
@@ -33,14 +41,14 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        desktopPane = new javax.swing.JDesktopPane();
+        dp = new javax.swing.JDesktopPane();
         menuBar = new javax.swing.JMenuBar();
-        ///com/tienda/recursos/prodcu640px.png"
         catalogo = new javax.swing.JMenu();
         ctgProducto = new javax.swing.JMenuItem();
         ctgClientes = new javax.swing.JMenuItem();
         ctgUsuario = new javax.swing.JMenuItem();
         exit = new javax.swing.JMenuItem();
+        tiendaCatalogo = new javax.swing.JMenuItem();
         transacciones = new javax.swing.JMenu();
         trsAsignacion = new javax.swing.JMenuItem();
         trsConciliacion = new javax.swing.JMenuItem();
@@ -66,8 +74,11 @@ public class MainFrame extends javax.swing.JFrame {
         setTitle("SistemControl");
         setSize(new java.awt.Dimension(600, 500));
 
-        ///home/julio/Escritorio/Proyecto 1/Proyecto_1/Tienda/src/main/java/com/tienda/recursos/clientes32.png
-        catalogo.setIcon(new javax.swing.ImageIcon(getClass().getResource(".../java/com/tienda/recursos/prodcu640px.png")));
+        menuBar.setBackground(new java.awt.Color(0, 153, 153));
+        menuBar.setForeground(new java.awt.Color(0, 153, 153));
+
+        catalogo.setBackground(new java.awt.Color(0, 153, 153));
+        catalogo.setForeground(new java.awt.Color(0, 153, 153));
         catalogo.setMnemonic('f');
         catalogo.setText("Catalago");
 
@@ -83,6 +94,11 @@ public class MainFrame extends javax.swing.JFrame {
 
         ctgClientes.setMnemonic('s');
         ctgClientes.setText("Clientes");
+        ctgClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ctgClientesActionPerformed(evt);
+            }
+        });
         catalogo.add(ctgClientes);
 
         ctgUsuario.setMnemonic('x');
@@ -95,7 +111,7 @@ public class MainFrame extends javax.swing.JFrame {
         catalogo.add(ctgUsuario);
 
         exit.setMnemonic('x');
-        exit.setText("Exit");
+        exit.setText("Tiempo Entre Tiendas");
         exit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exitActionPerformed(evt);
@@ -103,8 +119,19 @@ public class MainFrame extends javax.swing.JFrame {
         });
         catalogo.add(exit);
 
+        tiendaCatalogo.setMnemonic('x');
+        tiendaCatalogo.setText("Tiendas");
+        tiendaCatalogo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tiendaCatalogoActionPerformed(evt);
+            }
+        });
+        catalogo.add(tiendaCatalogo);
+
         menuBar.add(catalogo);
 
+        transacciones.setBackground(new java.awt.Color(0, 153, 153));
+        transacciones.setForeground(new java.awt.Color(0, 153, 153));
         transacciones.setMnemonic('e');
         transacciones.setText("Transacciones");
 
@@ -143,6 +170,8 @@ public class MainFrame extends javax.swing.JFrame {
 
         menuBar.add(transacciones);
 
+        administracion.setBackground(new java.awt.Color(0, 153, 153));
+        administracion.setForeground(new java.awt.Color(0, 153, 153));
         administracion.setMnemonic('h');
         administracion.setText("Administracion");
 
@@ -168,6 +197,8 @@ public class MainFrame extends javax.swing.JFrame {
 
         menuBar.add(administracion);
 
+        configuracion.setBackground(new java.awt.Color(0, 153, 153));
+        configuracion.setForeground(new java.awt.Color(0, 153, 153));
         configuracion.setMnemonic('e');
         configuracion.setText("Configuracion");
 
@@ -180,7 +211,12 @@ public class MainFrame extends javax.swing.JFrame {
         configuracion.add(confAdminUsuario);
 
         confConfDDocumentos.setMnemonic('p');
-        confConfDDocumentos.setText("Configuracion de Documentos");
+        confConfDDocumentos.setText("Cargar Archivo");
+        confConfDDocumentos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confConfDDocumentosActionPerformed(evt);
+            }
+        });
         configuracion.add(confConfDDocumentos);
 
         confAcercaDe.setMnemonic('d');
@@ -199,11 +235,11 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1002, Short.MAX_VALUE)
+            .addComponent(dp, javax.swing.GroupLayout.DEFAULT_SIZE, 1002, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
+            .addComponent(dp, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
         );
 
         pack();
@@ -211,6 +247,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void ctgUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctgUsuarioActionPerformed
         // TODO add your handling code here:
+        addPanel(new EmpleadoUI());
     }//GEN-LAST:event_ctgUsuarioActionPerformed
 
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
@@ -223,8 +260,37 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void ctgProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctgProductoActionPerformed
         System.out.println("Prodcuto Catalogo");
+        addPanel(new ProductoUI());
+
     }//GEN-LAST:event_ctgProductoActionPerformed
 
+    private void confConfDDocumentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confConfDDocumentosActionPerformed
+        // TODO add your handling code here:
+        
+        
+        addPanel(new CargarArchivoUI());
+
+       
+    }//GEN-LAST:event_confConfDDocumentosActionPerformed
+
+    private void tiendaCatalogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tiendaCatalogoActionPerformed
+        // TODO add your handling code here:
+        addPanel(new TiendaUI());
+    }//GEN-LAST:event_tiendaCatalogoActionPerformed
+
+    private void ctgClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctgClientesActionPerformed
+        // TODO add your handling code here:
+        addPanel(new ClienteUI());
+    }//GEN-LAST:event_ctgClientesActionPerformed
+
+    private void addPanel(javax.swing.JPanel panel){
+        dp.removeAll();
+        
+        panel.setSize(dp.getWidth()/(3/2),dp.getHeight()/(3/2));
+        panel.setVisible(true);
+        dp.add(panel);
+
+    }
     /**
      * @param args the command line arguments
      */
@@ -280,9 +346,10 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem ctgClientes;
     private javax.swing.JMenuItem ctgProducto;
     private javax.swing.JMenuItem ctgUsuario;
-    private javax.swing.JDesktopPane desktopPane;
+    private javax.swing.JDesktopPane dp;
     private javax.swing.JMenuItem exit;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem tiendaCatalogo;
     private javax.swing.JMenu transacciones;
     private javax.swing.JMenuItem trsAsignacion;
     private javax.swing.JMenuItem trsCompras;

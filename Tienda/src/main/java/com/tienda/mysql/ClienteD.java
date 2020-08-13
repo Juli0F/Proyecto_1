@@ -1,7 +1,9 @@
 package com.tienda.mysql;
 
 import com.tienda.dao.ClienteDAO;
+import com.tienda.dto.ClienteDTO;
 import com.tienda.entities.Cliente;
+import com.tienda.entities.Tienda;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,6 +21,16 @@ public class ClienteD implements ClienteDAO {
     private final String DELETE = "DELETE Cliente WHERE nit = ? ";
     private final String GETALL = "SELECT * FROM  Cliente  ";
     private final String GETONE = GETALL + "WHERE nit = ?";
+    private final String GETCLIENTEC = "Select p.dpi,c.nit,p.nombre,p.telefono,p.direccion,c.email,c.credito from Persona p inner join Cliente c on p.dpi = c.Persona_dpi";
+    private final String GETSEARCH = "Select p.dpi,c.nit,p.nombre,p.telefono,p.direccion,c.email,c.credito from Persona p inner join Cliente c on p.dpi = c.Persona_dpi "
+            + "WHERE p.dpi LIKE ?"+
+            " OR nombre LIKE ?"
+            + " OR telefono LIKE ?"
+            + " OR direccion LIKE ?"
+            + " OR credito LIKE ?"
+            + " OR email LIKE ? "
+            + " OR nit LIKE  ?"
+            ;
 
     public ClienteD(Connection connection) {
         this.connection = connection;
@@ -143,4 +155,65 @@ public class ClienteD implements ClienteDAO {
         }
         return "";
     }
+
+    @Override
+    public List<ClienteDTO> getClienteForDto() {
+       
+         PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<ClienteDTO> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GETCLIENTEC);
+            
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(clienteDtoConvert(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+     private ClienteDTO clienteDtoConvert(ResultSet rs){
+            try {
+            ClienteDTO cliente = new ClienteDTO(rs.getString("dpi"), rs.getString("nit"), rs.getString("nombre"), rs.getString("telefono"), rs.getString("direccion"), rs.getString("email"),rs.getBigDecimal("credito"));
+
+            return cliente;
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+     }
+
+    @Override
+    public List<ClienteDTO> getClienteForDtoWhitLike(String parameterOfSearch) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        List<ClienteDTO> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GETSEARCH);
+           stat.setString(1, "%"+parameterOfSearch+"%");
+            stat.setString(2, "%"+parameterOfSearch+"%");
+            stat.setString(3, "%"+parameterOfSearch+"%");
+            stat.setString(4, "%"+parameterOfSearch+"%");
+            stat.setString(5, "%"+parameterOfSearch+"%");
+            stat.setString(6, "%"+parameterOfSearch+"%");
+            stat.setString(7, "%"+parameterOfSearch+"%");
+            
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(clienteDtoConvert(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+     
+    }
+    
 }

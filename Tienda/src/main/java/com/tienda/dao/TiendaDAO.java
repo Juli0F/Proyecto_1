@@ -1,6 +1,7 @@
 package com.tienda.dao;
 
 import com.tienda.entities.Tienda;
+import java.util.List;
 
 /**
  *
@@ -8,5 +9,7 @@ import com.tienda.entities.Tienda;
  */
 public interface TiendaDAO extends DAO<Tienda,String> {
 
+    
+    public List<Tienda> getSearchWithLike(String parameterOfSearch);
 
 }

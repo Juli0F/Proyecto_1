@@ -14,11 +14,20 @@ import java.util.logging.Logger;
 public class TiendaD implements TiendaDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Tienda (nombre,direccion,telefono,telefono2,email,horario,estado,codigo) VALUES (?,?,?,?,?,?,?,?)";
+    private final String INSERT = "INSERT INTO Tienda (nombre , direccion, telefono, telefono2, email, horario, estado, codigo) VALUES (?,?,?,?,?,?,?,?)";
     private final String UPDATE = "UPDATE Tienda SET nombre = ?,  direccion = ?, telefono = ?, telefono2 = ?, email = ?, horario = ?, estado = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Tienda WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Tienda  ";
     private final String GETONE = GETALL + "WHERE codigo = ?";
+    private final String GETALLSEARCHWITH = GETALL +" WHERE "
+            + " nombre LIKE ? "
+            + "OR direccion LIKE ?"
+            + " OR telefono LIKE ? "
+            + "OR telefono LIKE ?"
+            + " OR telefono2 LIKE ?"
+            + " OR email LIKE ? OR"
+            + " codigo LIKE ?";
+    
 
     public TiendaD(Connection connection) {
         this.connection = connection;
@@ -74,7 +83,7 @@ public class TiendaD implements TiendaDAO {
         ResultSet rs = null;
         List<Tienda> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL);
+            stat = connection.prepareStatement(GETALL+" WHERE estado = 1");
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertir(rs));
@@ -150,4 +159,34 @@ public class TiendaD implements TiendaDAO {
         }
         return "";
     }
+
+    @Override
+    public List<Tienda> getSearchWithLike(String parameterOfSearch) {
+       PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        List<Tienda> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GETALLSEARCHWITH);
+           stat.setString(1, "%"+parameterOfSearch+"%");
+            stat.setString(2, "%"+parameterOfSearch+"%");
+            stat.setString(3, "%"+parameterOfSearch+"%");
+            stat.setString(4, "%"+parameterOfSearch+"%");
+            stat.setString(5, "%"+parameterOfSearch+"%");
+            stat.setString(6, "%"+parameterOfSearch+"%");
+            stat.setString(7, "%"+parameterOfSearch+"%");
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertir(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+     
+    }
+    
+    
 }

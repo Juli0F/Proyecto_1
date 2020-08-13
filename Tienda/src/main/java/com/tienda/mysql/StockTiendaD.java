@@ -19,6 +19,7 @@ public class StockTiendaD implements StockTiendaDAO {
     private final String DELETE = "DELETE StockTienda WHERE idStockTienda = ? ";
     private final String GETALL = "SELECT * FROM  StockTienda  ";
     private final String GETONE = GETALL + "WHERE idStockTienda = ?";
+    private final String GETSTOCKBYIDTIENDAANDPRODUCTO = GETALL + "WHERE Tienda_codigo = ? AND  Producto_codigo = ?";
     
 
     public StockTiendaD(Connection connection) {
@@ -34,7 +35,7 @@ public class StockTiendaD implements StockTiendaDAO {
             stat.setString(2, object.getProducto_codigo());
             stat.setBoolean(3, object.isEstado());
             stat.setInt(4, object.getCantidad());
-            stat.setBigDecimal(4, object.getPrecio());
+            stat.setBigDecimal(5, object.getPrecio());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover StockTienda");
 
@@ -147,14 +148,15 @@ public class StockTiendaD implements StockTiendaDAO {
     }
 
     @Override
-    public StockTienda existencia(String codigoTienda, String codigoProducot) {
+    public StockTienda existencia(String codigoTienda, String codigoProducto) {
      
         PreparedStatement stat = null;
         ResultSet rs = null;
 
         try {
-            stat = connection.prepareStatement(GETONE);
-            //stat.setInt(1, id);
+            stat = connection.prepareStatement(GETSTOCKBYIDTIENDAANDPRODUCTO);
+            stat.setString(1, codigoTienda);
+            stat.setString(2, codigoProducto);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));

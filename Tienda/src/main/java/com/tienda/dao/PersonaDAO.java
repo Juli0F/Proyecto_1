@@ -6,7 +6,7 @@ import com.tienda.entities.Persona;
  *
  * @author Julio
  */
-public interface PersonaDAO extends DAO<Persona,Integer> {
+public interface PersonaDAO extends DAO<Persona,String> {
 
 
 }
