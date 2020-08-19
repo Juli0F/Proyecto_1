@@ -14,8 +14,8 @@ import java.util.logging.Logger;
 public class FacturaD implements FacturaDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Factura (descripcion,estado,Usuario_idUsuario,Tienda_codigo,) VALUES (?,?,?,?)";
-    private final String UPDATE = "UPDATE Factura SET descripcion = ?, estado = ?, Usuario_idUsuario = ?, Tienda_codigo = ? WHERE idFactura = ? ";
+    private final String INSERT = "INSERT INTO Factura (descripcion,estado,Usuario_idUsuario,Tienda_codigo,nit) VALUES (?,?,?,?,?)";
+    private final String UPDATE = "UPDATE Factura SET descripcion = ?, estado = ?, Usuario_idUsuario = ?, Tienda_codigo = ?, nit = ? WHERE idFactura = ? ";
     private final String DELETE = "DELETE Factura WHERE idFactura = ? ";
     private final String GETALL = "SELECT * FROM  Factura  ";
     private final String GETONE = GETALL + "WHERE idFactura = ?";
@@ -33,6 +33,7 @@ public class FacturaD implements FacturaDAO {
             stat.setBoolean(2, object.isEstado());
             stat.setInt(3, object.getUsuario_idUsuario());
             stat.setString(4, object.getTienda_codigo());
+            stat.setString(5, object.getNit());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Factura");
 
@@ -51,7 +52,8 @@ public class FacturaD implements FacturaDAO {
             stat.setBoolean(2, object.isEstado());
             stat.setInt(3, object.getUsuario_idUsuario());
             stat.setString(4, object.getTienda_codigo());
-            stat.setInt(5, object.getIdFactura());
+            stat.setString(5, object.getNit());
+            stat.setInt(6, object.getIdFactura());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Factura");
 
@@ -116,7 +118,7 @@ public class FacturaD implements FacturaDAO {
     public Factura convertir(ResultSet rs) {
 
         try {
-            Factura factura = new Factura(rs.getInt("idFactura"), rs.getString("descripcion"), rs.getBoolean("estado"), rs.getInt("Usuario_idUsuario"), rs.getString("Tienda_codigo"));
+            Factura factura = new Factura(rs.getInt("idFactura"), rs.getString("descripcion"), rs.getBoolean("estado"), rs.getInt("Usuario_idUsuario"), rs.getString("Tienda_codigo"),rs.getString("nit"));
 
             return factura;
         } catch (SQLException ex) {

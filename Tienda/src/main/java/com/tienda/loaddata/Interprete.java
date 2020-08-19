@@ -6,10 +6,9 @@
 package com.tienda.loaddata;
 
 //import administradores.SeparadorDeParametros;
-import com.google.protobuf.TextFormat.ParseException;
 import com.tienda.entities.Cliente;
-import com.tienda.entities.DetalleFactura;
 import com.tienda.entities.DetallePedido;
+import com.tienda.entities.Empleado;
 import com.tienda.entities.Pedido;
 import com.tienda.entities.Persona;
 import com.tienda.entities.Producto;
@@ -17,13 +16,9 @@ import com.tienda.entities.StockTienda;
 import com.tienda.entities.TiempoDeEnvio;
 import com.tienda.entities.TiempoEntreTiendas;
 import com.tienda.entities.Tienda;
-import com.tienda.entities.Usuario;
 import com.tienda.mysql.Manager;
-import java.awt.Color;
 import java.math.BigDecimal;
 //import java.sql.Date;
-import java.util.Date;
-import java.text.SimpleDateFormat;
 import javax.swing.JTextArea;
 
 /**
@@ -140,14 +135,14 @@ public class Interprete {
                     if (verificarCantidad(datos, 5, cont, error)) {
 
                         System.out.println("Empleado");
-                        if (manager.getPersonaDAO().obtener(datos[4]) == null && manager.getUsuarioDAO().getByCodeUsr(datos[2]) == null) {
+                        if (manager.getPersonaDAO().obtener(datos[4]) == null && manager.getEmpleadoDAO().getByCodeUsr(datos[2]) == null) {
 
                             //public Persona (String dpi, String nombre, String telefono, String direccion, boolean estado ){
                             Persona tipoEmpleado = new Persona(datos[4], datos[1], datos[3], "", true);
                             manager.getPersonaDAO().insert(tipoEmpleado);
                             //public Usuario(int idUsuario, String usuario, String password, int tipo, boolean estado, String Persona_dpi) {
-                            Usuario empleado = new Usuario(0, datos[2], datos[4], 2, true, datos[4],"");
-                            manager.getUsuarioDAO().insert(empleado);
+                            Empleado empleado = new Empleado(0, datos[2], datos[4], 2, true, datos[4],"");
+                            manager.getEmpleadoDAO().insert(empleado);
                             imprimirJTextArea(correcto, cont,  instruccion, "Correcto");
 
                         } else {

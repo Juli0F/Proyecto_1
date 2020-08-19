@@ -1,6 +1,7 @@
 package com.tienda.mysql;
 
 import com.tienda.dao.TiendaDAO;
+import com.tienda.dto.TiendaTiempo;
 import com.tienda.entities.Tienda;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,6 +21,7 @@ public class TiendaD implements TiendaDAO {
     private final String GETALL = "SELECT * FROM  Tienda  ";
     private final String GETONE = GETALL + "WHERE codigo = ?";
     private final String GETALLSEARCHWITH = GETALL +" WHERE "
+    
             + " nombre LIKE ? "
             + "OR direccion LIKE ?"
             + " OR telefono LIKE ? "
@@ -27,8 +29,10 @@ public class TiendaD implements TiendaDAO {
             + " OR telefono2 LIKE ?"
             + " OR email LIKE ? OR"
             + " codigo LIKE ?";
+    private final String GETTIEMPOTIENDATET = "select tet.Tienda_codigo as codigo,ts.nombre, te.tiempo from TiempoEntreTiendas tet inner join Tienda ts on tet.Tienda_codigo = ts.codigo inner join TiempoDeEnvio te on te.idTiempoDeEnvio = tet.TiempoDeEnvio_idTiempoDeEnvio WHERE ts.estado = 1 and ts.codigo = ?";
+    private final String GETTIEMPOTIENDATETUSELIKE = "select tet.Tienda_codigo as codigo,ts.nombre, te.tiempo from TiempoEntreTiendas tet inner join Tienda ts on tet.Tienda_codigo = ts.codigo inner join TiempoDeEnvio te on te.idTiempoDeEnvio = tet.TiempoDeEnvio_idTiempoDeEnvio WHERE ts.estado = 1 and ts.codigo LIKE ?";
+    private final String GETALLTIENDASUSELIKE = GETALL + " WHERE estado = 1 AND ( codigo LIKE ? OR nombre LIKE ? )";
     
-
     public TiendaD(Connection connection) {
         this.connection = connection;
     }
@@ -186,6 +190,110 @@ public class TiendaD implements TiendaDAO {
 
         return null;
      
+    }
+
+    @Override
+    public List<TiendaTiempo> getTiempoTiendaTET(String codigoTiendaOrigen) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<TiendaTiempo> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GETTIEMPOTIENDATET);
+            stat.setString(1, codigoTiendaOrigen);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertTiendaTiempo(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<TiendaTiempo> getTiempoTiendaTET() {
+         PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<TiendaTiempo> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GETALL+" WHERE estado = 1");
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertTiendaTiempoSin(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    private TiendaTiempo convertTiendaTiempoSin(ResultSet rs){
+        
+        try {
+            TiendaTiempo tienda = new TiendaTiempo(rs.getString("codigo"), rs.getString("nombre"), 0);
+
+            return tienda;
+        } catch (SQLException ex) {
+            Logger.getLogger(TiendaD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+        
+    }
+    private TiendaTiempo convertTiendaTiempo(ResultSet rs){
+        
+        try {
+            TiendaTiempo tienda = new TiendaTiempo(rs.getString("codigo"), rs.getString("nombre"), rs.getInt("tiempo"));
+
+            return tienda;
+        } catch (SQLException ex) {
+            Logger.getLogger(TiendaD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+        
+    }
+
+    @Override
+    public List<TiendaTiempo> getTiempoTiendaTETUseLike(String codigoTiendaOrigen) {
+       PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<TiendaTiempo> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GETALL +" WHERE codigo LIKE ? AND estado = 1");
+            stat.setString(1, "%"+codigoTiendaOrigen+"%");
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertTiendaTiempoSin(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<Tienda> getAllTiendaLike(String parameter) {
+          PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<Tienda> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GETALLTIENDASUSELIKE);
+            stat.setString(1, "%"+parameter+"%");
+            stat.setString(2, "%"+parameter+"%");
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertir(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
     
     

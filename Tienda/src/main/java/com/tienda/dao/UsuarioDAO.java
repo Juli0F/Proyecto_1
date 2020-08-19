@@ -1,7 +1,7 @@
 package com.tienda.dao;
 
 
-import com.tienda.dto.UsuarioDTO;
+import com.tienda.dto.EmpleadoDTO;
 import com.tienda.entities.Usuario;
 import java.util.List;
 
@@ -11,8 +11,7 @@ import java.util.List;
  */
 public interface UsuarioDAO extends DAO<Usuario,Integer> {
 
-    public Usuario getByCodeUsr(String codigoUsuario);
-    public List<UsuarioDTO> getByUsuarioDTO();
+    public Usuario getUsuarioByUsrAndPassword(String usuario, String password);
     
 
 }

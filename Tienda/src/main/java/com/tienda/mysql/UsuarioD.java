@@ -1,7 +1,7 @@
 package com.tienda.mysql;
 
 import com.tienda.dao.UsuarioDAO;
-import com.tienda.dto.UsuarioDTO;
+import com.tienda.dto.EmpleadoDTO;
 import com.tienda.entities.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,9 +20,8 @@ public class UsuarioD implements UsuarioDAO {
     private final String DELETE = "DELETE Usuario WHERE idUsuario = ? ";
     private final String GETALL = "SELECT * FROM  Usuario  ";
     private final String GETONE = GETALL + "WHERE idUsuario = ?";
-    private final String GETBYCODEUSR = GETALL + "WHERE usuario = ?";
-    private final String GETBYALLUSRANDPERSON = "Select p.dpi,c.password,p.nombre,p.telefono,p.direccion,c.email,c.usuario, c.tipo from Persona p inner join Usuario c on p.dpi = c.Persona_dpi where c.tipo = 2";
-
+    private final String GETUSRPASSWORD = GETALL + " AS U WHERE U.usuario = ? AND U.password = ? ";
+    
     public UsuarioD(Connection connection) {
         this.connection = connection;
     }
@@ -74,7 +73,7 @@ public class UsuarioD implements UsuarioDAO {
         ResultSet rs = null;
         List<Usuario> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL + "WHERE estado = 0");
+            stat = connection.prepareStatement(GETALL + "WHERE estado = 1");
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertir(rs));
@@ -152,13 +151,14 @@ public class UsuarioD implements UsuarioDAO {
     }
 
     @Override
-    public Usuario getByCodeUsr(String codigoUsuario) {
-        PreparedStatement stat = null;
+    public Usuario getUsuarioByUsrAndPassword(String usuario, String password) {
+         PreparedStatement stat = null;
         ResultSet rs = null;
 
         try {
-            stat = connection.prepareStatement(GETBYCODEUSR);
-            stat.setString(1, codigoUsuario);
+            stat = connection.prepareStatement(GETUSRPASSWORD);
+            stat.setString(1, usuario);
+            stat.setString(2, password);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));
@@ -170,35 +170,5 @@ public class UsuarioD implements UsuarioDAO {
         return null;
     }
 
-    @Override
-    public List<UsuarioDTO> getByUsuarioDTO() {
-         PreparedStatement stat = null;
-        ResultSet rs = null;
-        List<UsuarioDTO> lst = new ArrayList<>();
-        try {
-            stat = connection.prepareStatement(GETBYALLUSRANDPERSON);
-            rs = stat.executeQuery();
-            while (rs.next()) {
-                lst.add(convertUsuarioDTO(rs));
-            }
-            return lst;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-    public UsuarioDTO convertUsuarioDTO(ResultSet rs){
-          try {
-              //String dpi, String nit, String nombre, String telefono, String direccion, String email, String codigoUsuario, int tipo) {
-            UsuarioDTO usuario = new UsuarioDTO (rs.getString("dpi"), rs.getString("password"), rs.getString("nombre"), rs.getString("telefono"), rs.getString("direccion"), rs.getString("email"), rs.getString("usuario"),rs.getInt("tipo"));
-
-            return usuario;
-        } catch (SQLException ex) {
-            Logger.getLogger(UsuarioD.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-        
-    }
-    
+ 
 }

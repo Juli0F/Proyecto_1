@@ -21,7 +21,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.tienda.prueba.prueba</mainClass>
+                            <mainClass>com.tienda.ui.Log</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

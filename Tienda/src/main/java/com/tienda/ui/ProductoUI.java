@@ -32,6 +32,7 @@ public class ProductoUI extends javax.swing.JPanel {
         buscar = "";
         evento();
         accionTable();
+        actionBuscarTxt();
     }
 
     /**
@@ -366,7 +367,15 @@ public class ProductoUI extends javax.swing.JPanel {
         // TODO add your handling code here:
         fillTable(manager.getProductoDAO().getSearchWithLike(txtSearch.getText()));
     }//GEN-LAST:event_btBuscarActionPerformed
+ private void actionBuscarTxt() {
+        txtSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                fillTable(manager.getProductoDAO().getSearchWithLike(txtSearch.getText()));
+            }
 
+        });
+    }
     private void accionTable() {
         tableView.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override

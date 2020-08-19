@@ -5,10 +5,12 @@
  */
 package com.tienda.ui;
 
-import com.tienda.dto.UsuarioDTO;
+import com.tienda.dto.EmpleadoDTO;
 import com.tienda.entities.Persona;
 import com.tienda.entities.Usuario;
 import com.tienda.mysql.Manager;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -31,6 +33,7 @@ public class EmpleadoUI extends javax.swing.JPanel {
         lblFieldTelefono.setVisible(false);
         modificar = false;
         accionTable();
+        actionBuscarTxt();
     }
 
     /**
@@ -360,7 +363,7 @@ public class EmpleadoUI extends javax.swing.JPanel {
         // TODO add your handling code here:
         
 
-        fillTable(manager.getUsuarioDAO().getByUsuarioDTO());
+        fillTable(manager.getEmpleadoDAO().getByUsuarioDTO());
 
 
     }//GEN-LAST:event_btnVerTodoActionPerformed
@@ -372,7 +375,7 @@ public class EmpleadoUI extends javax.swing.JPanel {
 
     }//GEN-LAST:event_txtSearchActionPerformed
 
-    public void fillTable(List<UsuarioDTO> listadoEmpleados) {
+    public void fillTable(List<EmpleadoDTO> listadoEmpleados) {
         DefaultTableModel tableModel = (DefaultTableModel) tableView.getModel();
         tableModel.setNumRows(0);
 
@@ -411,9 +414,18 @@ public class EmpleadoUI extends javax.swing.JPanel {
     private void btBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarActionPerformed
         // TODO add your handling code here:
 
-         fillTable(manager.getUsuarioDAO().getByUsuarioDTO());
+         fillTable(manager.getEmpleadoDAO().getByUsuarioDTO());
     }//GEN-LAST:event_btBuscarActionPerformed
+    
+     private void actionBuscarTxt() {
+        txtSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                 fillTable(manager.getEmpleadoDAO().getByUsuarioDTO());
+            }
 
+        });
+    }
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         // TODO add your handling code here:
         txtDpi.setEditable(true);
@@ -450,7 +462,7 @@ public class EmpleadoUI extends javax.swing.JPanel {
     }
 
     private boolean checkDpiNit() {
-        return manager.getPersonaDAO().obtener(txtDpi.getText()) == null && manager.getUsuarioDAO().getByCodeUsr(txtCodigoUsuario.getText()) == null ;
+        return manager.getPersonaDAO().obtener(txtDpi.getText()) == null && manager.getEmpleadoDAO().getByCodeUsr(txtCodigoUsuario.getText()) == null ;
     }
 
     private boolean checkField() {

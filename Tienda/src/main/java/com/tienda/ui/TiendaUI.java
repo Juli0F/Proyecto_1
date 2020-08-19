@@ -7,6 +7,8 @@ package com.tienda.ui;
 
 import com.tienda.entities.Tienda;
 import com.tienda.mysql.Manager;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -28,6 +30,7 @@ public class TiendaUI extends javax.swing.JPanel {
         lblFieldNombre.setVisible(false);
         lblFieldTelefono.setVisible(false);
         accionTable();
+        actionBuscarTxt();
     }
 
     /**
@@ -358,14 +361,14 @@ public class TiendaUI extends javax.swing.JPanel {
         Manager manager = new Manager();
 
         fillTable(manager.getTiendaDAO().obtenerTodo());
-       
+
 
     }//GEN-LAST:event_btnVerTodoActionPerformed
 
     private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
         // TODO add your handling code here:
         fillTable(manager.getTiendaDAO().getSearchWithLike(txtSearch.getText()));
-        
+
     }//GEN-LAST:event_txtSearchActionPerformed
 
     public void fillTable(List<Tienda> listadoTienda) {
@@ -384,7 +387,7 @@ public class TiendaUI extends javax.swing.JPanel {
         });
 
         tableView.setModel(tableModel);
-        
+
     }
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
@@ -403,10 +406,19 @@ public class TiendaUI extends javax.swing.JPanel {
 
     }//GEN-LAST:event_txtTelefono2ActionPerformed
 
-    private void btBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarActionPerformed
-            // TODO add your handling code here:
-            
+    private void actionBuscarTxt() {
+        txtSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
                 fillTable(manager.getTiendaDAO().getSearchWithLike(txtSearch.getText()));
+            }
+
+        });
+    }
+    private void btBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarActionPerformed
+        // TODO add your handling code here:
+
+        fillTable(manager.getTiendaDAO().getSearchWithLike(txtSearch.getText()));
     }//GEN-LAST:event_btBuscarActionPerformed
 
     private void accionTable() {

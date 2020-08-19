@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  *
  * @author julio
  */
-public class UsuarioDTO {
+public class EmpleadoDTO {
  
     private String dpi;
     private String nit;
@@ -22,7 +22,7 @@ public class UsuarioDTO {
     private String codigoUsuario;
     private int tipo;
 
-    public UsuarioDTO(String dpi, String nit, String nombre, String telefono, String direccion, String email, String codigoUsuario, int tipo) {
+    public EmpleadoDTO(String dpi, String nit, String nombre, String telefono, String direccion, String email, String codigoUsuario, int tipo) {
         this.dpi = dpi;
         this.nit = nit;
         this.nombre = nombre;

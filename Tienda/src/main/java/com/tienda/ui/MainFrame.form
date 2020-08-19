@@ -45,31 +45,40 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ctgClientesActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="ctgUsuario">
+            <MenuItem class="javax.swing.JMenuItem" name="ctgEmpleados">
               <Properties>
                 <Property name="mnemonic" type="int" value="120"/>
                 <Property name="text" type="java.lang.String" value="Empleados"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ctgUsuarioActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ctgEmpleadosActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="exit">
+            <MenuItem class="javax.swing.JMenuItem" name="ctgTet">
               <Properties>
                 <Property name="mnemonic" type="int" value="120"/>
                 <Property name="text" type="java.lang.String" value="Tiempo Entre Tiendas"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="exitActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ctgTetActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="tiendaCatalogo">
+            <MenuItem class="javax.swing.JMenuItem" name="ctgTiendas">
               <Properties>
                 <Property name="mnemonic" type="int" value="120"/>
                 <Property name="text" type="java.lang.String" value="Tiendas"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tiendaCatalogoActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ctgTiendasActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="ctgUsuario">
+              <Properties>
+                <Property name="mnemonic" type="int" value="120"/>
+                <Property name="text" type="java.lang.String" value="Usuarios"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ctgUsuarioActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
@@ -91,44 +100,32 @@
                 <Property name="mnemonic" type="int" value="116"/>
                 <Property name="text" type="java.lang.String" value="Asignacion de Productos"/>
               </Properties>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="trsConciliacion">
-              <Properties>
-                <Property name="mnemonic" type="int" value="121"/>
-                <Property name="text" type="java.lang.String" value="Conciliaciones"/>
-              </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="trsConciliacionActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="trsAsignacionActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="trsOrdenesdCompra">
               <Properties>
                 <Property name="mnemonic" type="int" value="112"/>
-                <Property name="text" type="java.lang.String" value="Ordenes de Compra"/>
+                <Property name="text" type="java.lang.String" value="Pedidos"/>
               </Properties>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="trsCompras">
-              <Properties>
-                <Property name="mnemonic" type="int" value="100"/>
-                <Property name="text" type="java.lang.String" value="Compras"/>
-              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="trsOrdenesdCompraActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="trsVentas">
               <Properties>
                 <Property name="mnemonic" type="int" value="100"/>
                 <Property name="text" type="java.lang.String" value="Ventas"/>
               </Properties>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="trsIngresoDeProducto">
-              <Properties>
-                <Property name="mnemonic" type="int" value="100"/>
-                <Property name="text" type="java.lang.String" value="Ingreso de Productos"/>
-              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="trsVentasActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="trsTraspaso">
               <Properties>
                 <Property name="mnemonic" type="int" value="100"/>
-                <Property name="text" type="java.lang.String" value="Traspaso de Producto"/>
+                <Property name="text" type="java.lang.String" value="Tracking de Pedido"/>
               </Properties>
             </MenuItem>
           </SubComponents>
@@ -154,7 +151,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="adminProveedores">
               <Properties>
                 <Property name="mnemonic" type="int" value="97"/>
-                <Property name="text" type="java.lang.String" value="Proveedores"/>
+                <Property name="text" type="java.lang.String" value="Usuarios"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="adminMovimientoDeCajas">
@@ -220,6 +217,32 @@
               <Properties>
                 <Property name="mnemonic" type="int" value="112"/>
                 <Property name="text" type="java.lang.String" value="Salir"/>
+              </Properties>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="ver">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="99" green="99" red="0" type="rgb"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="99" green="99" red="0" type="rgb"/>
+            </Property>
+            <Property name="mnemonic" type="int" value="101"/>
+            <Property name="text" type="java.lang.String" value="Ver"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="confUsuario1">
+              <Properties>
+                <Property name="mnemonic" type="int" value="116"/>
+                <Property name="text" type="java.lang.String" value="Ver Catalogo"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="confUsuario2">
+              <Properties>
+                <Property name="mnemonic" type="int" value="116"/>
+                <Property name="text" type="java.lang.String" value="Ver Pedidos"/>
               </Properties>
             </MenuItem>
           </SubComponents>

@@ -1,6 +1,7 @@
 package com.tienda.mysql;
 
 import com.tienda.dao.ProductoDAO;
+import com.tienda.dto.ProductoTableDto;
 import com.tienda.entities.Producto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,7 +26,8 @@ public class ProductoD implements ProductoDAO {
             "OR fabricante LIKE ?"+
             "OR Descripcion LIKE ?"+
             "OR codigo LIKE ? ";
-            
+            //
+    private final String GETPRODUCTOTABLE = "SELECT p.codigo, p.nombre, s.cantidad, s.precio FROM  Producto p inner join StockTienda s on p.codigo = s.Producto_codigo WHERE p.estado = 1 and s.estado = 1 and s.Tienda_codigo = ?";
 
     public ProductoD(Connection connection) {
         this.connection = connection;
@@ -176,6 +178,38 @@ public class ProductoD implements ProductoDAO {
         }
 
         return null;
+    }
+
+    @Override
+    public List<ProductoTableDto> getProductoTableDto(String codigoTienda) {
+       PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<ProductoTableDto> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GETPRODUCTOTABLE);
+            stat.setString(1, codigoTienda);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertProductoTable(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    private ProductoTableDto convertProductoTable(ResultSet rs){
+        
+        try {
+            return new ProductoTableDto(rs.getString("codigo"), rs.getString("nombre"), rs.getInt("cantidad"),rs.getBigDecimal("precio"));
+
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductoD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+        
     }
     
 }

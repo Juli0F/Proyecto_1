@@ -17,19 +17,32 @@ public class MainFrame extends javax.swing.JFrame {
     /**
      * Creates new form DeskInit
      */
-    public MainFrame() {
+    public MainFrame(boolean tipo) {
 
         initComponents();
 
+        usuarioTipo(tipo);
         Toolkit t = Toolkit.getDefaultToolkit();
         Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         
         int h = (int) screenSize.getHeight()/2;
         int w =(int) screenSize.getWidth()/2;
-        
-        this.setSize(screenSize);
-
+        this.setSize(1100,750);
+        //this.setSize(screenSize);
+        //setVisible(false);
+         //Log log = new Log();
+        //log.setVisible(true);
         //setSize(800,900);
+    }
+    public void usuarioTipo(boolean tipo){
+        if (tipo) {
+            ver.setVisible(false);
+        }else{
+           catalogo.setVisible(false);
+           transacciones.setVisible(false);
+           administracion.setVisible(false);
+           configuracion.setVisible(false);
+        }
     }
 
     /**
@@ -46,16 +59,14 @@ public class MainFrame extends javax.swing.JFrame {
         catalogo = new javax.swing.JMenu();
         ctgProducto = new javax.swing.JMenuItem();
         ctgClientes = new javax.swing.JMenuItem();
+        ctgEmpleados = new javax.swing.JMenuItem();
+        ctgTet = new javax.swing.JMenuItem();
+        ctgTiendas = new javax.swing.JMenuItem();
         ctgUsuario = new javax.swing.JMenuItem();
-        exit = new javax.swing.JMenuItem();
-        tiendaCatalogo = new javax.swing.JMenuItem();
         transacciones = new javax.swing.JMenu();
         trsAsignacion = new javax.swing.JMenuItem();
-        trsConciliacion = new javax.swing.JMenuItem();
         trsOrdenesdCompra = new javax.swing.JMenuItem();
-        trsCompras = new javax.swing.JMenuItem();
         trsVentas = new javax.swing.JMenuItem();
-        trsIngresoDeProducto = new javax.swing.JMenuItem();
         trsTraspaso = new javax.swing.JMenuItem();
         administracion = new javax.swing.JMenu();
         admClientes = new javax.swing.JMenuItem();
@@ -69,6 +80,9 @@ public class MainFrame extends javax.swing.JFrame {
         confConfDDocumentos = new javax.swing.JMenuItem();
         confAcercaDe = new javax.swing.JMenuItem();
         confSalir = new javax.swing.JMenuItem();
+        ver = new javax.swing.JMenu();
+        confUsuario1 = new javax.swing.JMenuItem();
+        confUsuario2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SistemControl");
@@ -101,32 +115,41 @@ public class MainFrame extends javax.swing.JFrame {
         });
         catalogo.add(ctgClientes);
 
+        ctgEmpleados.setMnemonic('x');
+        ctgEmpleados.setText("Empleados");
+        ctgEmpleados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ctgEmpleadosActionPerformed(evt);
+            }
+        });
+        catalogo.add(ctgEmpleados);
+
+        ctgTet.setMnemonic('x');
+        ctgTet.setText("Tiempo Entre Tiendas");
+        ctgTet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ctgTetActionPerformed(evt);
+            }
+        });
+        catalogo.add(ctgTet);
+
+        ctgTiendas.setMnemonic('x');
+        ctgTiendas.setText("Tiendas");
+        ctgTiendas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ctgTiendasActionPerformed(evt);
+            }
+        });
+        catalogo.add(ctgTiendas);
+
         ctgUsuario.setMnemonic('x');
-        ctgUsuario.setText("Empleados");
+        ctgUsuario.setText("Usuarios");
         ctgUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ctgUsuarioActionPerformed(evt);
             }
         });
         catalogo.add(ctgUsuario);
-
-        exit.setMnemonic('x');
-        exit.setText("Tiempo Entre Tiendas");
-        exit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitActionPerformed(evt);
-            }
-        });
-        catalogo.add(exit);
-
-        tiendaCatalogo.setMnemonic('x');
-        tiendaCatalogo.setText("Tiendas");
-        tiendaCatalogo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tiendaCatalogoActionPerformed(evt);
-            }
-        });
-        catalogo.add(tiendaCatalogo);
 
         menuBar.add(catalogo);
 
@@ -137,35 +160,33 @@ public class MainFrame extends javax.swing.JFrame {
 
         trsAsignacion.setMnemonic('t');
         trsAsignacion.setText("Asignacion de Productos");
-        transacciones.add(trsAsignacion);
-
-        trsConciliacion.setMnemonic('y');
-        trsConciliacion.setText("Conciliaciones");
-        trsConciliacion.addActionListener(new java.awt.event.ActionListener() {
+        trsAsignacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                trsConciliacionActionPerformed(evt);
+                trsAsignacionActionPerformed(evt);
             }
         });
-        transacciones.add(trsConciliacion);
+        transacciones.add(trsAsignacion);
 
         trsOrdenesdCompra.setMnemonic('p');
-        trsOrdenesdCompra.setText("Ordenes de Compra");
+        trsOrdenesdCompra.setText("Pedidos");
+        trsOrdenesdCompra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                trsOrdenesdCompraActionPerformed(evt);
+            }
+        });
         transacciones.add(trsOrdenesdCompra);
-
-        trsCompras.setMnemonic('d');
-        trsCompras.setText("Compras");
-        transacciones.add(trsCompras);
 
         trsVentas.setMnemonic('d');
         trsVentas.setText("Ventas");
+        trsVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                trsVentasActionPerformed(evt);
+            }
+        });
         transacciones.add(trsVentas);
 
-        trsIngresoDeProducto.setMnemonic('d');
-        trsIngresoDeProducto.setText("Ingreso de Productos");
-        transacciones.add(trsIngresoDeProducto);
-
         trsTraspaso.setMnemonic('d');
-        trsTraspaso.setText("Traspaso de Producto");
+        trsTraspaso.setText("Tracking de Pedido");
         transacciones.add(trsTraspaso);
 
         menuBar.add(transacciones);
@@ -180,7 +201,7 @@ public class MainFrame extends javax.swing.JFrame {
         administracion.add(admClientes);
 
         adminProveedores.setMnemonic('a');
-        adminProveedores.setText("Proveedores");
+        adminProveedores.setText("Usuarios");
         administracion.add(adminProveedores);
 
         adminMovimientoDeCajas.setMnemonic('c');
@@ -229,6 +250,21 @@ public class MainFrame extends javax.swing.JFrame {
 
         menuBar.add(configuracion);
 
+        ver.setBackground(new java.awt.Color(0, 153, 153));
+        ver.setForeground(new java.awt.Color(0, 153, 153));
+        ver.setMnemonic('e');
+        ver.setText("Ver");
+
+        confUsuario1.setMnemonic('t');
+        confUsuario1.setText("Ver Catalogo");
+        ver.add(confUsuario1);
+
+        confUsuario2.setMnemonic('t');
+        confUsuario2.setText("Ver Pedidos");
+        ver.add(confUsuario2);
+
+        menuBar.add(ver);
+
         setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -245,18 +281,14 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void ctgUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctgUsuarioActionPerformed
+    private void ctgEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctgEmpleadosActionPerformed
         // TODO add your handling code here:
         addPanel(new EmpleadoUI());
-    }//GEN-LAST:event_ctgUsuarioActionPerformed
+    }//GEN-LAST:event_ctgEmpleadosActionPerformed
 
-    private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_exitActionPerformed
-
-    private void trsConciliacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trsConciliacionActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_trsConciliacionActionPerformed
+    private void ctgTetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctgTetActionPerformed
+        addPanel(new TiempoEntreTiendasUI());
+    }//GEN-LAST:event_ctgTetActionPerformed
 
     private void ctgProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctgProductoActionPerformed
         System.out.println("Prodcuto Catalogo");
@@ -273,15 +305,33 @@ public class MainFrame extends javax.swing.JFrame {
        
     }//GEN-LAST:event_confConfDDocumentosActionPerformed
 
-    private void tiendaCatalogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tiendaCatalogoActionPerformed
+    private void ctgTiendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctgTiendasActionPerformed
         // TODO add your handling code here:
         addPanel(new TiendaUI());
-    }//GEN-LAST:event_tiendaCatalogoActionPerformed
+    }//GEN-LAST:event_ctgTiendasActionPerformed
 
     private void ctgClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctgClientesActionPerformed
         // TODO add your handling code here:
         addPanel(new ClienteUI());
     }//GEN-LAST:event_ctgClientesActionPerformed
+
+    private void trsAsignacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trsAsignacionActionPerformed
+        // TODO add your handling code here:
+        addPanel(new AsignacionDeProducto());
+    }//GEN-LAST:event_trsAsignacionActionPerformed
+
+    private void trsOrdenesdCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trsOrdenesdCompraActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_trsOrdenesdCompraActionPerformed
+
+    private void ctgUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctgUsuarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ctgUsuarioActionPerformed
+
+    private void trsVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trsVentasActionPerformed
+        // TODO add your handling code here:
+        addPanel(new Ventas());
+    }//GEN-LAST:event_trsVentasActionPerformed
 
     private void addPanel(javax.swing.JPanel panel){
         dp.removeAll();
@@ -289,6 +339,7 @@ public class MainFrame extends javax.swing.JFrame {
         panel.setSize(dp.getWidth()/(3/2),dp.getHeight()/(3/2));
         panel.setVisible(true);
         dp.add(panel);
+        
 
     }
     /**
@@ -324,9 +375,10 @@ public class MainFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainFrame().setVisible(true);
+             //   new MainFrame().setVisible(true);
             }
         });
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -342,22 +394,23 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem confConfDDocumentos;
     private javax.swing.JMenuItem confSalir;
     private javax.swing.JMenuItem confUsuario;
+    private javax.swing.JMenuItem confUsuario1;
+    private javax.swing.JMenuItem confUsuario2;
     private javax.swing.JMenu configuracion;
     private javax.swing.JMenuItem ctgClientes;
+    private javax.swing.JMenuItem ctgEmpleados;
     private javax.swing.JMenuItem ctgProducto;
+    private javax.swing.JMenuItem ctgTet;
+    private javax.swing.JMenuItem ctgTiendas;
     private javax.swing.JMenuItem ctgUsuario;
     private javax.swing.JDesktopPane dp;
-    private javax.swing.JMenuItem exit;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem tiendaCatalogo;
     private javax.swing.JMenu transacciones;
     private javax.swing.JMenuItem trsAsignacion;
-    private javax.swing.JMenuItem trsCompras;
-    private javax.swing.JMenuItem trsConciliacion;
-    private javax.swing.JMenuItem trsIngresoDeProducto;
     private javax.swing.JMenuItem trsOrdenesdCompra;
     private javax.swing.JMenuItem trsTraspaso;
     private javax.swing.JMenuItem trsVentas;
+    private javax.swing.JMenu ver;
     // End of variables declaration//GEN-END:variables
 
 }

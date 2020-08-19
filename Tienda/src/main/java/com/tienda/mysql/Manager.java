@@ -14,6 +14,7 @@ import com.tienda.dao.ClienteDAO;
 import com.tienda.dao.DetallePedidoDAO;
 import com.tienda.dao.PedidoDAO;
 import java.sql.Connection;
+import com.tienda.dao.EmpleadoDAO;
 
 public class Manager implements DAOManager {
 
@@ -27,6 +28,7 @@ public class Manager implements DAOManager {
     private TiempoDeEnvioDAO tiempodeenviodao;
     private StockTiendaDAO stocktiendadao;
     private UsuarioDAO usuariodao;
+    private EmpleadoDAO usuarioSystemdao;
     private ClienteDAO clientedao;
     private DetallePedidoDAO detallepedidodao;
     private PedidoDAO pedidodao;
@@ -75,7 +77,6 @@ public class Manager implements DAOManager {
 //        }
 //        return daomanager;
 //    }
-
     @Override
     public FacturaDAO getFacturaDAO() {
         if (facturadao == null) {
@@ -138,5 +139,13 @@ public class Manager implements DAOManager {
             pedidodao = new PedidoD(connection);
         }
         return pedidodao;
+    }
+
+    @Override
+    public EmpleadoDAO getEmpleadoDAO() {
+        if (usuarioSystemdao == null) {
+            usuarioSystemdao = new EmpleadoD(connection);
+        }
+        return usuarioSystemdao;
     }
 }

@@ -10,6 +10,8 @@ import com.tienda.entities.Cliente;
 import com.tienda.entities.Persona;
 import com.tienda.entities.Tienda;
 import com.tienda.mysql.Manager;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -33,6 +35,7 @@ public class ClienteUI extends javax.swing.JPanel {
         lblFieldTelefono.setVisible(false);
         modificar = false;
         accionTable();
+        actionBuscarTxt();
     }
 
     /**
@@ -320,11 +323,8 @@ public class ClienteUI extends javax.swing.JPanel {
                     manager.getPersonaDAO().modify(crearPersona());
                     manager.getClienteDAO().modify(crearCliente());
 
-//                
-//                
-//                manager.getClienteDAO().insert(crearCliente());
                     JOptionPane.showMessageDialog(null, "Se Modifico Correctamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-//
+
                     DefaultTableModel tableModel = (DefaultTableModel) tableView.getModel();
                     tableModel.addRow(new Object[]{txtDpi.getText(), txtNit.getText(), txtNombre.getText(), txtTelefono.getText(), txtDireccion.getText(), txtEmail.getText(), txtCredito.getText()});
                     tableModel.removeRow(row);
@@ -406,7 +406,15 @@ public class ClienteUI extends javax.swing.JPanel {
     private void txtDireccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDireccionActionPerformed
         
     }//GEN-LAST:event_txtDireccionActionPerformed
+ private void actionBuscarTxt() {
+        txtSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                fillTable(manager.getClienteDAO().getClienteForDtoWhitLike(txtSearch.getText()));
+            }
 
+        });
+    }
     private void btBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarActionPerformed
         // TODO add your handling code here:
 
@@ -466,7 +474,10 @@ public class ClienteUI extends javax.swing.JPanel {
     }
 
     private Cliente crearCliente() {
-        return new Cliente(txtNit.getText(), txtEmail.getText(), true, txtDpi.getText(), (BigDecimal) ((Object) txtCredito.getText()));
+        if (txtCredito.getText().isEmpty()) {
+            txtCredito.setText("0.0");
+        }
+        return new Cliente(txtNit.getText(), txtEmail.getText(), true, txtDpi.getText(),BigDecimal.valueOf(Double.valueOf(txtCredito.getText())));
     }
 
     private Persona crearPersona() {
