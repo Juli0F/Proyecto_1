@@ -56,5 +56,10 @@
             <artifactId>AbsoluteLayout</artifactId>
             <version>SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>at.swimmesberger</groupId>
+            <artifactId>swingx-core</artifactId>
+            <version>1.6.8</version>
+        </dependency>
     </dependencies>
 </project>

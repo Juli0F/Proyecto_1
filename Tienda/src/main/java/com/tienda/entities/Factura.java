@@ -1,6 +1,7 @@
 package com.tienda.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  *
@@ -14,8 +15,9 @@ public class Factura implements Serializable {
     private int Usuario_idUsuario;
     private String Tienda_codigo;
     private String nit;
-
-    public Factura(int idFactura, String descripcion, boolean estado, int Usuario_idUsuario, String Tienda_codigo, String nit) {
+    private BigDecimal total;
+    
+    public Factura(int idFactura, String descripcion, boolean estado, int Usuario_idUsuario, String Tienda_codigo, String nit,BigDecimal total) {
 
         this.idFactura = idFactura;
         this.descripcion = descripcion;
@@ -23,6 +25,15 @@ public class Factura implements Serializable {
         this.Usuario_idUsuario = Usuario_idUsuario;
         this.Tienda_codigo = Tienda_codigo;
         this.nit = nit;
+        this.total = total;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
     }
 
     public String getNit() {

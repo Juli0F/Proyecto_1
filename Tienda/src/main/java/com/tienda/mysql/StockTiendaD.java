@@ -20,6 +20,7 @@ public class StockTiendaD implements StockTiendaDAO {
     private final String GETALL = "SELECT * FROM  StockTienda  ";
     private final String GETONE = GETALL + "WHERE idStockTienda = ?";
     private final String GETSTOCKBYIDTIENDAANDPRODUCTO = GETALL + "WHERE Tienda_codigo = ? AND  Producto_codigo = ?";
+    private final String GETALLPRODUCTINSTORE = GETALL + "WHERE Tienda_codigo = ? AND estado = 1";
     
 
     public StockTiendaD(Connection connection) {
@@ -165,6 +166,26 @@ public class StockTiendaD implements StockTiendaDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    @Override
+    public List<StockTienda> productosEnUnaTienda(String codigoTienda) {
+         PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<StockTienda> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GETALLPRODUCTINSTORE);
+            stat.setString(1, codigoTienda);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertir(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
     

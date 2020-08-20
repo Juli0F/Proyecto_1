@@ -16,5 +16,6 @@ public interface TiendaDAO extends DAO<Tienda,String> {
     public List<TiendaTiempo> getTiempoTiendaTET();
     public List<TiendaTiempo> getTiempoTiendaTETUseLike(String codigoTiendaOrigen);
     public List<Tienda> getAllTiendaLike(String parameter);
+    
 
 }

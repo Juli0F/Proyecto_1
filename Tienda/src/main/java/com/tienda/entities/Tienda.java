@@ -93,4 +93,10 @@ public class Tienda implements Serializable {
         this.estado = estado;
     }
 
+    @Override
+    public String toString() {
+        return  nombre ;
+    }
+
+    
 }

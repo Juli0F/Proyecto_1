@@ -8,7 +8,10 @@ package com.tienda.ui;
 import com.tienda.actiontable.TableCellListener;
 import com.tienda.dto.ClienteDTO;
 import com.tienda.dto.ProductoTableDto;
+import com.tienda.entities.Cliente;
+import com.tienda.entities.DetalleFactura;
 import com.tienda.entities.Factura;
+import com.tienda.entities.StockTienda;
 import com.tienda.mysql.Manager;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
@@ -68,6 +71,13 @@ public class Ventas extends javax.swing.JPanel {
         jButton9 = new javax.swing.JButton();
         crearCliente = new javax.swing.JDialog();
         panelContains = new javax.swing.JPanel();
+        MetodoDePago = new javax.swing.JDialog();
+        jPanel12 = new javax.swing.JPanel();
+        lblCredito = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
+        btnCredito = new javax.swing.JButton();
+        btnCreditoEfectivo = new javax.swing.JButton();
+        btnEfectivo = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -258,6 +268,83 @@ public class Ventas extends javax.swing.JPanel {
             .addGroup(crearClienteLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panelContains, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        lblCredito.setFont(new java.awt.Font("Dialog", 2, 18)); // NOI18N
+        lblCredito.setText("Credito Disponible:");
+
+        btnCredito.setFont(new java.awt.Font("Dialog", 2, 18)); // NOI18N
+        btnCredito.setText("Usar Credito");
+        btnCredito.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreditoAction(evt);
+            }
+        });
+
+        btnCreditoEfectivo.setFont(new java.awt.Font("Dialog", 2, 18)); // NOI18N
+        btnCreditoEfectivo.setText("Credito y Efectivo");
+        btnCreditoEfectivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pagoHibrido(evt);
+            }
+        });
+
+        btnEfectivo.setFont(new java.awt.Font("Dialog", 2, 18)); // NOI18N
+        btnEfectivo.setText("Efectivo");
+        btnEfectivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pagarConEfectivo(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblCredito, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
+                .addContainerGap(17, Short.MAX_VALUE)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnCredito, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnCreditoEfectivo, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
+                    .addComponent(btnEfectivo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(7, 7, 7))
+        );
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnCreditoEfectivo, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnEfectivo, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout MetodoDePagoLayout = new javax.swing.GroupLayout(MetodoDePago.getContentPane());
+        MetodoDePago.getContentPane().setLayout(MetodoDePagoLayout);
+        MetodoDePagoLayout.setHorizontalGroup(
+            MetodoDePagoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(MetodoDePagoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        MetodoDePagoLayout.setVerticalGroup(
+            MetodoDePagoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(MetodoDePagoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -550,10 +637,30 @@ public class Ventas extends javax.swing.JPanel {
 
     private void btnFinalizarCompraAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarCompraAction
         // TODO add your handling code here:
-        Factura factura = new Factura(WIDTH, "", true, SOMEBITS, dpi)
+        totalVenta();
+        Factura factura = new Factura(0, "", true, Log.idUsuario, Log.codigoTienda, nitCliente, this.totalPagar);
+        manager.getFacturaDAO().insert(factura);
+        int idFactura = manager.getFacturaDAO().lastInsertId();
         if (tableCarrito.getRowCount() != 0) {
+            for (int i = 0; i < tableCarrito.getRowCount(); i++) {
+                DetalleFactura detalleFactura = new DetalleFactura(0,
+                        idFactura,
+                        (String) tableCarrito.getValueAt(i, 0),
+                        Integer.valueOf((String)tableCarrito.getValueAt(i, 2)),
+                        (BigDecimal) tableCarrito.getValueAt(i, 4));
+
+                manager.getDetalleFacturaDAO().insert(detalleFactura);
+
+                StockTienda st = manager.getStockTiendaDAO().existencia(Log.codigoTienda,(String) tableCarrito.getValueAt(i, 0) );
+                
+                st.setCantidad(st.getCantidad() - detalleFactura.getCantidad());
+                manager.getStockTiendaDAO().modify(st);
+
+            }
+            MetodoDePago.setSize(310, 310);
+            MetodoDePago.setVisible(true);
         }
-        
+
     }//GEN-LAST:event_btnFinalizarCompraAction
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -562,18 +669,18 @@ public class Ventas extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jButton6ActionPerformed
 
-    private void fillTableProducto(List<ProductoTableDto> productos) {
-        ((DefaultTableModel) tableProducto.getModel()).setRowCount(0);
-        productos.forEach(producto -> {
-            ((DefaultTableModel) tableProducto.getModel()).addRow(new Object[]{
-                producto.getCodigo(),
-                producto.getProducto(),
-                producto.getPrecio(),
-                producto.getCantidad()
+private void fillTableProducto(List<ProductoTableDto> productos) {
+    ((DefaultTableModel) tableProducto.getModel()).setRowCount(0);
+    productos.forEach(producto -> {
+        ((DefaultTableModel) tableProducto.getModel()).addRow(new Object[]{
+            producto.getCodigo(),
+            producto.getProducto(),
+            producto.getPrecio(),
+            producto.getCantidad()
 
-            });
         });
-    }
+    });
+}
 
     private void translateProduct() {
         if (tableProducto.getSelectedRow() != -1) {
@@ -598,7 +705,7 @@ public class Ventas extends javax.swing.JPanel {
 
                 if (e.getClickCount() == 2) {
                     translateProduct();
-                    
+
                 }
 
             }
@@ -607,7 +714,7 @@ public class Ventas extends javax.swing.JPanel {
     private void btnAceptarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarClienteActionPerformed
         // TODO add your handling code here:
         dtCliente();
-        
+
     }//GEN-LAST:event_btnAceptarClienteActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -639,7 +746,7 @@ public class Ventas extends javax.swing.JPanel {
         ));
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
-   
+
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         translateProduct();
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -651,13 +758,59 @@ public class Ventas extends javax.swing.JPanel {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         if (tableCarrito.getSelectedRow() != -1) {
-            ((DefaultTableModel)tableCarrito.getModel()).removeRow(tableCarrito.getSelectedRow());
+            ((DefaultTableModel) tableCarrito.getModel()).removeRow(tableCarrito.getSelectedRow());
             if (tableCarrito.getRowCount() != 0) {
                 totalVenta();
             }
-            
+
         }
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void btnCreditoAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreditoAction
+        // TODO add your handling code here:
+        Cliente cliente = manager.getClienteDAO().obtener(nitCliente);
+        if (cliente.getCredito().compareTo(totalPagar) == 0 || cliente.getCredito().compareTo(totalPagar) == 1) {
+
+            cliente.setCredito(cliente.getCredito().subtract(totalPagar));
+            manager.getClienteDAO().modify(cliente);
+            MetodoDePago.dispose();
+            JOptionPane.showMessageDialog(null, "Venta Finalizada", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+            MainFrame.dp.removeAll();
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Credito Insuficiente", "Informacion", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnCreditoAction
+
+    private void pagoHibrido(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagoHibrido
+        // TODO add your handling code here:
+        Cliente cliente = manager.getClienteDAO().obtener(nitCliente);
+        if (cliente.getCredito().compareTo(totalPagar)== 0 ||cliente.getCredito().compareTo(totalPagar)== 1 ) {
+            cliente.setCredito(cliente.getCredito().subtract(totalPagar));
+            manager.getClienteDAO().modify(cliente);
+            MainFrame.dp.remove(this);
+            MetodoDePago.dispose();
+            JOptionPane.showMessageDialog(null, "Venta Finalizada", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+            MainFrame.dp.removeAll();
+
+        }else{
+            cliente.setCredito(BigDecimal.ZERO);
+            manager.getClienteDAO().modify(cliente);
+            MetodoDePago.dispose();
+            
+            MainFrame.dp.remove(this);
+            JOptionPane.showMessageDialog(null, "Venta Finalizada", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+            MainFrame.dp.removeAll();
+        }
+
+    }//GEN-LAST:event_pagoHibrido
+
+    private void pagarConEfectivo(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagarConEfectivo
+        // TODO add your handling code here:
+
+        JOptionPane.showMessageDialog(null, "Venta Finalizada", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+        MainFrame.dp.removeAll();
+    }//GEN-LAST:event_pagarConEfectivo
     private void eventTxtBuscarCliente() {
         txtBuscarCliente.addKeyListener(new KeyAdapter() {
             @Override
@@ -709,7 +862,7 @@ public class Ventas extends javax.swing.JPanel {
         if (rowSelected != -1) {
             nitCliente = (String) tableCliente.getValueAt(rowSelected, 0);
             dpi = (String) tableCliente.getValueAt(rowSelected, 1);
-            System.out.println("Cliente Seleccionado: "+nitCliente);
+            System.out.println("Cliente Seleccionado: " + nitCliente);
             SeleccionarCliente.dispose();
 
         } else {
@@ -723,53 +876,58 @@ public class Ventas extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TableCellListener tcl = (TableCellListener) e.getSource();
-                
+
                 String codigo = (String) tableCarrito.getValueAt(tcl.getRow(), 0);
-                Integer nValor = Integer.valueOf((String)tcl.getNewValue());
-                
-                if (manager.getStockTiendaDAO().existencia(Log.codigoTienda, codigo).getCantidad() <=nValor) {
-                    
-                    tableCarrito.setValueAt(tcl.getOldValue(),tcl.getRow(),tcl.getColumn());
-                    JOptionPane.showMessageDialog(null, "No hay Existencia Suficiente","Cuidado",JOptionPane.WARNING_MESSAGE);
-                    
+                Integer nValor = Integer.valueOf((String) tcl.getNewValue());
+
+                if (manager.getStockTiendaDAO().existencia(Log.codigoTienda, codigo).getCantidad() <= nValor) {
+
+                    tableCarrito.setValueAt(tcl.getOldValue(), tcl.getRow(), tcl.getColumn());
+                    JOptionPane.showMessageDialog(null, "No hay Existencia Suficiente", "Cuidado", JOptionPane.WARNING_MESSAGE);
+
                 } else {
-                    
+
                     BigDecimal precio = (BigDecimal) tableCarrito.getValueAt(tcl.getRow(), 3);
                     int cantidad = Integer.valueOf(String.valueOf(tcl.getNewValue()));
                     BigDecimal subTotal = precio.multiply(new BigDecimal(cantidad));
                     tableCarrito.setValueAt(subTotal, tcl.getRow(), 4);
-                     totalVenta();
+                    totalVenta();
                 }
             }
         };
-        
+
         TableCellListener tcl = new TableCellListener(tableCarrito, action);
-       //
-    }
-    public void totalVenta(){
-        
-        lblTotal.setText("Q. ");
-     //   int filaSumada = 0;
-     
-        BigDecimal total = new BigDecimal(BigInteger.ZERO);
-     
-        for (int i = 0; i < tableCarrito.getRowCount(); i++) {
-            total = total.add((BigDecimal)tableCarrito.getValueAt(i, 4));
-            System.out.println("Total "+total);
-            
-        }
-        
-        
-        lblTotal.setText("Q. "+total);
+        //
     }
 
+    public void totalVenta() {
+
+        lblTotal.setText("Q. ");
+        //   int filaSumada = 0;
+
+        BigDecimal total = new BigDecimal(BigInteger.ZERO);
+
+        for (int i = 0; i < tableCarrito.getRowCount(); i++) {
+            total = total.add((BigDecimal) tableCarrito.getValueAt(i, 4));
+            System.out.println("Total " + total);
+
+        }
+        totalPagar = total;
+
+        lblTotal.setText("Q. " + total);
+    }
+    private BigDecimal totalPagar;
     private Manager manager;
     private String nitCliente;
     private String dpi;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDialog MetodoDePago;
     private javax.swing.JDialog SeleccionarCliente;
     private javax.swing.JButton btnAceptarCliente;
     private javax.swing.JButton btnBuscarCliente;
+    private javax.swing.JButton btnCredito;
+    private javax.swing.JButton btnCreditoEfectivo;
+    private javax.swing.JButton btnEfectivo;
     private javax.swing.JButton btnFinalizarCompra;
     private javax.swing.JDialog crearCliente;
     private javax.swing.JButton jButton1;
@@ -782,6 +940,7 @@ public class Ventas extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -794,7 +953,9 @@ public class Ventas extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lblCredito;
     private javax.swing.JLabel lblTotal;
     private javax.swing.JPanel panelContains;
     private javax.swing.JTable tableCarrito;

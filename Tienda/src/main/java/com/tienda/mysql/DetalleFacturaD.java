@@ -14,8 +14,8 @@ import java.util.logging.Logger;
 public class DetalleFacturaD implements DetalleFacturaDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO DetalleFactura (Factura_idFactura,Producto_codigo) VALUES (?,?)";
-    private final String UPDATE = "UPDATE DetalleFactura setFactura_idFactura = ?, Producto_codigo = ? WHERE idDetalleFactura = ? ";
+    private final String INSERT = "INSERT INTO DetalleFactura (Factura_idFactura,Producto_codigo,cantidad,subtotal) VALUES (?,?,?,?)";
+    private final String UPDATE = "UPDATE DetalleFactura setFactura_idFactura = ?, Producto_codigo = ? ,cantidad =?, subtotal = ? WHERE idDetalleFactura = ? ";
     private final String DELETE = "DELETE DetalleFactura WHERE idDetalleFactura = ? ";
     private final String GETALL = "SELECT * FROM  DetalleFactura  ";
     private final String GETONE = GETALL + "WHERE idDetalleFactura = ?";
@@ -31,6 +31,8 @@ public class DetalleFacturaD implements DetalleFacturaDAO {
             stat = connection.prepareStatement(INSERT);
             stat.setInt(1, object.getFactura_idFactura());
             stat.setString(2, object.getProducto_codigo());
+            stat.setInt(3, object.getCantidad());
+            stat.setBigDecimal(4, object.getSubtotal());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover DetalleFactura");
 
@@ -47,7 +49,9 @@ public class DetalleFacturaD implements DetalleFacturaDAO {
             stat = connection.prepareStatement(UPDATE);
             stat.setInt(1, object.getFactura_idFactura());
             stat.setString(2, object.getProducto_codigo());
-            stat.setInt(3, object.getIdDetalleFactura());
+            stat.setInt(3, object.getCantidad());
+            stat.setBigDecimal(4, object.getSubtotal());
+            stat.setInt(5, object.getIdDetalleFactura());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover DetalleFactura");
 
@@ -112,7 +116,12 @@ public class DetalleFacturaD implements DetalleFacturaDAO {
     public DetalleFactura convertir(ResultSet rs) {
 
         try {
-            DetalleFactura detalleFactura = new DetalleFactura(rs.getInt("idDetalleFactura"), rs.getInt("Factura_idFactura"), rs.getString("Producto_codigo"));
+            DetalleFactura detalleFactura =
+                    new DetalleFactura(rs.getInt("idDetalleFactura"), 
+                                       rs.getInt("Factura_idFactura"),
+                                       rs.getString("Producto_codigo"), 
+                                       rs.getInt("cantidad"),
+                                       rs.getBigDecimal("subtotal"));
 
             return detalleFactura;
         } catch (SQLException ex) {

@@ -297,6 +297,8 @@ public class Log extends javax.swing.JFrame {
                 //  this.setVisible(false);
                 dialogo.setSize(600, 650);
                 dialogo.setVisible(true);
+                
+                idUsuario = usuario.getIdUsuario();
                 this.dispose();
 
             } else if (usuario.getTipo() == 3) {
@@ -309,8 +311,7 @@ public class Log extends javax.swing.JFrame {
             // new MainFrame().setVisible(true);
 
         } else {
-            JOptionPane
-                    .showMessageDialog(null, "Datos No Coinciden", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Datos No Coinciden", "Informacion", JOptionPane.INFORMATION_MESSAGE);
         }
 
     }
@@ -388,6 +389,7 @@ public class Log extends javax.swing.JFrame {
         });
     }
 
+    public static int idUsuario;
     public static String codigoTienda;
     public static String nombreTienda;
     private boolean empleadoC;

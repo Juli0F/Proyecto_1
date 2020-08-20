@@ -27,7 +27,7 @@ public class MainFrame extends javax.swing.JFrame {
         
         int h = (int) screenSize.getHeight()/2;
         int w =(int) screenSize.getWidth()/2;
-        this.setSize(1100,750);
+        this.setSize(1200,950);
         //this.setSize(screenSize);
         //setVisible(false);
          //Log log = new Log();
@@ -322,6 +322,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void trsOrdenesdCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trsOrdenesdCompraActionPerformed
         // TODO add your handling code here:
+        addPanel(new Pedido());
     }//GEN-LAST:event_trsOrdenesdCompraActionPerformed
 
     private void ctgUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctgUsuarioActionPerformed
@@ -403,7 +404,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem ctgTet;
     private javax.swing.JMenuItem ctgTiendas;
     private javax.swing.JMenuItem ctgUsuario;
-    private javax.swing.JDesktopPane dp;
+    public static javax.swing.JDesktopPane dp;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu transacciones;
     private javax.swing.JMenuItem trsAsignacion;
