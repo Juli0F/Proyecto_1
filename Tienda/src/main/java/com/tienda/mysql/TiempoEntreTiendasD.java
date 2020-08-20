@@ -22,7 +22,7 @@ public class TiempoEntreTiendasD implements TiempoEntreTiendasDAO {
     private final String GET_BY_CODIGO_TIENDA_AND_DESCRIPCION = GETALL + " WHERE Tienda_codigo = ? AND descripcion = ? ";
     private final String GETTIMEBETWEENSTOREs = GETALL;
     private final String GETIDTIEMPO = "SELECT t.TiempoDeEnvio_idTiempoDeEnvio from TiempoEntreTiendas as t inner join TiempoEntreTiendas e on t.TiempoDeEnvio_idTiempoDeEnvio = e.TiempoDeEnvio_idTiempoDeEnvio where (t.Tienda_codigo=? and t.descripcion = \"Origen\") and (e.Tienda_codigo = ? and e.descripcion = \"Destino\")";
-
+    private final String GETIDTIEMPODEENVIO = "SELECT  tet.TiempoDeEnvio_idTiempoDeEnvio from TiempoEntreTiendas tet inner join TiempoEntreTiendas aux on tet.TiempoDeEnvio_idTiempoDeEnvio = aux.TiempoDeEnvio_idTiempoDeEnvio where tet.Tienda_codigo = ? AND aux.Tienda_codigo = ?";
     public TiempoEntreTiendasD(Connection connection) {
         this.connection = connection;
     }
@@ -151,6 +151,26 @@ public class TiempoEntreTiendasD implements TiempoEntreTiendasDAO {
 
         try {
             stat = connection.prepareStatement(GETIDTIEMPO);
+            stat.setString(1, codigoTiendaA);
+            stat.setString(2, codigoTiendaB);
+            rs = stat.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer getTheTimeBetweenStoresWithTheCodeOfTheStoresInvolved(String codigoTiendaA, String codigoTiendaB) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(GETIDTIEMPODEENVIO);
             stat.setString(1, codigoTiendaA);
             stat.setString(2, codigoTiendaB);
             rs = stat.executeQuery();

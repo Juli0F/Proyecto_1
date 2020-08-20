@@ -322,7 +322,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void trsOrdenesdCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trsOrdenesdCompraActionPerformed
         // TODO add your handling code here:
-        addPanel(new Pedido());
+        addPanel(new PedidoUI());
     }//GEN-LAST:event_trsOrdenesdCompraActionPerformed
 
     private void ctgUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctgUsuarioActionPerformed
