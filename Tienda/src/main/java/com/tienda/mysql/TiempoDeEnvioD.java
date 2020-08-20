@@ -48,10 +48,11 @@ public class TiempoDeEnvioD implements TiempoDeEnvioDAO {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
+
             stat.setInt(1, object.getTiempo());
             stat.setBoolean(2, object.isEstado());
             stat.setString(3, object.getDescripcion());
-            
+
             stat.setInt(5, object.getIdTiempoDeEnvio());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover TiempoDeEnvio");
@@ -145,5 +146,4 @@ public class TiempoDeEnvioD implements TiempoDeEnvioDAO {
         return 0;
     }
 
-    
 }

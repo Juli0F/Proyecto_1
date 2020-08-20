@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class PedidoD implements PedidoDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Pedido (fecha,entregado,retraso,destino,estado,TiempoDeEnvio_idTiempoDeEnvio,Cliente_nit,subtotal,anticipo) VALUES (?,?,?,?,?,?,?,?,?)";
+    private final String INSERT = "INSERT INTO Pedido (fecha,entregado,retraso,destino,estado,TiempoDeEnvio_idTiempoDeEnvio,Cliente_nit,subtotal,anticipo,codigo) VALUES (?,?,?,?,?,?,?,?,?,?)";
     private final String UPDATE = "UPDATE Pedido SET fecha = ?, entregado = ?, retraso = ?, destino = ?, estado = ?, TiempoDeEnvio_idTiempoDeEnvio = ?, Cliente_nit = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Pedido WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Pedido  ";
@@ -38,6 +38,7 @@ public class PedidoD implements PedidoDAO {
             stat.setString(7, object.getCliente_nit());
             stat.setBigDecimal(8, object.getSubtotal());
             stat.setBigDecimal(9, object.getAnticipo());
+            stat.setString(10, object.getCodigo());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Pedido");
 

@@ -13,6 +13,7 @@ import com.tienda.entities.DetalleFactura;
 import com.tienda.entities.Factura;
 import com.tienda.entities.StockTienda;
 import com.tienda.mysql.Manager;
+import static com.tienda.ui.MainFrame.dp;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -646,13 +647,13 @@ public class Ventas extends javax.swing.JPanel {
                 DetalleFactura detalleFactura = new DetalleFactura(0,
                         idFactura,
                         (String) tableCarrito.getValueAt(i, 0),
-                        Integer.valueOf((String)tableCarrito.getValueAt(i, 2)),
+                        Integer.valueOf((String) tableCarrito.getValueAt(i, 2)),
                         (BigDecimal) tableCarrito.getValueAt(i, 4));
 
                 manager.getDetalleFacturaDAO().insert(detalleFactura);
 
-                StockTienda st = manager.getStockTiendaDAO().existencia(Log.codigoTienda,(String) tableCarrito.getValueAt(i, 0) );
-                
+                StockTienda st = manager.getStockTiendaDAO().existencia(Log.codigoTienda, (String) tableCarrito.getValueAt(i, 0));
+
                 st.setCantidad(st.getCantidad() - detalleFactura.getCantidad());
                 manager.getStockTiendaDAO().modify(st);
 
@@ -669,18 +670,18 @@ public class Ventas extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jButton6ActionPerformed
 
-private void fillTableProducto(List<ProductoTableDto> productos) {
-    ((DefaultTableModel) tableProducto.getModel()).setRowCount(0);
-    productos.forEach(producto -> {
-        ((DefaultTableModel) tableProducto.getModel()).addRow(new Object[]{
-            producto.getCodigo(),
-            producto.getProducto(),
-            producto.getPrecio(),
-            producto.getCantidad()
+    private void fillTableProducto(List<ProductoTableDto> productos) {
+        ((DefaultTableModel) tableProducto.getModel()).setRowCount(0);
+        productos.forEach(producto -> {
+            ((DefaultTableModel) tableProducto.getModel()).addRow(new Object[]{
+                producto.getCodigo(),
+                producto.getProducto(),
+                producto.getPrecio(),
+                producto.getCantidad()
 
+            });
         });
-    });
-}
+    }
 
     private void translateProduct() {
         if (tableProducto.getSelectedRow() != -1) {
@@ -775,7 +776,7 @@ private void fillTableProducto(List<ProductoTableDto> productos) {
             manager.getClienteDAO().modify(cliente);
             MetodoDePago.dispose();
             JOptionPane.showMessageDialog(null, "Venta Finalizada", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-            MainFrame.dp.removeAll();
+            removeThis();
 
         } else {
             JOptionPane.showMessageDialog(null, "Credito Insuficiente", "Informacion", JOptionPane.WARNING_MESSAGE);
@@ -785,31 +786,37 @@ private void fillTableProducto(List<ProductoTableDto> productos) {
     private void pagoHibrido(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagoHibrido
         // TODO add your handling code here:
         Cliente cliente = manager.getClienteDAO().obtener(nitCliente);
-        if (cliente.getCredito().compareTo(totalPagar)== 0 ||cliente.getCredito().compareTo(totalPagar)== 1 ) {
+        if (cliente.getCredito().compareTo(totalPagar) == 0 || cliente.getCredito().compareTo(totalPagar) == 1) {
             cliente.setCredito(cliente.getCredito().subtract(totalPagar));
             manager.getClienteDAO().modify(cliente);
-            MainFrame.dp.remove(this);
+            
             MetodoDePago.dispose();
             JOptionPane.showMessageDialog(null, "Venta Finalizada", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-            MainFrame.dp.removeAll();
+            removeThis();
 
-        }else{
+        } else {
             cliente.setCredito(BigDecimal.ZERO);
             manager.getClienteDAO().modify(cliente);
             MetodoDePago.dispose();
-            
-            MainFrame.dp.remove(this);
+
             JOptionPane.showMessageDialog(null, "Venta Finalizada", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-            MainFrame.dp.removeAll();
+            removeThis();
+
         }
 
     }//GEN-LAST:event_pagoHibrido
+    public void removeThis() {
+        MainFrame.dp.removeAll();
+        dp.repaint();
+        dp.revalidate();
+        MainFrame.addPanel(new Ventas());
+    }
 
     private void pagarConEfectivo(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagarConEfectivo
         // TODO add your handling code here:
 
         JOptionPane.showMessageDialog(null, "Venta Finalizada", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-        MainFrame.dp.removeAll();
+        removeThis();
     }//GEN-LAST:event_pagarConEfectivo
     private void eventTxtBuscarCliente() {
         txtBuscarCliente.addKeyListener(new KeyAdapter() {

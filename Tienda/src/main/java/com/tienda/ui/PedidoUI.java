@@ -9,22 +9,34 @@ import com.tienda.actiontable.DateLabelFormatter;
 import com.tienda.actiontable.TableCellListener;
 import com.tienda.dto.ClienteDTO;
 import com.tienda.dto.ProductoTableDto;
+import com.tienda.entities.Cliente;
+import com.tienda.entities.DetallePedido;
+import com.tienda.entities.Pedido;
 import com.tienda.entities.Tienda;
 import com.tienda.mysql.Manager;
+import static com.tienda.ui.MainFrame.dp;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Date;
+import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.NumberFormatter;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -42,17 +54,27 @@ public final class PedidoUI extends javax.swing.JPanel {
     public PedidoUI() {
         initComponents();
 
+        eventTableCliente();
         manager = new Manager();
+
         generateCode();
+
         fillCombo(jCOrigen);
         fillCombo(jCDestino);
+
         listenerCombo();
+
         jCDestino.setSelectedIndex(1);
         cellListener();
+
         eventTableProducto();
+
+        eventTextfield(txtCredito);
+        eventTextfield(txtEfectivo);
 
         SeleccionarCliente.setSize(600, 400);
         SeleccionarCliente.setVisible(true);
+
         initDatePicker();
 
     }
@@ -60,21 +82,17 @@ public final class PedidoUI extends javax.swing.JPanel {
     public void initDatePicker() {
         UtilDateModel model = new UtilDateModel();
         model.setDate(2020, 8, 1);
+
         Properties p = new Properties();
         p.put("text.today", "Hoy");
         p.put("text.month", "Mes");
         p.put("text.year", "Anio");
-        
+
         JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-        datePicker.setVisible(true);
-        jPanel1.add(datePicker, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 80, 210, 40));
-        
-        //JDatePanelImpl datePanel = new JDatePanelImpl(model);
-        //JDatePanelImpl panelDate = new JDatePanelImpl(model,i18nStrings);
-        //SqlDataModel sqlDataModel = new SqlDataModel();
-        //JDatePanelImpl datePanel = new JDatePanelImpl(model);
-        // JDatePickerImpl datePicker = new JDatePickerImpl(datePanel);
+        txtDatePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+        txtDatePicker.setVisible(true);
+        jPanel1.add(txtDatePicker, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 80, 210, 40));
+
     }
 
     /**
@@ -99,6 +117,16 @@ public final class PedidoUI extends javax.swing.JPanel {
         jButton9 = new javax.swing.JButton();
         crearCliente = new javax.swing.JDialog();
         panelContains = new javax.swing.JPanel();
+        FormaDePago = new javax.swing.JDialog();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        lblCreditoPago = new javax.swing.JLabel();
+        btnPagar = new javax.swing.JButton();
+        lblTotalAPagar = new javax.swing.JLabel();
+        lblMinimo = new javax.swing.JLabel();
+        txtCredito = new javax.swing.JTextField();
+        txtEfectivo = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -121,7 +149,6 @@ public final class PedidoUI extends javax.swing.JPanel {
         txtCodePedido = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
 
         SeleccionarCliente.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         SeleccionarCliente.setTitle("Cliente");
@@ -232,21 +259,19 @@ public final class PedidoUI extends javax.swing.JPanel {
         jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(6, 6, 6)
+                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout SeleccionarClienteLayout = new javax.swing.GroupLayout(SeleccionarCliente.getContentPane());
@@ -289,6 +314,88 @@ public final class PedidoUI extends javax.swing.JPanel {
             .addGroup(crearClienteLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panelContains, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jLabel5.setFont(new java.awt.Font("Dialog", 2, 18)); // NOI18N
+        jLabel5.setText("Anticipo:");
+
+        jLabel6.setText("Efectivo");
+
+        lblCreditoPago.setText("Credito");
+
+        btnPagar.setText("Pagar");
+        btnPagar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPagarActionPerformed(evt);
+            }
+        });
+
+        lblTotalAPagar.setFont(new java.awt.Font("Dialog", 2, 18)); // NOI18N
+        lblTotalAPagar.setText("Total  pagar");
+
+        lblMinimo.setFont(new java.awt.Font("Dialog", 2, 18)); // NOI18N
+        lblMinimo.setText("Anticipo Minimo");
+
+        txtCredito.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCreditoActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(btnPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtEfectivo)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtCredito)
+                    .addComponent(lblCreditoPago, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
+                    .addComponent(lblMinimo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTotalAPagar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblTotalAPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblMinimo, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblCreditoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtEfectivo, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12))
+        );
+
+        javax.swing.GroupLayout FormaDePagoLayout = new javax.swing.GroupLayout(FormaDePago.getContentPane());
+        FormaDePago.getContentPane().setLayout(FormaDePagoLayout);
+        FormaDePagoLayout.setHorizontalGroup(
+            FormaDePagoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(FormaDePagoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        FormaDePagoLayout.setVerticalGroup(
+            FormaDePagoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(FormaDePagoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -464,9 +571,6 @@ public final class PedidoUI extends javax.swing.JPanel {
         jLabel4.setText("Fecha");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 90, 60, 30));
 
-        jCheckBox1.setText("Hoy");
-        jPanel1.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 90, -1, -1));
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -515,14 +619,34 @@ public final class PedidoUI extends javax.swing.JPanel {
     }
 
     private void btnFinalizarCompraAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarCompraAction
-        // TODO add your handling code here:
+        totalVenta();
+
+        if (txtDatePicker.getModel().getValue() == null) {
+
+            JOptionPane.showMessageDialog(null, "Debe Elegir una fecha", "Advertencia", JOptionPane.WARNING_MESSAGE);
+
+        } else {
+
+            FormaDePago.setModal(true);
+            FormaDePago.setSize(304, 449);
+            FormaDePago.setVisible(true);
+
+        }
+
+    }//GEN-LAST:event_btnFinalizarCompraAction
+
+    private void metodoPrueba() {
+
         totalVenta();
         // com.tienda.entities.PedidoUI factura = com.tienda.entities.PedidoUI();
         //manager.getFacturaDAO().insert(factura);
+        int idTiempo = manager.getTiempoEntreTiendasDAO().getTheTimeBetweenStoresWithTheCodeOfTheStoresInvolved(((Tienda) jCOrigen.getSelectedItem()).getCodigo(), ((Tienda) jCDestino.getSelectedItem()).getCodigo());
         int idFactura = manager.getFacturaDAO().lastInsertId();
-        //Pedido pedido = new Pedido(txtCodePedido.getText(), fecha, true, ERROR, true, true, UNDEFINED_CONDITION, nitCliente, totalPagar, totalPagar)
+        //String codigo,              java.sql.Date fecha,            boolean entregado, int r boolean estado, int TiempoDeEnvio_idTiempoDeEnvio, String Cliente_nit, BigDecimal anticipo,BigDecimal subtotal) {
+        //Pedido pedido = new Pedido(txtCodePedido.getText(), (java.sql.Date)datePicker.getModel().getValue() , false, 0, false, true, idTiempo   , nitCliente, totalPagar, totalPagar);
         if (tableCarrito.getRowCount() != 0) {
             for (int i = 0; i < tableCarrito.getRowCount(); i++) {
+
                 /* DetalleFactura detalleFactura = new DetalleFactura(0,
                     idFactura,
                     (String) tableCarrito.getValueAt(i, 0),
@@ -543,8 +667,7 @@ public final class PedidoUI extends javax.swing.JPanel {
             }
         }
 
-    }//GEN-LAST:event_btnFinalizarCompraAction
-
+    }
     private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
         // TODO add your handling code here:
         fillTableCliente(manager.getClienteDAO().getClienteForDtoWhitLike(
@@ -578,6 +701,104 @@ public final class PedidoUI extends javax.swing.JPanel {
         manager = new Manager();
         fillTableCliente(manager.getClienteDAO().getClienteForDto());
     }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void txtCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCreditoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCreditoActionPerformed
+
+    private void btnPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPagarActionPerformed
+        // TODO add your handling code here:
+        BigDecimal credito;
+        BigDecimal enEfectivo = new BigDecimal("0.0");
+        if (txtCredito.getText().isEmpty()) {
+            if (txtEfectivo.getText().isEmpty()) {
+
+                JOptionPane.showMessageDialog(null, "Debe Ingresar una cantidad minima", "Advertencia", JOptionPane.WARNING_MESSAGE);
+
+            } else {
+
+                enEfectivo = new BigDecimal(txtEfectivo.getText());
+                compararMinimo(enEfectivo);
+
+            }
+        } else {
+            credito = new BigDecimal(txtCredito.getText());
+            if (!txtEfectivo.getText().isEmpty()) {
+                enEfectivo = new BigDecimal(txtEfectivo.getText());
+
+            }
+            compararMinimo(credito.add(enEfectivo));
+
+        }
+    }//GEN-LAST:event_btnPagarActionPerformed
+    public void compararMinimo(BigDecimal anticipo) {
+        System.out.println("Anticpo: " + anticipo + "  Minimo: " + minimo);
+        if (minimo.compareTo(anticipo) == -1) {
+            crearPedido(anticipo);
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Debe Cancelar un Minimo Del 25%", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    public void crearPedido(BigDecimal anticipo) {
+        String codeStoreOrigen = ((Tienda) jCOrigen.getModel().getSelectedItem()).getCodigo();
+        String codeStoreDestino = ((Tienda) jCDestino.getModel().getSelectedItem()).getCodigo();
+        //    , BigDecimal anticipo,BigDecimal subtotal) {
+        //String date = (String) txtDatePicker.getModel().getValue();
+        System.out.println("DatePicker tipo de Objeto: " + txtDatePicker.getModel().getValue().getClass().getName());
+        java.sql.Date date = new java.sql.Date(txtDatePicker.getModel().getYear(), txtDatePicker.getModel().getMonth(), txtDatePicker.getModel().getDay());
+        // java.util.Date date = (java.util.Date) txtDatePicker.getModel().getValue();
+        int idTiempoEnvio = manager.getTiempoEntreTiendasDAO().getTheTimeBetweenStoresWithTheCodeOfTheStoresInvolved(codeStoreOrigen, codeStoreDestino);
+        Pedido pedido = new Pedido(txtCodePedido.getText(),
+                date,
+                false,//entregado
+                0,//dias de retraso
+                false,//se encuentra en su destino
+                true,//estado
+                idTiempoEnvio,//idTiempoDeEnvio
+                nitCliente,//nitCliente
+                anticipo,//anticipo
+                totalPagar);//subtotal
+        manager.getPedidoDAO().insert(pedido);
+
+        crearDetallePedido();
+
+    }
+
+    public void crearDetallePedido() {
+        DetallePedido detalle;
+        for (int i = 0; i < tableCarrito.getModel().getRowCount(); i++) {
+            detalle = new DetallePedido(0,
+                    Integer.valueOf((String) tableCarrito.getValueAt(i, 2)),
+                    true, (String) tableCarrito.getValueAt(i, 0),
+                    txtCodePedido.getText());
+        
+            manager.getDetallePedidoDAO().insert(detalle);
+        }
+        
+        JOptionPane.showMessageDialog(null, "Pedido Creado Satisfactoriamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+        FormaDePago.dispose();
+
+          MainFrame.dp.removeAll();
+           dp.repaint();
+        dp.revalidate();
+        MainFrame.addPanel(new PedidoUI());
+        
+    }
+
+    public void eventTextfield(JTextField field) {
+        field.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+                if (!(Character.isDigit(e.getKeyChar()) || e.getKeyChar() == 46)) {
+                    e.consume();
+                }
+            }
+        });
+    }
+
     public void cellListener() {
         Action action = new AbstractAction() {
             @Override
@@ -657,8 +878,12 @@ public final class PedidoUI extends javax.swing.JPanel {
 
         }
         totalPagar = total;
-
+        lblTotalAPagar.setText("Total a Pagar: " + totalPagar);
+        minimo = new BigDecimal(25);
+        minimo = totalPagar.multiply(minimo);
+        minimo = minimo.divide(new BigDecimal(100));
         lblTotal.setText("Q. " + total);
+
     }
 
     private void eventTableProducto() {
@@ -707,21 +932,41 @@ public final class PedidoUI extends javax.swing.JPanel {
             dpi = (String) tableCliente.getValueAt(rowSelected, 1);
             System.out.println("Cliente Seleccionado: " + nitCliente);
             SeleccionarCliente.dispose();
+            Cliente seleccionado = manager.getClienteDAO().obtener(nitCliente);
+            lblCreditoPago.setText(lblCreditoPago.getText() + ":  " + seleccionado.getCredito());
 
         } else {
             JOptionPane.showMessageDialog(null, "Debe seleccionar A un Cliente", "Datos Clientes", JOptionPane.ERROR_MESSAGE);
         }
 
     }
+
+    private void eventTableCliente() {
+        tableCliente.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                //super.mouseClicked(e); //To change body of generated methods, choose Tools | Templates.
+                if (e.getClickCount() == 2) {
+                    dtCliente();
+
+                }
+            }
+
+        });
+    }
+    private BigDecimal minimo;
+    private JDatePickerImpl txtDatePicker;
     private String nitCliente;
     private String dpi;
     private BigDecimal totalPagar;
     private Manager manager;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDialog FormaDePago;
     private javax.swing.JDialog SeleccionarCliente;
     private javax.swing.JButton btnAceptarCliente;
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnFinalizarCompra;
+    private javax.swing.JButton btnPagar;
     private javax.swing.JDialog crearCliente;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
@@ -730,15 +975,17 @@ public final class PedidoUI extends javax.swing.JPanel {
     private javax.swing.JButton jButton9;
     private javax.swing.JComboBox<Tienda> jCDestino;
     private javax.swing.JComboBox<Tienda> jCOrigen;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
@@ -747,12 +994,17 @@ public final class PedidoUI extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lblCreditoPago;
+    private javax.swing.JLabel lblMinimo;
     private javax.swing.JLabel lblTotal;
+    private javax.swing.JLabel lblTotalAPagar;
     private javax.swing.JPanel panelContains;
     private javax.swing.JTable tableCarrito;
     private javax.swing.JTable tableCliente;
     private javax.swing.JTable tableProducto;
     private javax.swing.JTextField txtBuscarCliente;
     private javax.swing.JTextField txtCodePedido;
+    private javax.swing.JTextField txtCredito;
+    private javax.swing.JTextField txtEfectivo;
     // End of variables declaration//GEN-END:variables
 }

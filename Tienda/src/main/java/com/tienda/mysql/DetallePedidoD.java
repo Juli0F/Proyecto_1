@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class DetallePedidoD implements DetallePedidoDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO DetallePedido (cantidad,estado,Producto_codigo,Pedido_codigo,) VALUES (?,?,?,?)";
+    private final String INSERT = "INSERT INTO DetallePedido (cantidad,estado,Producto_codigo,Pedido_codigo) VALUES (?,?,?,?)";
     private final String UPDATE = "UPDATE DetallePedido SET cantidad = ?, estado = ?, Producto_codigo = ?, Pedido_codigo = ? WHERE idDetallePedido = ? ";
     private final String DELETE = "DELETE DetallePedido WHERE idDetallePedido = ? ";
     private final String GETALL = "SELECT * FROM  DetallePedido  ";

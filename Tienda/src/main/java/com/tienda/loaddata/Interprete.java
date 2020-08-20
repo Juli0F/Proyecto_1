@@ -71,10 +71,11 @@ public class Interprete {
 
     }
 
-    //--------------------------------------------------------------------------------------------
-    //  El siguiente bloque de codigo clasifica las intrucciones 
-    //  para convertirlas en objetos
-    //--------------------------------------------------------------------------------------------
+    /**--------------------------------------------------------------------------------------------
+    *  El siguiente bloque de codigo clasifica las intrucciones 
+    *  para convertirlas en objetos
+    --------------------------------------------------------------------------------------------
+    **/
     public void tipoObjeto(String SplitTipo, String lineInstructions, int cont, JTextArea correcto, JTextArea error) {
 
         switch (SplitTipo) {
@@ -246,7 +247,7 @@ public class Interprete {
                                             //  crea el pedido
                                             Integer envio = manager.getTiempoEntreTiendasDAO().getTiempoByTwoStore(datos[2], datos[3]);
                                             if (envio != null) {
-
+//public Pedido(String codigo, java.sql.Date fecha, boolean entregado, int retraso, boolean destino, boolean estado, int TiempoDeEnvio_idTiempoDeEnvio, String Cliente_nit, BigDecimal anticipo,BigDecimal subtotal) {
                                                 Pedido pedido = new Pedido(datos[1], java.sql.Date.valueOf(datos[4]), false, 0, false, true, envio, datos[6], BigDecimal.valueOf(Double.valueOf(datos[datos.length - 1])), BigDecimal.valueOf(Double.valueOf(datos[datos.length - 2])));
                                                 DetallePedido articulos = new DetallePedido(0, Integer.valueOf(datos[7]), true, datos[6], datos[1]);
 

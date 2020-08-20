@@ -334,7 +334,7 @@ public class MainFrame extends javax.swing.JFrame {
         addPanel(new Ventas());
     }//GEN-LAST:event_trsVentasActionPerformed
 
-    private void addPanel(javax.swing.JPanel panel){
+    public static void addPanel(javax.swing.JPanel panel){
         dp.removeAll();
         
         panel.setSize(dp.getWidth()/(3/2),dp.getHeight()/(3/2));
@@ -342,6 +342,11 @@ public class MainFrame extends javax.swing.JFrame {
         dp.add(panel);
         
 
+    }
+    public static void cleanPane(){
+        dp.removeAll();
+        dp.repaint();
+        dp.revalidate();
     }
     /**
      * @param args the command line arguments
