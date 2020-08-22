@@ -18,7 +18,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
@@ -43,9 +42,9 @@ public final class EntregarPedido extends javax.swing.JPanel {
         cellListener();
         eventoTable();
         eventTextfield(txtCredito);
-
+        
         this.pedidoSelected = false;
-
+        
     }
 
     /**
@@ -59,7 +58,7 @@ public final class EntregarPedido extends javax.swing.JPanel {
 
         pagar = new javax.swing.JDialog();
         jPanel3 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
+        pagarPendiente = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -81,10 +80,10 @@ public final class EntregarPedido extends javax.swing.JPanel {
         tableDescripcionPedidos = new javax.swing.JTable();
         bntEntrega = new javax.swing.JButton();
 
-        jButton2.setText("Pagar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        pagarPendiente.setText("Pagar");
+        pagarPendiente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                pagarPendienteActionPerformed(evt);
             }
         });
 
@@ -106,7 +105,7 @@ public final class EntregarPedido extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(pagarPendiente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
@@ -158,7 +157,7 @@ public final class EntregarPedido extends javax.swing.JPanel {
                     .addComponent(txtCredito, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
                     .addComponent(txtEfectivo))
                 .addGap(41, 41, 41)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pagarPendiente, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33))
         );
 
@@ -311,135 +310,216 @@ public final class EntregarPedido extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * muestra datos en la tabla de pedidos
+     * 
+     * @param evt 
+     */
     private void btnVerTodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerTodoActionPerformed
-
+        
         fillTablePedidosAEntregar(manager.getPedidoDAO().paraRecogerSeEncuentraEnDestino());
     }//GEN-LAST:event_btnVerTodoActionPerformed
 
+    /**
+     * muestra un cuadro de dialogo 
+     * para que el usuario pueda realizar 
+     * el pago del saldo pendiente
+     * @param evt 
+     */
     private void bntEntregaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntEntregaActionPerformed
-
+        
         txtEfectivo.setText("0.0");
         txtCredito.setText("0.0");
         pagar.setSize(400, 440);
         pagar.setVisible(true);
         datosParaMostrarPagar();
     }//GEN-LAST:event_bntEntregaActionPerformed
-
+    /**
+     * verificar si el cliente tiene un pendiente 
+     * de saldo
+     * y si tiene debe puede canncelarlo con credito o efectivo
+     * verifica si tiene el credito suficiente para que apareza visible
+     * el campo de credito
+     * 
+     */
     public void datosParaMostrarPagar() {
-
+        
         BigDecimal anticpoDecimal = aEntregar.get(0).getAnticipo();
         BigDecimal totalDecimal = aEntregar.get(0).getSubtotal();
         BigDecimal saldoDecimal = new BigDecimal("" + totalDecimal.subtract(anticpoDecimal));
-
+        
         if (aEntregar.get(0) != null) {
-
+            
             lblAnticipo.setText("Q." + anticpoDecimal);
             lblSaldo.setText("Q. " + saldoDecimal);
             lblTotal.setText("Q. " + totalDecimal);
-
+            
             if (anticpoDecimal.compareTo(totalDecimal) == 0) {
-
+                
                 txtCredito.setVisible(false);
                 txtEfectivo.setVisible(false);
-
+                
                 lblForTxtCredito.setVisible(false);
                 lblForTxtEfectivo.setVisible(false);
-
+                
             } else {
-
+                
                 Cliente c = manager.getClienteDAO().obtener(aEntregar.get(0).getCliente_nit());
                 //si el credito del cliente es cero debe pagar con efectivo
                 if (c.getCredito().compareTo(BigDecimal.ZERO) == 0) {
                     txtCredito.setVisible(false);
                     lblForTxtCredito.setVisible(false);
-
+                    
                 }
-
+                
             }
-
+            
         } else {
             JOptionPane.showMessageDialog(null, "Debe Seleccionar una Pedido para entregar", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-
+            
         }
     }
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    /**
+     *realiza el pago pendiente que tiene el cliente con el pedido
+     * s
+     * @param evt 
+     */
+    private void pagarPendienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagarPendienteActionPerformed
         //si el textfield de credito esta visible significa que aun debe
         if (txtEfectivo.isVisible()) {
-
+            
             Cliente cliente = manager.getClienteDAO().obtener(aEntregar.get(0).getCliente_nit());
-
+            
             BigDecimal pagoEfectivo = new BigDecimal(txtEfectivo.getText());
             BigDecimal pagoCredito = new BigDecimal(txtCredito.getText());
             BigDecimal creditoClien = cliente.getCredito();
-
-            if (pagoCredito.compareTo(creditoClien) < 0) {
-
+            
+            if (pagoCredito.compareTo(creditoClien) <= 0) {
+                
                 JOptionPane.showMessageDialog(null, "Credito insuficiente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-
+                
             } else {
                 if (creditoClien.add(pagoEfectivo).compareTo(aEntregar.get(0).getSubtotal()) <= 0) {
-
+                    
                     translatePedidoAFactura();
                     cliente.setCredito(cliente.getCredito().subtract(pagoCredito));
                     
                 } else {
                     JOptionPane.showMessageDialog(null, "Credito insuficiente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
                 }
-
+                
             }
-
+            
         } else {
-
+            
             translatePedidoAFactura();
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
-
+    }//GEN-LAST:event_pagarPendienteActionPerformed
+    /**
+     * Verifica que e producto se encuentre a tiempo
+     * en la tienda de Destino
+     * si tiene dias de retraso entoncesle aumentara 
+     * en 5% el credito del Cliente 
+     * sino en un 2%
+     */
+    public void diasTardes() {
+        
+        Pedido pedido = aEntregar.get(0);
+        
+        //   cantidad -> 100%
+        //    x  -> 5%
+        
+        BigDecimal porcentaje;
+        BigDecimal cien = new  BigDecimal("100");
+        BigDecimal creditoPlus = new BigDecimal("0");
+        
+        if (pedido.getRetraso() != 0) {
+            
+            if (pedido.getAnticipo().compareTo(pedido.getSubtotal()) == 0) {
+                //agregar %5  
+                porcentaje = new BigDecimal("5");
+                creditoPlus = (pedido.getSubtotal().multiply(porcentaje));
+                creditoPlus = creditoPlus.divide(cien);
+            }else{
+                //agregar %2
+                porcentaje = new BigDecimal("2");
+                creditoPlus = (pedido.getSubtotal().multiply(porcentaje));
+                creditoPlus = creditoPlus.divide(cien);
+            }
+            
+            Cliente cliente = manager.getClienteDAO().obtener(pedido.getCliente_nit());
+            cliente.setCredito(cliente.getCredito().add(creditoPlus));
+        }
+        
+        
+    }
+    /**
+     * metodo que concluye el pedido
+     * creando una factura por el pedido
+     * y registrando los productos en la factura
+     *
+     */
     public void translatePedidoAFactura() {
-
+        
         JOptionPane.showMessageDialog(null, "Procesando Entrega, Facturando", "Informacion", JOptionPane.INFORMATION_MESSAGE);
         TiempoEntreTiendas tet = manager.getTiempoEntreTiendasDAO().getCodigoTiendaUsingidTiempoAndCodigoTiendaDestino(aEntregar.get(0).getCodigoDestino(), aEntregar.get(0).getTiempoDeEnvio_idTiempoDeEnvio());
-
+        
         Factura dePedido = new Factura(0, "Pedido-" + aEntregar.get(0).getCodigo(), true, Log.idUsuario, tet.getTienda_codigo(), aEntregar.get(0).getCliente_nit(), aEntregar.get(0).getSubtotal());
-
+        
         manager.getFacturaDAO().insert(dePedido);
         int idFactura = manager.getFacturaDAO().lastInsertId();
         for (DetallePedido detallePedido : manager.getDetallePedidoDAO().obtenerDetallePorCodigoDePedido(aEntregar.get(0).getCodigo())) {
-
+            
             DetalleFactura detalleFactura = new DetalleFactura(0, idFactura, detallePedido.getProducto_codigo(), detallePedido.getCantidad(), BigDecimal.ZERO);
             manager.getDetalleFacturaDAO().insert(detalleFactura);
-
+            
         }
+        diasTardes();
         JOptionPane.showMessageDialog(null, "Factura realizada", "Factura", JOptionPane.INFORMATION_MESSAGE);
-
+        
     }
-
+    /**
+     * solo permite el ingreso de numeros y puntos
+     * 
+     * @param field al que se le agregara el evento
+     * 
+     */
+    
     public void eventTextfield(JTextField field) {
         field.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
-
+                
                 if (!(Character.isDigit(e.getKeyChar()) || e.getKeyChar() == 46)) {
                     e.consume();
                 }
             }
         });
     }
-
+    /**
+     * reconoce el enter arriba y abajo
+     * y pasa la descripcion del pedido a la 
+     * tabla de detallesPedido
+     */
     public void eventoTable() {
         tablePedidosAEntregar.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_LEFT) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) {
                     int rowselect = tablePedidosAEntregar.getSelectedRow();
                     fillTableDetalle(manager.getDetallePedidoDAO().getCodigoProductoCantidad((String) tablePedidosAEntregar.getValueAt(rowselect, 0)));
-
+                    
                 }
             }
-
+            
         });
     }
-
+    
+    /**
+     *llena la tabla descripcionDe Pedido con la lista 
+     * de que se le pasara por parametro
+     * @param productos Lista del tipo detallePedidoProducto
+     */
     private void fillTableDetalle(List<DetallePedidoProducto> productos) {
         ((DefaultTableModel) tableDescripcionPedidos.getModel()).setRowCount(0);
         productos.forEach(detalles -> {
@@ -449,16 +529,19 @@ public final class EntregarPedido extends javax.swing.JPanel {
                 detalles.getCantidad()
             });
         });
-
+        
     }
-
+    /**
+     *selecciona el pedido a entregar
+     * reconoce la celda que se ha modificado
+     */
     public void cellListener() {
         Action action;
         action = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TableCellListener tcl = (TableCellListener) e.getSource();
-
+                
                 if (!pedidoSelected) {
                     JOptionPane.showMessageDialog(null, "Solo se puede entregar un pedido a la vez", "Advertencia", JOptionPane.WARNING_MESSAGE);
                 } else {
@@ -467,28 +550,31 @@ public final class EntregarPedido extends javax.swing.JPanel {
                         System.out.println("Agregando pedido a lista de entrega");
                         aEntregar.add(manager.getPedidoDAO().obtener((String) tablePedidosAEntregar.getValueAt(tcl.getRow(), 0)));
                     } else {
-
+                        
                         System.out.println("Se debe quitar el pedido de la lista de entrega");
                         if (aEntregar.contains(manager.getPedidoDAO().obtener((String) tablePedidosAEntregar.getValueAt(tcl.getRow(), 0)))) {
-
+                            
                             if (!aEntregar.remove(aEntregar.contains(manager.getPedidoDAO().obtener((String) tablePedidosAEntregar.getValueAt(tcl.getRow(), 0))))) {
                                 JOptionPane.showMessageDialog(null, "Error Al Remover Pedido", "Error", JOptionPane.ERROR_MESSAGE);
                             }
                         }
-
+                        
                     }
                 }
             }
         };
-
+        
         TableCellListener tcl = new TableCellListener(tablePedidosAEntregar, action);
         //
     }
-
+    /**
+     * llena la tabla Pedidos con la lista de tipo Pedidos
+     * @param pedidos List<Pedido> 
+     */
     public void fillTablePedidosAEntregar(List<Pedido> pedidos) {
-
+        
         ((DefaultTableModel) tablePedidosAEntregar.getModel()).setRowCount(0);
-
+        
         pedidos.forEach(pedido -> {
             ((DefaultTableModel) tablePedidosAEntregar.getModel()).addRow(new Object[]{
                 pedido.getCodigo(),
@@ -507,7 +593,6 @@ public final class EntregarPedido extends javax.swing.JPanel {
     private javax.swing.JButton bntEntrega;
     private javax.swing.JButton btnVerTodo;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -523,6 +608,7 @@ public final class EntregarPedido extends javax.swing.JPanel {
     private javax.swing.JLabel lblSaldo;
     private javax.swing.JLabel lblTotal;
     private javax.swing.JDialog pagar;
+    private javax.swing.JButton pagarPendiente;
     private javax.swing.JTable tableDescripcionPedidos;
     private javax.swing.JTable tablePedidosAEntregar;
     private javax.swing.JTextField txtCredito;

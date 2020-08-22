@@ -79,6 +79,17 @@ public class Ventas extends javax.swing.JPanel {
         btnCredito = new javax.swing.JButton();
         btnCreditoEfectivo = new javax.swing.JButton();
         btnEfectivo = new javax.swing.JButton();
+        creditoEfectico = new javax.swing.JDialog();
+        jPanel13 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JSeparator();
+        jLabel3 = new javax.swing.JLabel();
+        txtCredito = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        txtEfectivo = new javax.swing.JTextField();
+        pagar = new javax.swing.JButton();
+        jInternalFrame1 = new javax.swing.JInternalFrame();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -349,6 +360,100 @@ public class Ventas extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
+        jLabel1.setFont(new java.awt.Font("Dialog", 2, 18)); // NOI18N
+        jLabel1.setText("Credito Disponible");
+
+        jLabel2.setFont(new java.awt.Font("Dialog", 2, 18)); // NOI18N
+
+        jLabel3.setText("Credito");
+
+        jLabel4.setText("Efectivo");
+
+        pagar.setText("Pagar");
+        pagar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pagarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
+        jPanel13.setLayout(jPanel13Layout);
+        jPanel13Layout.setHorizontalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel13Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(pagar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel13Layout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(txtEfectivo))
+                    .addGroup(jPanel13Layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(txtCredito))
+                    .addGroup(jPanel13Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel13Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(jSeparator3)
+                .addGap(6, 6, 6))
+        );
+        jPanel13Layout.setVerticalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel13Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtEfectivo, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(pagar, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout creditoEfecticoLayout = new javax.swing.GroupLayout(creditoEfectico.getContentPane());
+        creditoEfectico.getContentPane().setLayout(creditoEfecticoLayout);
+        creditoEfecticoLayout.setHorizontalGroup(
+            creditoEfecticoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(creditoEfecticoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        creditoEfecticoLayout.setVerticalGroup(
+            creditoEfecticoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(creditoEfecticoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jInternalFrame1.setVisible(true);
+
+        javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
+        jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
+        jInternalFrame1Layout.setHorizontalGroup(
+            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jInternalFrame1Layout.setVerticalGroup(
+            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Ventas"));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Productos"));
@@ -412,7 +517,7 @@ public class Ventas extends javax.swing.JPanel {
                         .addGap(2, 2, 2)
                         .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Buscar"));
@@ -637,7 +742,7 @@ public class Ventas extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFinalizarCompraAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarCompraAction
-        
+
         totalVenta();
         Factura factura = new Factura(0, "", true, Log.idUsuario, Log.codigoTienda, nitCliente, this.totalPagar);
         manager.getFacturaDAO().insert(factura);
@@ -713,13 +818,13 @@ public class Ventas extends javax.swing.JPanel {
         });
     }
     private void btnAceptarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarClienteActionPerformed
-        
+
         dtCliente();
 
     }//GEN-LAST:event_btnAceptarClienteActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        
+
         SeleccionarCliente.dispose();
         ClienteUI crear = new ClienteUI();
         crear.setSize(800, 700);
@@ -735,13 +840,13 @@ public class Ventas extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        
+
         manager = new Manager();
         fillTableCliente(manager.getClienteDAO().getClienteForDto());
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
-        
+
         fillTableCliente(manager.getClienteDAO().getClienteForDtoWhitLike(
                 (!txtBuscarCliente.getText().isEmpty()) ? txtBuscarCliente.getText() : " "
         ));
@@ -757,7 +862,7 @@ public class Ventas extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        
+
         if (tableCarrito.getSelectedRow() != -1) {
             ((DefaultTableModel) tableCarrito.getModel()).removeRow(tableCarrito.getSelectedRow());
             if (tableCarrito.getRowCount() != 0) {
@@ -768,13 +873,14 @@ public class Ventas extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void btnCreditoAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreditoAction
-        
+
         Cliente cliente = manager.getClienteDAO().obtener(nitCliente);
         if (cliente.getCredito().compareTo(totalPagar) == 0 || cliente.getCredito().compareTo(totalPagar) == 1) {
 
             cliente.setCredito(cliente.getCredito().subtract(totalPagar));
             manager.getClienteDAO().modify(cliente);
             MetodoDePago.dispose();
+            facturar();
             JOptionPane.showMessageDialog(null, "Venta Finalizada", "Informacion", JOptionPane.INFORMATION_MESSAGE);
             removeThis();
 
@@ -784,25 +890,31 @@ public class Ventas extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCreditoAction
 
     private void pagoHibrido(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagoHibrido
-        
-        Cliente cliente = manager.getClienteDAO().obtener(nitCliente);
-        if (cliente.getCredito().compareTo(totalPagar) == 0 || cliente.getCredito().compareTo(totalPagar) == 1) {
-            cliente.setCredito(cliente.getCredito().subtract(totalPagar));
-            manager.getClienteDAO().modify(cliente);
-            
-            MetodoDePago.dispose();
-            JOptionPane.showMessageDialog(null, "Venta Finalizada", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-            removeThis();
+        txtCredito.setText("0.0");
+        txtEfectivo.setText("0.0");
 
-        } else {
-            cliente.setCredito(BigDecimal.ZERO);
-            manager.getClienteDAO().modify(cliente);
-            MetodoDePago.dispose();
-
-            JOptionPane.showMessageDialog(null, "Venta Finalizada", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-            removeThis();
-
-        }
+        creditoEfectico.setSize(390, 317);
+        creditoEfectico.setVisible(true);
+//        
+//        Cliente cliente = manager.getClienteDAO().obtener(nitCliente);
+//        
+//        if (cliente.getCredito().compareTo(totalPagar) == 0 || cliente.getCredito().compareTo(totalPagar) == 1) {
+//            cliente.setCredito(cliente.getCredito().subtract(totalPagar));
+//            manager.getClienteDAO().modify(cliente);
+//            
+//            MetodoDePago.dispose();
+//            JOptionPane.showMessageDialog(null, "Venta Finalizada", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+//            removeThis();
+//
+//        } else {
+//            cliente.setCredito(BigDecimal.ZERO);
+//            manager.getClienteDAO().modify(cliente);
+//            MetodoDePago.dispose();
+//
+//            JOptionPane.showMessageDialog(null, "Venta Finalizada", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+//            removeThis();
+//
+//        }
 
     }//GEN-LAST:event_pagoHibrido
     public void removeThis() {
@@ -813,11 +925,57 @@ public class Ventas extends javax.swing.JPanel {
     }
 
     private void pagarConEfectivo(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagarConEfectivo
-        
 
+        facturar();
         JOptionPane.showMessageDialog(null, "Venta Finalizada", "Informacion", JOptionPane.INFORMATION_MESSAGE);
         removeThis();
+
     }//GEN-LAST:event_pagarConEfectivo
+
+    private void pagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagarActionPerformed
+
+        BigDecimal inCredito = new BigDecimal("" + txtCredito.getText());
+        BigDecimal inEfectivo = new BigDecimal("" + txtEfectivo.getText());
+
+        Cliente cliente = manager.getClienteDAO().obtener(nitCliente);
+        
+         //credito > inEfectivo                \\
+        //se procede a facturar                 \\
+       //si credito < inEfectivo lanzar mensjae  \\
+      //credito > inEfectivo                      \\
+        
+        if (cliente.getCredito().compareTo(inCredito) >= 0) {
+
+            cliente.setCredito(cliente.getCredito().subtract(totalPagar));
+            manager.getClienteDAO().modify(cliente);
+            
+            creditoEfectico.dispose();
+            
+            facturar();
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Credito Insuficiente", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
+
+
+    }//GEN-LAST:event_pagarActionPerformed
+    public void facturar() {
+        Factura factura = new Factura(0, "Venta", true, Log.idUsuario, Log.codigoTienda, nitCliente, totalPagar);
+
+        manager.getFacturaDAO().insert(factura);
+
+        int idFactura = manager.getFacturaDAO().lastInsertId();
+
+        for (int i = 0; i < tableCarrito.getRowCount(); i++) {
+
+            DetalleFactura detalleFactura = new DetalleFactura(0, idFactura, (String) tableCarrito.getModel().getValueAt(i, 0), Integer.valueOf((String) tableCarrito.getModel().getValueAt(i, 2)), BigDecimal.ZERO);
+            manager.getDetalleFacturaDAO().insert(detalleFactura);
+
+        }
+
+        MetodoDePago.dispose();
+    }
+
     private void eventTxtBuscarCliente() {
         txtBuscarCliente.addKeyListener(new KeyAdapter() {
             @Override
@@ -937,6 +1095,7 @@ public class Ventas extends javax.swing.JPanel {
     private javax.swing.JButton btnEfectivo;
     private javax.swing.JButton btnFinalizarCompra;
     private javax.swing.JDialog crearCliente;
+    private javax.swing.JDialog creditoEfectico;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -944,10 +1103,16 @@ public class Ventas extends javax.swing.JPanel {
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
+    private javax.swing.JInternalFrame jInternalFrame1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -961,14 +1126,18 @@ public class Ventas extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lblCredito;
     private javax.swing.JLabel lblTotal;
+    private javax.swing.JButton pagar;
     private javax.swing.JPanel panelContains;
     private javax.swing.JTable tableCarrito;
     private javax.swing.JTable tableCliente;
     private javax.swing.JTable tableProducto;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtBuscarCliente;
+    private javax.swing.JTextField txtCredito;
+    private javax.swing.JTextField txtEfectivo;
     // End of variables declaration//GEN-END:variables
 }
