@@ -1,6 +1,7 @@
 package com.tienda.mysql;
 
 import com.tienda.dao.DetallePedidoDAO;
+import com.tienda.dto.DetallePedidoProducto;
 import com.tienda.entities.DetallePedido;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,8 +18,10 @@ public class DetallePedidoD implements DetallePedidoDAO {
     private final String INSERT = "INSERT INTO DetallePedido (cantidad,estado,Producto_codigo,Pedido_codigo) VALUES (?,?,?,?)";
     private final String UPDATE = "UPDATE DetallePedido SET cantidad = ?, estado = ?, Producto_codigo = ?, Pedido_codigo = ? WHERE idDetallePedido = ? ";
     private final String DELETE = "DELETE DetallePedido WHERE idDetallePedido = ? ";
-    private final String GETALL = "SELECT * FROM  DetallePedido  ";
-    private final String GETONE = GETALL + "WHERE idDetallePedido = ?";
+    private final String GET_ALL = "SELECT * FROM  DetallePedido  ";
+    private final String GET_ONE = GET_ALL + "WHERE idDetallePedido = ?";
+    private final String GET_DETALLE_POR_CODIGO_DE_PRODUCTO = GET_ALL+" WHERE DetallePedido = ?";
+    private final String GET_CODIGO_PRODUTO_CANTIDAD = "SELECT p.codigo codigo, p.nombre producto, dp.cantidad FROM Producto p INNER JOIN DetallePedido dp ON dp.Producto_codigo = p.codigo WHERE  dp.Pedido_codigo = ?";
 
     public DetallePedidoD(Connection connection) {
         this.connection = connection;
@@ -67,7 +70,7 @@ public class DetallePedidoD implements DetallePedidoDAO {
         ResultSet rs = null;
         List<DetallePedido> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL);
+            stat = connection.prepareStatement(GET_ALL);
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertir(rs));
@@ -86,7 +89,7 @@ public class DetallePedidoD implements DetallePedidoDAO {
         ResultSet rs = null;
 
         try {
-            stat = connection.prepareStatement(GETONE);
+            stat = connection.prepareStatement(GET_ONE);
             stat.setInt(1, id);
             rs = stat.executeQuery();
             while (rs.next()) {
@@ -143,4 +146,56 @@ public class DetallePedidoD implements DetallePedidoDAO {
         }
         return 0;
     }
+
+    @Override
+    public List<DetallePedido> obtenerDetallePorCodigoDePedido(String codigoPedido) {
+         PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<DetallePedido> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GET_DETALLE_POR_CODIGO_DE_PRODUCTO);
+            stat.setString(1, codigoPedido);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertir(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    public List<DetallePedidoProducto> getCodigoProductoCantidad(String codigoPedido){
+         PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<DetallePedidoProducto> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GET_CODIGO_PRODUTO_CANTIDAD);
+            stat.setString(1, codigoPedido);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertirDetalleProducto(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        
+     return null;   
+    }
+    
+    public DetallePedidoProducto convertirDetalleProducto(ResultSet rs) {
+
+        try {
+            DetallePedidoProducto detallePedidoProducto = new DetallePedidoProducto(rs.getString("codigo"), rs.getString("producto"), rs.getInt("cantidad"));
+
+            return detallePedidoProducto;
+        } catch (SQLException ex) {
+            Logger.getLogger(DetallePedidoD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
 }

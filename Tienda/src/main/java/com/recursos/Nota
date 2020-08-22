@@ -1,0 +1,10 @@
+Cuando se realiza un pedido, 
+la llave foranea que aparece
+de tienda, hace referencia a 
+la tienda destino, 
+es decir la tienda que pidio el pedido.
+
+
+En la Factura siempre debe ir el codigo de la tienda
+que dio o extrajo producto 
+

@@ -70,8 +70,8 @@ public class MainFrame extends javax.swing.JFrame {
         trsTraspaso = new javax.swing.JMenuItem();
         administracion = new javax.swing.JMenu();
         admClientes = new javax.swing.JMenuItem();
+        btnEntregarPedido = new javax.swing.JMenuItem();
         adminProveedores = new javax.swing.JMenuItem();
-        adminMovimientoDeCajas = new javax.swing.JMenuItem();
         adminCorteDCajas = new javax.swing.JMenuItem();
         adminReportes = new javax.swing.JMenuItem();
         configuracion = new javax.swing.JMenu();
@@ -197,16 +197,26 @@ public class MainFrame extends javax.swing.JFrame {
         administracion.setText("Administracion");
 
         admClientes.setMnemonic('c');
-        admClientes.setText("Clientes");
+        admClientes.setText("Recibir Pedidos");
+        admClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                admClientesActionPerformed(evt);
+            }
+        });
         administracion.add(admClientes);
+
+        btnEntregarPedido.setMnemonic('c');
+        btnEntregarPedido.setText("Entregar Pedidos");
+        btnEntregarPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEntregarPedidoActionPerformed(evt);
+            }
+        });
+        administracion.add(btnEntregarPedido);
 
         adminProveedores.setMnemonic('a');
         adminProveedores.setText("Usuarios");
         administracion.add(adminProveedores);
-
-        adminMovimientoDeCajas.setMnemonic('c');
-        adminMovimientoDeCajas.setText("Movimiento de Caja");
-        administracion.add(adminMovimientoDeCajas);
 
         adminCorteDCajas.setMnemonic('c');
         adminCorteDCajas.setText("Corte De Caja");
@@ -282,7 +292,7 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ctgEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctgEmpleadosActionPerformed
-        // TODO add your handling code here:
+        
         addPanel(new EmpleadoUI());
     }//GEN-LAST:event_ctgEmpleadosActionPerformed
 
@@ -297,7 +307,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_ctgProductoActionPerformed
 
     private void confConfDDocumentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confConfDDocumentosActionPerformed
-        // TODO add your handling code here:
+        
         
         
         addPanel(new CargarArchivoUI());
@@ -306,33 +316,41 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_confConfDDocumentosActionPerformed
 
     private void ctgTiendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctgTiendasActionPerformed
-        // TODO add your handling code here:
+        
         addPanel(new TiendaUI());
     }//GEN-LAST:event_ctgTiendasActionPerformed
 
     private void ctgClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctgClientesActionPerformed
-        // TODO add your handling code here:
+        
         addPanel(new ClienteUI());
     }//GEN-LAST:event_ctgClientesActionPerformed
 
     private void trsAsignacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trsAsignacionActionPerformed
-        // TODO add your handling code here:
+        
         addPanel(new AsignacionDeProducto());
     }//GEN-LAST:event_trsAsignacionActionPerformed
 
     private void trsOrdenesdCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trsOrdenesdCompraActionPerformed
-        // TODO add your handling code here:
+        
         addPanel(new PedidoUI());
     }//GEN-LAST:event_trsOrdenesdCompraActionPerformed
 
     private void ctgUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctgUsuarioActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_ctgUsuarioActionPerformed
 
     private void trsVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trsVentasActionPerformed
-        // TODO add your handling code here:
+        
         addPanel(new Ventas());
     }//GEN-LAST:event_trsVentasActionPerformed
+
+    private void admClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_admClientesActionPerformed
+        addPanel(new RecibirPedidos());
+    }//GEN-LAST:event_admClientesActionPerformed
+
+    private void btnEntregarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntregarPedidoActionPerformed
+        addPanel(new EntregarPedido());
+    }//GEN-LAST:event_btnEntregarPedidoActionPerformed
 
     public static void addPanel(javax.swing.JPanel panel){
         dp.removeAll();
@@ -390,10 +408,10 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem admClientes;
     private javax.swing.JMenuItem adminCorteDCajas;
-    private javax.swing.JMenuItem adminMovimientoDeCajas;
     private javax.swing.JMenuItem adminProveedores;
     private javax.swing.JMenuItem adminReportes;
     private javax.swing.JMenu administracion;
+    private javax.swing.JMenuItem btnEntregarPedido;
     private javax.swing.JMenu catalogo;
     private javax.swing.JMenuItem confAcercaDe;
     private javax.swing.JMenuItem confAdminUsuario;

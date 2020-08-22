@@ -2,6 +2,7 @@ package com.tienda.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  *
@@ -19,8 +20,9 @@ public class Pedido implements Serializable {
     private String Cliente_nit;
     private BigDecimal anticipo;
     private BigDecimal subtotal;
+    private String codigoDestino;
     
-    public Pedido(String codigo, java.sql.Date fecha, boolean entregado, int retraso, boolean destino, boolean estado, int TiempoDeEnvio_idTiempoDeEnvio, String Cliente_nit, BigDecimal anticipo,BigDecimal subtotal) {
+    public Pedido(String codigo, java.sql.Date fecha, boolean entregado, int retraso, boolean destino, boolean estado, int TiempoDeEnvio_idTiempoDeEnvio, String Cliente_nit, BigDecimal anticipo,BigDecimal subtotal,String codigoDestino) {
 
         this.codigo = codigo;
         this.fecha = fecha;
@@ -32,6 +34,15 @@ public class Pedido implements Serializable {
         this.Cliente_nit = Cliente_nit;
         this.anticipo = anticipo;
         this.subtotal = subtotal;
+        this.codigoDestino = codigoDestino;
+    }
+
+    public String getCodigoDestino() {
+        return codigoDestino;
+    }
+
+    public void setCodigoDestino(String codigoDestino) {
+        this.codigoDestino = codigoDestino;
     }
 
     public String getCodigo() {
@@ -113,6 +124,32 @@ public class Pedido implements Serializable {
     public void setSubtotal(BigDecimal subtotal) {
         this.subtotal = subtotal;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 71 * hash + Objects.hashCode(this.codigo);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Pedido other = (Pedido) obj;
+        if (!Objects.equals(this.codigo, other.codigo)) {
+            return false;
+        }
+        return true;
+    }
+    
     
     
 

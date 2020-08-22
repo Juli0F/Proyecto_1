@@ -18,9 +18,9 @@ public class TiendaD implements TiendaDAO {
     private final String INSERT = "INSERT INTO Tienda (nombre , direccion, telefono, telefono2, email, horario, estado, codigo) VALUES (?,?,?,?,?,?,?,?)";
     private final String UPDATE = "UPDATE Tienda SET nombre = ?,  direccion = ?, telefono = ?, telefono2 = ?, email = ?, horario = ?, estado = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Tienda WHERE codigo = ? ";
-    private final String GETALL = "SELECT * FROM  Tienda  ";
-    private final String GETONE = GETALL + "WHERE codigo = ?";
-    private final String GETALLSEARCHWITH = GETALL +" WHERE "
+    private final String GET_ALL = "SELECT * FROM  Tienda  ";
+    private final String GET_ONE = GET_ALL + "WHERE codigo = ?";
+    private final String GET_ALL_SEARCH_WITH = GET_ALL +" WHERE "
     
             + " nombre LIKE ? "
             + "OR direccion LIKE ?"
@@ -29,9 +29,11 @@ public class TiendaD implements TiendaDAO {
             + " OR telefono2 LIKE ?"
             + " OR email LIKE ? OR"
             + " codigo LIKE ?";
-    private final String GETTIEMPOTIENDATET = "select tet.Tienda_codigo as codigo,ts.nombre, te.tiempo from TiempoEntreTiendas tet inner join Tienda ts on tet.Tienda_codigo = ts.codigo inner join TiempoDeEnvio te on te.idTiempoDeEnvio = tet.TiempoDeEnvio_idTiempoDeEnvio WHERE ts.estado = 1 and ts.codigo = ?";
-    private final String GETTIEMPOTIENDATETUSELIKE = "select tet.Tienda_codigo as codigo,ts.nombre, te.tiempo from TiempoEntreTiendas tet inner join Tienda ts on tet.Tienda_codigo = ts.codigo inner join TiempoDeEnvio te on te.idTiempoDeEnvio = tet.TiempoDeEnvio_idTiempoDeEnvio WHERE ts.estado = 1 and ts.codigo LIKE ?";
-    private final String GETALLTIENDASUSELIKE = GETALL + " WHERE estado = 1 AND ( codigo LIKE ? OR nombre LIKE ? )";
+    private final String GET_TIEMPO_TIENDA_TET = "select tet.Tienda_codigo as codigo,ts.nombre, te.tiempo from TiempoEntreTiendas tet inner join Tienda ts on tet.Tienda_codigo = ts.codigo inner join TiempoDeEnvio te on te.idTiempoDeEnvio = tet.TiempoDeEnvio_idTiempoDeEnvio WHERE ts.estado = 1 and ts.codigo = ?";
+    private final String GET_TIEMPO_TIENDA_TET_USE_LIKE = "select tet.Tienda_codigo as codigo,ts.nombre, te.tiempo from TiempoEntreTiendas tet inner join Tienda ts on tet.Tienda_codigo = ts.codigo inner join TiempoDeEnvio te on te.idTiempoDeEnvio = tet.TiempoDeEnvio_idTiempoDeEnvio WHERE ts.estado = 1 and ts.codigo LIKE ?";
+    private final String GET_ALL_TIENDAS_USE_LIKE = GET_ALL + " WHERE estado = 1 AND ( codigo LIKE ? OR nombre LIKE ? )";
+    
+    private final String GET_CODIGO_NOMBRE_TIEMPO = "select auxTet.Tienda_codigo as codigo, t.nombre nombre, tiempo.tiempo from TiempoEntreTiendas tet inner join TiempoEntreTiendas auxTet on tet.TiempoDeEnvio_idTiempoDeEnvio = auxTet.TiempoDeEnvio_idTiempoDeEnvio  inner join Tienda t on auxTet.Tienda_codigo = t.codigo inner join TiempoDeEnvio tiempo on tiempo.idTiempoDeEnvio = auxTet.TiempoDeEnvio_idTiempoDeEnvio WHERE tet.Tienda_codigo = ? AND auxTet.Tienda_codigo <> ? ORDER BY tiempo.tiempo DESC";
     
     public TiendaD(Connection connection) {
         this.connection = connection;
@@ -87,7 +89,7 @@ public class TiendaD implements TiendaDAO {
         ResultSet rs = null;
         List<Tienda> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL+" WHERE estado = 1");
+            stat = connection.prepareStatement(GET_ALL+" WHERE estado = 1");
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertir(rs));
@@ -106,7 +108,7 @@ public class TiendaD implements TiendaDAO {
         ResultSet rs = null;
 
         try {
-            stat = connection.prepareStatement(GETONE);
+            stat = connection.prepareStatement(GET_ONE);
             stat.setString(1, id);
             rs = stat.executeQuery();
             while (rs.next()) {
@@ -171,7 +173,7 @@ public class TiendaD implements TiendaDAO {
 
         List<Tienda> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALLSEARCHWITH);
+            stat = connection.prepareStatement(GET_ALL_SEARCH_WITH);
            stat.setString(1, "%"+parameterOfSearch+"%");
             stat.setString(2, "%"+parameterOfSearch+"%");
             stat.setString(3, "%"+parameterOfSearch+"%");
@@ -198,8 +200,9 @@ public class TiendaD implements TiendaDAO {
         ResultSet rs = null;
         List<TiendaTiempo> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETTIEMPOTIENDATET);
+            stat = connection.prepareStatement(GET_CODIGO_NOMBRE_TIEMPO);
             stat.setString(1, codigoTiendaOrigen);
+            stat.setString(2, codigoTiendaOrigen);
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertTiendaTiempo(rs));
@@ -218,7 +221,7 @@ public class TiendaD implements TiendaDAO {
         ResultSet rs = null;
         List<TiendaTiempo> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL+" WHERE estado = 1");
+            stat = connection.prepareStatement(GET_ALL+" WHERE estado = 1");
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertTiendaTiempoSin(rs));
@@ -261,7 +264,7 @@ public class TiendaD implements TiendaDAO {
         ResultSet rs = null;
         List<TiendaTiempo> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL +" WHERE codigo LIKE ? AND estado = 1");
+            stat = connection.prepareStatement(GET_ALL +" WHERE codigo LIKE ? AND estado = 1");
             stat.setString(1, "%"+codigoTiendaOrigen+"%");
             rs = stat.executeQuery();
             while (rs.next()) {
@@ -281,7 +284,7 @@ public class TiendaD implements TiendaDAO {
         ResultSet rs = null;
         List<Tienda> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALLTIENDASUSELIKE);
+            stat = connection.prepareStatement(GET_ALL_TIENDAS_USE_LIKE);
             stat.setString(1, "%"+parameter+"%");
             stat.setString(2, "%"+parameter+"%");
             rs = stat.executeQuery();

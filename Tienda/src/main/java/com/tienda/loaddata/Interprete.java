@@ -59,7 +59,7 @@ public class Interprete {
             String datosLinea = "";
             for (int i = 1; i < partirCodigo.length; i++) {
                 datosLinea = datosLinea + "," + partirCodigo[i];
-                
+
             }
 
             System.out.println(datosLinea);
@@ -71,11 +71,13 @@ public class Interprete {
 
     }
 
-    /**--------------------------------------------------------------------------------------------
-    *  El siguiente bloque de codigo clasifica las intrucciones 
-    *  para convertirlas en objetos
-    --------------------------------------------------------------------------------------------
-    **/
+    /**
+     * --------------------------------------------------------------------------------------------
+     * El siguiente bloque de codigo clasifica las intrucciones para
+     * convertirlas en objetos
+     * --------------------------------------------------------------------------------------------
+    *
+     */
     public void tipoObjeto(String SplitTipo, String lineInstructions, int cont, JTextArea correcto, JTextArea error) {
 
         switch (SplitTipo) {
@@ -127,8 +129,9 @@ public class Interprete {
             //  SeparadorDeParametros administrarParametros = new SeparadorDeParametros(instruccion, i, cont);
             //administrarParametros.separarParametros();
             String datos[] = instruccion.split(",");
-
+            System.out.println("==> "+instruccion+"dato[2]: "+datos[2]);
             
+
             Manager manager = new Manager();
             switch (i) {
                 case 1:
@@ -142,13 +145,13 @@ public class Interprete {
                             Persona tipoEmpleado = new Persona(datos[4], datos[1], datos[3], "", true);
                             manager.getPersonaDAO().insert(tipoEmpleado);
                             //public Usuario(int idUsuario, String usuario, String password, int tipo, boolean estado, String Persona_dpi) {
-                            Empleado empleado = new Empleado(0, datos[2], datos[4], 2, true, datos[4],"");
+                            Empleado empleado = new Empleado(0, datos[2], datos[4], 2, true, datos[4], "");
                             manager.getEmpleadoDAO().insert(empleado);
-                            imprimirJTextArea(correcto, cont,  instruccion, "Correcto");
+                            imprimirJTextArea(correcto, cont, instruccion, "Correcto");
 
                         } else {
 
-                            imprimirJTextArea(error, cont,  instruccion, "error existe un registro similar");
+                            imprimirJTextArea(error, cont, instruccion, "error existe un registro similar");
 
                         }
 
@@ -157,17 +160,17 @@ public class Interprete {
                 case 2:
                     System.out.println("Cliente");
                     if (verificarCantidad(datos, 5, cont, error)) {
-                        if (( manager.getPersonaDAO().obtener(datos[2]) == null) && manager.getClienteDAO().obtener(datos[2]) == null) {
+                        if ((manager.getPersonaDAO().obtener(datos[2]) == null) && manager.getClienteDAO().obtener(datos[2]) == null) {
 
                             Persona tipoCliente = new Persona(datos[2], datos[1], datos[3], "", true);
                             manager.getPersonaDAO().insert(tipoCliente);
-                            
+
                             Cliente cliente = new Cliente(datos[2], "", true, datos[2], BigDecimal.valueOf(Double.valueOf(datos[4])));
                             manager.getClienteDAO().insert(cliente);
-                            imprimirJTextArea(correcto, cont,  instruccion, "Correcto");
+                            imprimirJTextArea(correcto, cont, instruccion, "Correcto");
 
                         } else {
-                            imprimirJTextArea(error, cont,  instruccion, " Error -> Existe un Registro Similar");
+                            imprimirJTextArea(error, cont, instruccion, " Error -> Existe un Registro Similar");
                         }
                     }
                     break;
@@ -183,9 +186,9 @@ public class Interprete {
 
                             manager.getProductoDAO().insert(producto);
                             manager.getStockTiendaDAO().insert(stock_Tienda);
-                            imprimirJTextArea(correcto, cont,  instruccion, "Correcto");
+                            imprimirJTextArea(correcto, cont, instruccion, "Correcto");
                         } else {
-                            imprimirJTextArea(error, cont,  instruccion, " Error -> Existe un Registro Similar");
+                            imprimirJTextArea(error, cont, instruccion, " Error -> Existe un Registro Similar");
                         }
                     }
 
@@ -237,18 +240,20 @@ public class Interprete {
 
                                         if (manager.getPedidoDAO().obtener(datos[1]) != null) {
                                             //el pedido ya existe
+                                            
                                             DetallePedido articulos = new DetallePedido(0, Integer.valueOf(datos[7]), true, datos[6], datos[1]);
                                             manager.getDetallePedidoDAO().insert(articulos);
 
                                             descontarPedido(datos[1], datos[5], Integer.valueOf(datos[7]));
-                                            imprimirJTextArea(correcto, cont,  instruccion, "Correcto");
+                                            imprimirJTextArea(correcto, cont, instruccion, "Correcto");
 
                                         } else {
                                             //  crea el pedido
                                             Integer envio = manager.getTiempoEntreTiendasDAO().getTiempoByTwoStore(datos[2], datos[3]);
                                             if (envio != null) {
 //public Pedido(String codigo, java.sql.Date fecha, boolean entregado, int retraso, boolean destino, boolean estado, int TiempoDeEnvio_idTiempoDeEnvio, String Cliente_nit, BigDecimal anticipo,BigDecimal subtotal) {
-                                                Pedido pedido = new Pedido(datos[1], java.sql.Date.valueOf(datos[4]), false, 0, false, true, envio, datos[6], BigDecimal.valueOf(Double.valueOf(datos[datos.length - 1])), BigDecimal.valueOf(Double.valueOf(datos[datos.length - 2])));
+
+                                                Pedido pedido = new Pedido(datos[1], java.sql.Date.valueOf(datos[4]), false, 0, false, true, envio, datos[6], BigDecimal.valueOf(Double.valueOf(datos[datos.length - 1])), BigDecimal.valueOf(Double.valueOf(datos[datos.length - 2])),datos[3]);
                                                 DetallePedido articulos = new DetallePedido(0, Integer.valueOf(datos[7]), true, datos[6], datos[1]);
 
                                                 manager.getPedidoDAO().insert(pedido);
@@ -258,25 +263,25 @@ public class Interprete {
                                                 imprimirJTextArea(correcto, cont, instruccion, "Correcto");
 
                                             } else {
-                                                imprimirJTextArea(error, cont,  instruccion, "Error: Linea " + cont + " -> Debe Crear Primero un Tiempo De Envio");
+                                                imprimirJTextArea(error, cont, instruccion, "Error: Linea " + cont + " -> Debe Crear Primero un Tiempo De Envio");
                                                 System.out.println("Error: Linea " + cont + " -> Debe Crear Primero un Tiempo De Envio");
                                             }
                                         }
                                     } else {
-                                        imprimirJTextArea(error, cont,  instruccion, "Error: Linea " + cont + " -> Debe Crear Primero Al Cliente");
+                                        imprimirJTextArea(error, cont, instruccion, "Error: Linea " + cont + " -> Debe Crear Primero Al Cliente");
                                         System.out.println("Error: Linea " + cont + " -> Debe Crear Primero Al Cliente");
                                     }
                                 } else {
-                                    imprimirJTextArea(error, cont,  instruccion, "Error: Linea " + cont + " -> Debe Verificar Existencias (Stock)");
+                                    imprimirJTextArea(error, cont, instruccion, "Error: Linea " + cont + " -> Debe Verificar Existencias (Stock)");
                                     System.out.println("Error: Linea " + cont + " -> Verificar Existencia");
                                 }
 
                             } else {
-                                imprimirJTextArea(error, cont,  instruccion, "Error: Linea " + cont + " -> Debe Crear Primero La Tienda");
+                                imprimirJTextArea(error, cont, instruccion, "Error: Linea " + cont + " -> Debe Crear Primero La Tienda");
                                 System.out.println("Error: Linea " + cont + " -> Debe Crear Primero la Tienda");
                             }
                         } else {
-                            imprimirJTextArea(error, cont,  instruccion, "Error: Linea " + cont + " -> Debe Crear Primero La Tienda");
+                            imprimirJTextArea(error, cont, instruccion, "Error: Linea " + cont + " -> Debe Crear Primero La Tienda");
                             System.out.println("Error: Linea " + cont + " -> Debe Crear Primero la Tienda");
                         }
                     }
@@ -291,8 +296,8 @@ public class Interprete {
 
                             Tienda tienda = new Tienda(datos[3], datos[1], datos[2], datos[4], "", "", "", true);
                             manager.getTiendaDAO().insert(tienda);
-                            imprimirJTextArea(correcto, cont,  instruccion, "Correcto");
-                           // imprimirJTextArea(correcto, cont, "TIENDA" + instruccion, "Correcto  Codigo"+datos[3]+" Nombre:"+datos[1]+"    >Direccion: "+datos[2]+"Telefono "+datos[4]);
+                            imprimirJTextArea(correcto, cont, instruccion, "Correcto");
+                            // imprimirJTextArea(correcto, cont, "TIENDA" + instruccion, "Correcto  Codigo"+datos[3]+" Nombre:"+datos[1]+"    >Direccion: "+datos[2]+"Telefono "+datos[4]);
 
                         } else {
                             imprimirJTextArea(error, cont, instruccion, "Error: Linea " + cont + " -> Existe Un Producto Similar");
@@ -316,7 +321,7 @@ public class Interprete {
     public boolean verificarCantidad(String datos[], int cantidad, int cont, JTextArea error) {
 
         System.out.println("===================>" + datos.length);
-        if (datos.length  == cantidad) {
+        if (datos.length == cantidad) {
             return true;
         }
         imprimirJTextArea(error, cont, "Cantidad De Parametros  ", "Finalizo lectura de Linea con Error");

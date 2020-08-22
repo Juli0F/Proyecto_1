@@ -590,7 +590,7 @@ public final class PedidoUI extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        
         if (tableCarrito.getSelectedRow() != -1) {
             ((DefaultTableModel) tableCarrito.getModel()).removeRow(tableCarrito.getSelectedRow());
             if (tableCarrito.getRowCount() != 0) {
@@ -635,53 +635,20 @@ public final class PedidoUI extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btnFinalizarCompraAction
 
-    private void metodoPrueba() {
-
-        totalVenta();
-        // com.tienda.entities.PedidoUI factura = com.tienda.entities.PedidoUI();
-        //manager.getFacturaDAO().insert(factura);
-        int idTiempo = manager.getTiempoEntreTiendasDAO().getTheTimeBetweenStoresWithTheCodeOfTheStoresInvolved(((Tienda) jCOrigen.getSelectedItem()).getCodigo(), ((Tienda) jCDestino.getSelectedItem()).getCodigo());
-        int idFactura = manager.getFacturaDAO().lastInsertId();
-        //String codigo,              java.sql.Date fecha,            boolean entregado, int r boolean estado, int TiempoDeEnvio_idTiempoDeEnvio, String Cliente_nit, BigDecimal anticipo,BigDecimal subtotal) {
-        //Pedido pedido = new Pedido(txtCodePedido.getText(), (java.sql.Date)datePicker.getModel().getValue() , false, 0, false, true, idTiempo   , nitCliente, totalPagar, totalPagar);
-        if (tableCarrito.getRowCount() != 0) {
-            for (int i = 0; i < tableCarrito.getRowCount(); i++) {
-
-                /* DetalleFactura detalleFactura = new DetalleFactura(0,
-                    idFactura,
-                    (String) tableCarrito.getValueAt(i, 0),
-                    Integer.valueOf((String)tableCarrito.getValueAt(i, 2)),
-                    (BigDecimal) tableCarrito.getValueAt(i, 4));
-
-                manager.getDetalleFacturaDAO().insert(detalleFactura);
-
-                StockTienda st = manager.getStockTiendaDAO().existencia(Log.codigoTienda,(String) tableCarrito.getValueAt(i, 0) );
-
-                st.setCantidad(st.getCantidad() - detalleFactura.getCantidad());
-                manager.getStockTiendaDAO().modify(st);
-
-            
-            ////MetodoDePago.setSize(310, 310);
-            ////MetodoDePago.setVisible(true);
-                 */
-            }
-        }
-
-    }
     private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
-        // TODO add your handling code here:
+        
         fillTableCliente(manager.getClienteDAO().getClienteForDtoWhitLike(
                 (!txtBuscarCliente.getText().isEmpty()) ? txtBuscarCliente.getText() : " "
         ));
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
     private void btnAceptarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarClienteActionPerformed
-        // TODO add your handling code here:
+        
         dtCliente();
     }//GEN-LAST:event_btnAceptarClienteActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        // TODO add your handling code here:
+        
         SeleccionarCliente.dispose();
         ClienteUI crear = new ClienteUI();
         crear.setSize(800, 700);
@@ -697,17 +664,17 @@ public final class PedidoUI extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
+        
         manager = new Manager();
         fillTableCliente(manager.getClienteDAO().getClienteForDto());
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void txtCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCreditoActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_txtCreditoActionPerformed
 
     private void btnPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPagarActionPerformed
-        // TODO add your handling code here:
+        
         BigDecimal credito;
         BigDecimal enEfectivo = new BigDecimal("0.0");
         if (txtCredito.getText().isEmpty()) {
@@ -759,7 +726,8 @@ public final class PedidoUI extends javax.swing.JPanel {
                 idTiempoEnvio,//idTiempoDeEnvio
                 nitCliente,//nitCliente
                 anticipo,//anticipo
-                totalPagar);//subtotal
+                totalPagar,
+                codeStoreDestino);//subtotal
         manager.getPedidoDAO().insert(pedido);
 
         crearDetallePedido();

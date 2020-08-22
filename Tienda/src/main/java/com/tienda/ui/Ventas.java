@@ -637,7 +637,7 @@ public class Ventas extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFinalizarCompraAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarCompraAction
-        // TODO add your handling code here:
+        
         totalVenta();
         Factura factura = new Factura(0, "", true, Log.idUsuario, Log.codigoTienda, nitCliente, this.totalPagar);
         manager.getFacturaDAO().insert(factura);
@@ -713,13 +713,13 @@ public class Ventas extends javax.swing.JPanel {
         });
     }
     private void btnAceptarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarClienteActionPerformed
-        // TODO add your handling code here:
+        
         dtCliente();
 
     }//GEN-LAST:event_btnAceptarClienteActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        // TODO add your handling code here:
+        
         SeleccionarCliente.dispose();
         ClienteUI crear = new ClienteUI();
         crear.setSize(800, 700);
@@ -735,13 +735,13 @@ public class Ventas extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
+        
         manager = new Manager();
         fillTableCliente(manager.getClienteDAO().getClienteForDto());
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
-        // TODO add your handling code here:
+        
         fillTableCliente(manager.getClienteDAO().getClienteForDtoWhitLike(
                 (!txtBuscarCliente.getText().isEmpty()) ? txtBuscarCliente.getText() : " "
         ));
@@ -757,7 +757,7 @@ public class Ventas extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        
         if (tableCarrito.getSelectedRow() != -1) {
             ((DefaultTableModel) tableCarrito.getModel()).removeRow(tableCarrito.getSelectedRow());
             if (tableCarrito.getRowCount() != 0) {
@@ -768,7 +768,7 @@ public class Ventas extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void btnCreditoAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreditoAction
-        // TODO add your handling code here:
+        
         Cliente cliente = manager.getClienteDAO().obtener(nitCliente);
         if (cliente.getCredito().compareTo(totalPagar) == 0 || cliente.getCredito().compareTo(totalPagar) == 1) {
 
@@ -784,7 +784,7 @@ public class Ventas extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCreditoAction
 
     private void pagoHibrido(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagoHibrido
-        // TODO add your handling code here:
+        
         Cliente cliente = manager.getClienteDAO().obtener(nitCliente);
         if (cliente.getCredito().compareTo(totalPagar) == 0 || cliente.getCredito().compareTo(totalPagar) == 1) {
             cliente.setCredito(cliente.getCredito().subtract(totalPagar));
@@ -813,7 +813,7 @@ public class Ventas extends javax.swing.JPanel {
     }
 
     private void pagarConEfectivo(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagarConEfectivo
-        // TODO add your handling code here:
+        
 
         JOptionPane.showMessageDialog(null, "Venta Finalizada", "Informacion", JOptionPane.INFORMATION_MESSAGE);
         removeThis();

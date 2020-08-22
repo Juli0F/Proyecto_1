@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class PedidoD implements PedidoDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Pedido (fecha,entregado,retraso,destino,estado,TiempoDeEnvio_idTiempoDeEnvio,Cliente_nit,subtotal,anticipo,codigo) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    private final String INSERT = "INSERT INTO Pedido (fecha,entregado,retraso,destino,estado,TiempoDeEnvio_idTiempoDeEnvio,Cliente_nit,subtotal,anticipo,codigo,Tienda_codigo) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
     private final String UPDATE = "UPDATE Pedido SET fecha = ?, entregado = ?, retraso = ?, destino = ?, estado = ?, TiempoDeEnvio_idTiempoDeEnvio = ?, Cliente_nit = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Pedido WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Pedido  ";
@@ -39,6 +39,7 @@ public class PedidoD implements PedidoDAO {
             stat.setBigDecimal(8, object.getSubtotal());
             stat.setBigDecimal(9, object.getAnticipo());
             stat.setString(10, object.getCodigo());
+            stat.setString(11, object.getCodigoDestino());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Pedido");
 
@@ -125,7 +126,7 @@ public class PedidoD implements PedidoDAO {
     public Pedido convertir(ResultSet rs) {
 
         try {
-            Pedido pedido = new Pedido(rs.getString("codigo"), rs.getDate("fecha"), rs.getBoolean("entregado"), rs.getInt("retraso"), rs.getBoolean("destino"), rs.getBoolean("estado"), rs.getInt("TiempoDeEnvio_idTiempoDeEnvio"), rs.getString("Cliente_nit"), rs.getBigDecimal("anticipo"),rs.getBigDecimal("subtotal"));
+            Pedido pedido = new Pedido(rs.getString("codigo"), rs.getDate("fecha"), rs.getBoolean("entregado"), rs.getInt("retraso"), rs.getBoolean("destino"), rs.getBoolean("estado"), rs.getInt("TiempoDeEnvio_idTiempoDeEnvio"), rs.getString("Cliente_nit"), rs.getBigDecimal("anticipo"),rs.getBigDecimal("subtotal"),rs.getString("Tienda_codigo"));
 
             return pedido;
         } catch (SQLException ex) {
@@ -151,5 +152,82 @@ public class PedidoD implements PedidoDAO {
             Logger.getLogger(PedidoD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "";
+    }
+
+    @Override
+    public List<Pedido> sinEntregarEnDestino() {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<Pedido> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GETALL + " WHERE destino = 0");
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertir(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<Pedido> buscarCoincidenciaSinEntregarEnDestino(String matchParameter) {
+       PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<Pedido> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GETALL +" WHERE (Cliente_nit  LIKE ? OR  codigo LIKE ?) AND  destino = 0 ");
+            stat.setString(1, "%"+matchParameter+"%");
+            stat.setString(2, "%"+matchParameter+"%");
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertir(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    @Override
+    public List<Pedido> buscarCoincidenciaPedidosEntregadosEnTiendaDestino(String matchParameter) {
+       PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<Pedido> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GETALL +" WHERE (Cliente_nit  LIKE ? OR  codigo LIKE ?) AND  destino = 1 ");
+            stat.setString(1, "%"+matchParameter+"%");
+            stat.setString(2, "%"+matchParameter+"%");
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertir(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+     public List<Pedido> paraRecogerSeEncuentraEnDestino() {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<Pedido> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GETALL + " WHERE destino = 1 AND entregado = 0");
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertir(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
