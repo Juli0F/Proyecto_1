@@ -8,6 +8,6 @@ import com.tienda.entities.TiempoDeEnvio;
  */
 public interface TiempoDeEnvioDAO extends DAO<TiempoDeEnvio,Integer> {
 
-
+ public TiempoDeEnvio getTiempoUsandoTiendaAAndTiendaB(String codeTiendaA, String codeTiendaB);
     
 }

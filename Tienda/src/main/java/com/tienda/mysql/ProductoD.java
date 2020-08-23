@@ -18,16 +18,17 @@ public class ProductoD implements ProductoDAO {
     private final String INSERT = "INSERT INTO Producto (nombre,fabricante,Descripcion,Garantia,estado , codigo) VALUES (?,?,?,?,?,?)";
     private final String UPDATE = "UPDATE Producto SET nombre = ?, fabricante = ?, Descripcion = ?, Garantia = ?, estado = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Producto WHERE codigo = ? ";
-    private final String GETALL = "SELECT * FROM  Producto  ";
-    private final String GETONE = GETALL + "WHERE codigo = ?";
-    private final String GETBYPARAMETER = GETALL + 
-            
-            "WHERE nombre LIKE ?"+
-            "OR fabricante LIKE ?"+
-            "OR Descripcion LIKE ?"+
-            "OR codigo LIKE ? ";
-            //
+    private final String GET_ALL = "SELECT * FROM  Producto  ";
+    private final String GETONE = GET_ALL + "WHERE codigo = ?";
+    private final String GETBYPARAMETER = GET_ALL
+            + "WHERE nombre LIKE ?"
+            + "OR fabricante LIKE ?"
+            + "OR Descripcion LIKE ?"
+            + "OR codigo LIKE ? ";
+    //
     private final String GETPRODUCTOTABLE = "SELECT p.codigo, p.nombre, s.cantidad, s.precio FROM  Producto p inner join StockTienda s on p.codigo = s.Producto_codigo WHERE p.estado = 1 and s.estado = 1 and s.Tienda_codigo = ?";
+
+    private final String GET_PRODUCTOS_QUE_NO_ESTAN_EN_LA_TIENDA = "SELECT * FROM Producto p WHERE codigo not in (select st.Producto_codigo from StockTienda st inner join Tienda t ON st.Tienda_codigo=t.codigo where t.codigo = ?) ";
 
     public ProductoD(Connection connection) {
         this.connection = connection;
@@ -44,7 +45,7 @@ public class ProductoD implements ProductoDAO {
             stat.setInt(4, object.getGarantia());
             stat.setBoolean(5, object.isEstado());
             stat.setString(6, object.getCodigo());
-            
+
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Producto");
 
@@ -80,7 +81,7 @@ public class ProductoD implements ProductoDAO {
         ResultSet rs = null;
         List<Producto> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL);
+            stat = connection.prepareStatement(GET_ALL);
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertir(rs));
@@ -159,15 +160,15 @@ public class ProductoD implements ProductoDAO {
 
     @Override
     public List<Producto> getSearchWithLike(String parameterOfSearch) {
-       PreparedStatement stat = null;
+        PreparedStatement stat = null;
         ResultSet rs = null;
         List<Producto> lst = new ArrayList<>();
         try {
             stat = connection.prepareStatement(GETBYPARAMETER);
-            stat.setString(1, "%"+parameterOfSearch+"%");
-            stat.setString(2, "%"+parameterOfSearch+"%");
-            stat.setString(3, "%"+parameterOfSearch+"%");
-            stat.setString(4, "%"+parameterOfSearch+"%");
+            stat.setString(1, "%" + parameterOfSearch + "%");
+            stat.setString(2, "%" + parameterOfSearch + "%");
+            stat.setString(3, "%" + parameterOfSearch + "%");
+            stat.setString(4, "%" + parameterOfSearch + "%");
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertir(rs));
@@ -182,7 +183,7 @@ public class ProductoD implements ProductoDAO {
 
     @Override
     public List<ProductoTableDto> getProductoTableDto(String codigoTienda) {
-       PreparedStatement stat = null;
+        PreparedStatement stat = null;
         ResultSet rs = null;
         List<ProductoTableDto> lst = new ArrayList<>();
         try {
@@ -199,17 +200,37 @@ public class ProductoD implements ProductoDAO {
 
         return null;
     }
-    private ProductoTableDto convertProductoTable(ResultSet rs){
-        
-        try {
-            return new ProductoTableDto(rs.getString("codigo"), rs.getString("nombre"), rs.getInt("cantidad"),rs.getBigDecimal("precio"));
 
-            
+    private ProductoTableDto convertProductoTable(ResultSet rs) {
+
+        try {
+            return new ProductoTableDto(rs.getString("codigo"), rs.getString("nombre"), rs.getInt("cantidad"), rs.getBigDecimal("precio"));
+
         } catch (SQLException ex) {
             Logger.getLogger(ProductoD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
-        
+
     }
-    
+
+    @Override
+    public List<Producto> getProductoQueNoEstanAsignadosEnTienda(String codigoTienda) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<Producto> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GET_PRODUCTOS_QUE_NO_ESTAN_EN_LA_TIENDA);
+            stat.setString(1, codigoTienda);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertir(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 }

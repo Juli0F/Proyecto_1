@@ -34,7 +34,11 @@ public class TiendaD implements TiendaDAO {
     private final String GET_ALL_TIENDAS_USE_LIKE = GET_ALL + " WHERE estado = 1 AND ( codigo LIKE ? OR nombre LIKE ? )";
     
     private final String GET_CODIGO_NOMBRE_TIEMPO = "select auxTet.Tienda_codigo as codigo, t.nombre nombre, tiempo.tiempo from TiempoEntreTiendas tet inner join TiempoEntreTiendas auxTet on tet.TiempoDeEnvio_idTiempoDeEnvio = auxTet.TiempoDeEnvio_idTiempoDeEnvio  inner join Tienda t on auxTet.Tienda_codigo = t.codigo inner join TiempoDeEnvio tiempo on tiempo.idTiempoDeEnvio = auxTet.TiempoDeEnvio_idTiempoDeEnvio WHERE tet.Tienda_codigo = ? AND auxTet.Tienda_codigo <> ? ORDER BY tiempo.tiempo DESC";
-    
+   
+    private final String GET_TIENDAS_SIN_TIEMPO_CON_RESPECTO_A_OTRA = "SELECT * FROM Tienda t WHERE"
+                                                                   + " t.codigo <> ? and estado = 1 AND  t.codigo "
+                                                                   + "NOT IN (SELECT auxTet.Tienda_codigo as codigo FROM TiempoEntreTiendas tet INNER JOIN TiempoEntreTiendas auxTet ON tet.TiempoDeEnvio_idTiempoDeEnvio = auxTet.TiempoDeEnvio_idTiempoDeEnvio  INNER JOIN Tienda t ON auxTet.Tienda_codigo = t.codigo INNER JOIN TiempoDeEnvio tiempo ON tiempo.idTiempoDeEnvio = auxTet.TiempoDeEnvio_idTiempoDeEnvio WHERE tet.Tienda_codigo = ? AND auxTet.Tienda_codigo <> ? ORDER BY tiempo.tiempo DESC)  ";
+            
     public TiendaD(Connection connection) {
         this.connection = connection;
     }
@@ -287,6 +291,34 @@ public class TiendaD implements TiendaDAO {
             stat = connection.prepareStatement(GET_ALL_TIENDAS_USE_LIKE);
             stat.setString(1, "%"+parameter+"%");
             stat.setString(2, "%"+parameter+"%");
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertir(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<TiendaTiempo> getTiendasSinTiempoConRespectoAOtra(String codigoTienda) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Tienda> getTiendaSinRelacionDeTiempoConRespectoAOtra(String codigoTienda) {
+      PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<Tienda> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GET_TIENDAS_SIN_TIEMPO_CON_RESPECTO_A_OTRA);
+            stat.setString(1, codigoTienda);
+            stat.setString(2, codigoTienda);
+            stat.setString(3, codigoTienda);
+            
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertir(rs));

@@ -5,13 +5,22 @@
  */
 package com.tienda.ui;
 
+import com.tienda.actiontable.TableCellListener;
 import com.tienda.dto.TiendaTiempo;
+import com.tienda.entities.TiempoDeEnvio;
+import com.tienda.entities.TiempoEntreTiendas;
+import com.tienda.entities.Tienda;
 import com.tienda.mysql.Manager;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -19,10 +28,10 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author julio
  */
-public class TiempoEntreTiendasUI extends javax.swing.JPanel {
+public final class TiempoEntreTiendasUI extends javax.swing.JPanel {
 
     /**
-     * Creates new form TiempoEntreTiendasUI
+     * Creates new form TiempoEntreTiendasUI 500 340
      */
     public TiempoEntreTiendasUI() {
         initComponents();
@@ -30,9 +39,11 @@ public class TiempoEntreTiendasUI extends javax.swing.JPanel {
         codigoOrigen = "";
         destino = "";
         sinTiempo = "";
-        fillTable(manager.getTiendaDAO().getTiempoTiendaTET() , tableTienda, false);
+        eventoTextField();
+        cellListenerTiendaTiempo();
         eventTableTienda();
         actionBuscarTxt();
+        this.tiempos = new ArrayList<>();
     }
 
     /**
@@ -44,6 +55,13 @@ public class TiempoEntreTiendasUI extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        asignarTiempoNuevo = new javax.swing.JDialog();
+        jLabel4 = new javax.swing.JLabel();
+        lblTiendas = new javax.swing.JLabel();
+        txtDIas = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         txtBuscarOrigen = new javax.swing.JTextField();
         btnBuscarOrigen = new javax.swing.JButton();
@@ -62,6 +80,70 @@ public class TiempoEntreTiendasUI extends javax.swing.JPanel {
         btnBuscarDestino = new javax.swing.JButton();
         txtDestinoSinTiempo = new javax.swing.JTextField();
         btnBuscarDestSinTiempo = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+
+        jLabel4.setFont(new java.awt.Font("Dialog", 2, 18)); // NOI18N
+        jLabel4.setText("Tiempo Entre");
+
+        lblTiendas.setFont(new java.awt.Font("Dialog", 2, 18)); // NOI18N
+
+        jLabel3.setFont(new java.awt.Font("Dialog", 2, 18)); // NOI18N
+        jLabel3.setText("Dias De Envio");
+
+        jButton5.setText("Guardar");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setText("Cancelar");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout asignarTiempoNuevoLayout = new javax.swing.GroupLayout(asignarTiempoNuevo.getContentPane());
+        asignarTiempoNuevo.getContentPane().setLayout(asignarTiempoNuevoLayout);
+        asignarTiempoNuevoLayout.setHorizontalGroup(
+            asignarTiempoNuevoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(asignarTiempoNuevoLayout.createSequentialGroup()
+                .addGroup(asignarTiempoNuevoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(asignarTiempoNuevoLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(asignarTiempoNuevoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblTiendas, javax.swing.GroupLayout.PREFERRED_SIZE, 488, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, asignarTiempoNuevoLayout.createSequentialGroup()
+                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtDIas, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(98, 98, 98))
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(asignarTiempoNuevoLayout.createSequentialGroup()
+                        .addGap(117, 117, 117)
+                        .addComponent(jButton6)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        asignarTiempoNuevoLayout.setVerticalGroup(
+            asignarTiempoNuevoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(asignarTiempoNuevoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblTiendas, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(asignarTiempoNuevoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtDIas, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(38, 38, 38)
+                .addGroup(asignarTiempoNuevoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(63, Short.MAX_VALUE))
+        );
 
         btnBuscarOrigen.setText("Buscar");
         btnBuscarOrigen.addActionListener(new java.awt.event.ActionListener() {
@@ -82,7 +164,7 @@ public class TiempoEntreTiendasUI extends javax.swing.JPanel {
                 java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -131,9 +213,16 @@ public class TiempoEntreTiendasUI extends javax.swing.JPanel {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jScrollPane1.setViewportView(tableSinTiempo);
@@ -152,6 +241,11 @@ public class TiempoEntreTiendasUI extends javax.swing.JPanel {
         jButton3.setText("Modificar");
 
         jButton4.setText("Crear Tiempo");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         btnBuscarDestino.setText("Buscar");
         btnBuscarDestino.addActionListener(new java.awt.event.ActionListener() {
@@ -167,32 +261,37 @@ public class TiempoEntreTiendasUI extends javax.swing.JPanel {
             }
         });
 
+        jButton1.setText("Guardar Cambios");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(txtBuscarOrigen)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnBuscarOrigen)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(txtBuscarDestino)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnBuscarDestino)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(txtBuscarOrigen)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnBuscarOrigen)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(txtBuscarDestino)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnBuscarDestino)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -200,10 +299,10 @@ public class TiempoEntreTiendasUI extends javax.swing.JPanel {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
                         .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(txtDestinoSinTiempo)
+                        .addComponent(txtDestinoSinTiempo, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnBuscarDestSinTiempo)))
-                .addContainerGap(9, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -232,7 +331,8 @@ public class TiempoEntreTiendasUI extends javax.swing.JPanel {
                     .addComponent(jButton2)
                     .addComponent(jButton3)
                     .addComponent(jButton4))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -254,44 +354,96 @@ public class TiempoEntreTiendasUI extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarOrigenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarOrigenActionPerformed
-        // TODO add your handling code here:
+
         fillTable(manager.getTiendaDAO().getTiempoTiendaTETUseLike(txtBuscarOrigen.getText()), tableTienda, false);
     }//GEN-LAST:event_btnBuscarOrigenActionPerformed
 
-     private void actionBuscarTxt() {
+    private void actionBuscarTxt() {
         txtBuscarOrigen.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-               fillTable(manager.getTiendaDAO().getTiempoTiendaTETUseLike(txtBuscarOrigen.getText()), tableTienda, false);
+                fillTable(manager.getTiendaDAO().getTiempoTiendaTETUseLike(txtBuscarOrigen.getText()), tableTienda, false);
             }
 
         });
     }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+
+        fillTable(manager.getTiendaDAO().getTiempoTiendaTET(), tableTienda, false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void btnBuscarDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarDestinoActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_btnBuscarDestinoActionPerformed
 
     private void btnBuscarDestSinTiempoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarDestSinTiempoActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_btnBuscarDestSinTiempoActionPerformed
 
-    public void eventTableTienda(){
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        asignarTiempoNuevo.dispose();
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        if (txtDIas.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe Ingresar una cantidad de dias", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            String pseudoDestino = (String) tableSinTiempo.getValueAt(tableSinTiempo.getSelectedRow(), 0);
+            TiempoDeEnvio nuevo = new TiempoDeEnvio(0, Integer.valueOf(txtDIas.getText()), true, pseudoDestino);
+
+            manager.getTiempoDeEnvioDAO().insert(nuevo);
+
+            int idTiempo = manager.getTiempoDeEnvioDAO().lastInsertId();
+
+            TiempoEntreTiendas tet = new TiempoEntreTiendas(0, idTiempo, codigoOrigen, "Origen");
+            manager.getTiempoEntreTiendasDAO().insert(tet);
+
+            tet = new TiempoEntreTiendas(0, idTiempo, pseudoDestino, "destino");
+            manager.getTiempoEntreTiendasDAO().insert(tet);
+            
+
+            tableSinTiempo.remove(tableSinTiempo.getSelectedRow());
+            
+            fillTtalbleTiendaSinTiempo(manager.getTiendaDAO().getTiendaSinRelacionDeTiempoConRespectoAOtra(codigoOrigen));
+            
+            JOptionPane.showMessageDialog(null, "Tiempo Asignado Correctamente", "Informacion",JOptionPane.INFORMATION_MESSAGE);
+            asignarTiempoNuevo.dispose();
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        asignarTiempo();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    public void eventTableTienda() {
         tableTienda.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evnt){
+            public void mouseClicked(MouseEvent evnt) {
                 if (evnt.getClickCount() == 2) {
-                     int row = tableTienda.rowAtPoint(evnt.getPoint());
-                     System.out.println("Row"+ row);
-                   codigoOrigen = (String) tableTienda.getValueAt(row, 0);
+                    int row = tableTienda.rowAtPoint(evnt.getPoint());
+                    System.out.println("Row" + row);
+                    codigoOrigen = (String) tableTienda.getValueAt(row, 0);
                     fillTable(manager.getTiendaDAO().getTiempoTiendaTET(codigoOrigen), tableTiempoTienda, true);
                     
+                    fillTtalbleTiendaSinTiempo(manager.getTiendaDAO().getTiendaSinRelacionDeTiempoConRespectoAOtra(codigoOrigen));
+
                 }
             }
         });
     }
+
+    public void fillTtalbleTiendaSinTiempo(List<Tienda> tiendas) {
+         ((DefaultTableModel) tableSinTiempo.getModel()).setRowCount(0);
+        
+        tiendas.forEach(tienda -> {
+            ((DefaultTableModel) tableSinTiempo.getModel()).addRow(new Object[]{
+                tienda.getCodigo(),
+                tienda.getNombre()
+            });
+        });
+
+    }
+
     public void fillTable(List<TiendaTiempo> tiendatiempo, JTable tableView, boolean withTiempo) {
 
         DefaultTableModel tableModel = (DefaultTableModel) tableView.getModel();
@@ -317,30 +469,95 @@ public class TiempoEntreTiendasUI extends javax.swing.JPanel {
         tableView.setModel(tableModel);
 
     }
-    
 
+    public void cellListenerTiendaTiempo() {
+        Action action = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                TableCellListener tcl = (TableCellListener) e.getSource();
+                String codigo = (String) tableTiempoTienda.getValueAt(tcl.getRow(), 0);
+                String tienda = (String) tableTiempoTienda.getValueAt(tcl.getRow(), 1);
+                int tiempo = (int) tableTiempoTienda.getValueAt(tcl.getRow(), 2);
+                tiempos.add(new TiendaTiempo(codigo, tienda, tiempo));
+
+                TiempoDeEnvio tiempoAModifcar = manager.getTiempoDeEnvioDAO().getTiempoUsandoTiendaAAndTiendaB(codigoOrigen, codigo);
+
+                tiempoAModifcar.setTiempo((int) tcl.getNewValue());
+                manager.getTiempoDeEnvioDAO().insert(tiempoAModifcar);
+            }
+        };
+
+        TableCellListener tcl = new TableCellListener(tableTiempoTienda, action);
+
+    }
+
+    public void eventoTextField() {
+        txtDIas.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (!Character.isDigit((char) e.getKeyChar())) {
+                    e.consume();
+                }
+
+            }
+
+        });
+    }
+
+    public void eventTableTiempoSinTienda() {
+        tableSinTiempo.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    asignarTiempo();
+                }
+            }
+        });
+    }
+
+    public void asignarTiempo() {
+
+        if (tableSinTiempo.getSelectedRow() != -1) {
+            asignarTiempoNuevo.setSize(508, 348);
+            asignarTiempoNuevo.setVisible(true);
+
+            Tienda tienda = manager.getTiendaDAO().obtener(codigoOrigen);
+            String tiendaNom = (String) tableSinTiempo.getValueAt(tableSinTiempo.getSelectedRow(), 1);
+            lblTiendas.setText(tienda.getNombre() + "  y    " + tiendaNom);
+        }
+    }
+    private List<TiendaTiempo> tiempos;
     private String codigoOrigen;
     private String destino;
-    private  String sinTiempo;
+    private String sinTiempo;
     private Manager manager;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDialog asignarTiempoNuevo;
     private javax.swing.JButton btnBuscarDestSinTiempo;
     private javax.swing.JButton btnBuscarDestino;
     private javax.swing.JButton btnBuscarOrigen;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JLabel lblTiendas;
     private javax.swing.JTable tableSinTiempo;
     private javax.swing.JTable tableTiempoTienda;
     private javax.swing.JTable tableTienda;
     private javax.swing.JTextField txtBuscarDestino;
     private javax.swing.JTextField txtBuscarOrigen;
+    private javax.swing.JTextField txtDIas;
     private javax.swing.JTextField txtDestinoSinTiempo;
     // End of variables declaration//GEN-END:variables
 }

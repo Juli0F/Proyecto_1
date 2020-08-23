@@ -18,8 +18,9 @@ public class TiempoDeEnvioD implements TiempoDeEnvioDAO {
     private final String UPDATE = "UPDATE TiempoDeEnvio SET tiempo = ?, estado = ?, SET descripcion = ? WHERE idTiempoDeEnvio = ? ";
     private final String DELETE = "DELETE TiempoDeEnvio WHERE idTiempoDeEnvio = ? ";
     private final String GETALL = "SELECT * FROM  TiempoDeEnvio  ";
-    private final String GETONE = GETALL + "WHERE idTiempoDeEnvio = ?";
+    private final String GET_ONE = GETALL + "WHERE idTiempoDeEnvio = ?";
     private final String GETBYIDTIENDAANDDESCRIPCION = GETALL + " WHERE origen = ? AND  descripcion = ?";
+    private final String GET_TIEMPO_ENTRE_TIENDAA_AND_TIENDAB = "SELECT * FROM TiempoDeEnvio T WHERE T.idTiempoDeEnvio IN (SELECT tet.TiempoDeEnvio_idTiempoDeEnvio FROM TiempoEntreTiendas tet inner join TiempoEntreTiendas auxTet on tet.TiempoDeEnvio_idTiempoDeEnvio = auxTet.TiempoDeEnvio_idTiempoDeEnvio where tet.Tienda_codigo = ? AND auxTet.Tienda_codigo= ?)";
 
     public TiempoDeEnvioD(Connection connection) {
         this.connection = connection;
@@ -88,7 +89,7 @@ public class TiempoDeEnvioD implements TiempoDeEnvioDAO {
         ResultSet rs = null;
 
         try {
-            stat = connection.prepareStatement(GETONE);
+            stat = connection.prepareStatement(GET_ONE);
             stat.setInt(1, id);
             rs = stat.executeQuery();
             while (rs.next()) {
@@ -146,4 +147,27 @@ public class TiempoDeEnvioD implements TiempoDeEnvioDAO {
         return 0;
     }
 
+    @Override
+    public TiempoDeEnvio getTiempoUsandoTiendaAAndTiendaB(String codeTiendaA, String codeTiendaB) {
+    
+         PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(GET_TIEMPO_ENTRE_TIENDAA_AND_TIENDAB);
+            stat.setString(1, codeTiendaA);
+            stat.setString(2, codeTiendaB);
+            
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                return (convertir(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    
 }

@@ -6,6 +6,7 @@
 package com.tienda.ui;
 
 import com.tienda.dto.ProductoTableDto;
+import com.tienda.entities.Producto;
 import com.tienda.entities.StockTienda;
 import com.tienda.mysql.Manager;
 import java.awt.event.MouseAdapter;
@@ -335,6 +336,7 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
         if (codeNew != null) {
             txtCodigoProducto.setText(codeNew);
             txtProducto.setText(nameProducto);
+            agregarProducto.setTitle("Agregar Producto");
             sizeAgregarProducto();
         }
     }//GEN-LAST:event_btnAddProductActionPerformed
@@ -352,7 +354,7 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
 
     private void btnCancelarDialogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarDialogActionPerformed
         // TODO add your handling code here:
-        agregarProducto.setVisible(false);
+        agregarProducto.dispose();
     }//GEN-LAST:event_btnCancelarDialogActionPerformed
 
     private void btnGuardarDialogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarDialogActionPerformed
@@ -364,17 +366,18 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
         if (txtPrecio.getText().isEmpty()) {
             txtPrecio.setText("0.0");
         }
-        
+
         if (agregarProducto.getTitle().contains("Modificar")) {
 
-             stockProducto = new StockTienda(0, txtCodigoTienda.getText(), txtCodigoProducto.getText(), true, Integer.valueOf(txtCantidad.getText()), BigDecimal.valueOf(Double.valueOf(txtPrecio.getText())));
-             manager.getStockTiendaDAO().modify(stockProducto);
-             JOptionPane.showMessageDialog(null, "Se ha Modificado Correctamente", "Informacion de Modificaion", JOptionPane.INFORMATION_MESSAGE);
+            stockProducto = new StockTienda(0, txtCodigoTienda.getText(), txtCodigoProducto.getText(), true, Integer.valueOf(txtCantidad.getText()), BigDecimal.valueOf(Double.valueOf(txtPrecio.getText())));
+            manager.getStockTiendaDAO().modify(stockProducto);
+            JOptionPane.showMessageDialog(null, "Se ha Modificado Correctamente", "Informacion de Modificaion", JOptionPane.INFORMATION_MESSAGE);
+            agregarProducto.dispose();
         } else {
             stockProducto = new StockTienda(0, txtCodigoTienda.getText(), txtCodigoProducto.getText(), true, Integer.valueOf(txtCantidad.getText()), BigDecimal.valueOf(Double.valueOf(txtPrecio.getText())));
-             manager.getStockTiendaDAO().insert(stockProducto);
-             JOptionPane.showMessageDialog(null, "Se ha Asignado Correctamente", "Informacion de Asignacion", JOptionPane.INFORMATION_MESSAGE);
-
+            manager.getStockTiendaDAO().insert(stockProducto);
+            JOptionPane.showMessageDialog(null, "Se ha Asignado Correctamente", "Informacion de Asignacion", JOptionPane.INFORMATION_MESSAGE);
+            agregarProducto.dispose();
         }
     }//GEN-LAST:event_btnGuardarDialogActionPerformed
 
@@ -392,6 +395,8 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
 
                     fillStockProductos(codigoTiendaSeleccionada);
 
+                    fillTableProductosFaltantes(manager.getProductoDAO().getProductoQueNoEstanAsignadosEnTienda(codigoTiendaSeleccionada));
+
                 }
             }
         });
@@ -405,18 +410,18 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
                     System.out.println("Row" + row);
 
                     otherMethod();
-                    //  fillStockProductos((String)tableTiendas.getValueAt(row, 0));
+                    fillStockProductos((String) tableTiendas.getValueAt(row, 0));
 
                 }
             }
         });
     }
 
-    
     private void otherMethod() {
         selectRowTableStock();
         txtCodigoProducto.setText(modifcarProductoCode);
         txtProducto.setText(modifcarProductoName);
+        agregarProducto.setTitle("Modificar Producto");
         sizeAgregarProducto();
 
     }
@@ -453,16 +458,17 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
 
     }
 
-    private void fillTableProductosFaltantes(List<ProductoTableDto> faltantes) {
-        DefaultTableModel tableModel = (DefaultTableModel) tableStock.getModel();
+    private void fillTableProductosFaltantes(List<Producto> faltantes) {
+        //DefaultTableModel tableModel = (DefaultTableModel) tableStock.getModel();
 
-        tableModel.setNumRows(0);
+        //tableModel.setNumRows(0);
+        ((DefaultTableModel) tableProductosFaltantes.getModel()).setRowCount(0);
         //stock = manager.getProductoDAO().getProductoTableDto(codigoTienda);
 
         faltantes.forEach(prodFaltantes -> {
-            tableModel.addRow(new Object[]{
+            ((DefaultTableModel) tableProductosFaltantes.getModel()).addRow(new Object[]{
                 prodFaltantes.getCodigo(),
-                prodFaltantes.getProducto()
+                prodFaltantes.getNombre()
 
             });
         });
@@ -479,7 +485,7 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
                     txtCodigoProducto.setText(codeNew);
                     txtProducto.setText(nameProducto);
                     sizeAgregarProducto();
-                    //fillStockProductos((String) tableTiendas.getValueAt(row, 0));
+                    fillStockProductos((String) tableTiendas.getValueAt(row, 0));
 
                 }
             }
