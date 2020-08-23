@@ -72,7 +72,6 @@ public class MainFrame extends javax.swing.JFrame {
         admClientes = new javax.swing.JMenuItem();
         btnEntregarPedido = new javax.swing.JMenuItem();
         adminProveedores = new javax.swing.JMenuItem();
-        adminCorteDCajas = new javax.swing.JMenuItem();
         adminReportes = new javax.swing.JMenuItem();
         configuracion = new javax.swing.JMenu();
         confUsuario = new javax.swing.JMenuItem();
@@ -217,10 +216,6 @@ public class MainFrame extends javax.swing.JFrame {
         adminProveedores.setMnemonic('a');
         adminProveedores.setText("Usuarios");
         administracion.add(adminProveedores);
-
-        adminCorteDCajas.setMnemonic('c');
-        adminCorteDCajas.setText("Corte De Caja");
-        administracion.add(adminCorteDCajas);
 
         adminReportes.setMnemonic('c');
         adminReportes.setText("Reportes");
@@ -407,7 +402,6 @@ public class MainFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem admClientes;
-    private javax.swing.JMenuItem adminCorteDCajas;
     private javax.swing.JMenuItem adminProveedores;
     private javax.swing.JMenuItem adminReportes;
     private javax.swing.JMenu administracion;

@@ -24,7 +24,7 @@ public class EmpleadoD implements EmpleadoDAO {
     private final String GETONE = GETALL + "WHERE Empleado = ?";
     private final String GETBYCODEEMPLEADO = GETALL + "WHERE codigoEmpleado = ?";
     private final String GETBYALLUSRANDPERSON = "Select p.dpi,c.nit,p.nombre,p.telefono,p.direccion,c.email,c.usuario, c.tipo from Persona p inner join Empleado c on p.dpi = c.Persona_dpi where c.tipo = 2";
-
+    
 
     public EmpleadoD(Connection connection) {
         this.connection = connection;
@@ -202,6 +202,27 @@ public class EmpleadoD implements EmpleadoDAO {
         }
         return null;
         
+    }
+
+    @Override
+    public Integer verificarDatosInDB() {
+        String ultimo = "SELECT last_insert_id()";
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<Integer> ls = new ArrayList<>();
+
+        try {
+            stat = connection.prepareStatement("SELECT COUNT(codigo) FROM TIENDA");
+            
+            rs = stat.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(EmpleadoD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
     }
     
 }

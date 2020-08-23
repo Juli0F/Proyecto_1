@@ -8,7 +8,6 @@ package com.tienda.ui;
 import com.tienda.dto.ClienteDTO;
 import com.tienda.entities.Cliente;
 import com.tienda.entities.Persona;
-import com.tienda.entities.Tienda;
 import com.tienda.mysql.Manager;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -308,13 +307,13 @@ public class ClienteUI extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        // TODO add your handling code here:
+        
         setTextField("", "", "", "", "", "", "");
         modificar = false;
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
+        
         if (modificar) {
             if (checkDpiNit()) {
 
@@ -357,7 +356,7 @@ public class ClienteUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnVerTodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerTodoActionPerformed
-        // TODO add your handling code here:
+        
         Manager manager = new Manager();
 
         fillTable(manager.getClienteDAO().getClienteForDto());
@@ -366,7 +365,7 @@ public class ClienteUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnVerTodoActionPerformed
 
     private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
-        // TODO add your handling code here:
+        
         
         fillTable(manager.getClienteDAO().getClienteForDtoWhitLike(txtSearch.getText()));
 
@@ -391,7 +390,7 @@ public class ClienteUI extends javax.swing.JPanel {
 
     }
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
+        
 
         if (JOptionPane.showConfirmDialog(null, "Seguro que desea elimiar al Cliente\n Nit " + txtNit.getText() + "con Nombre: " + txtNombre.getText(), "Advertencia", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE) == 0) {
             Cliente cliente = new Cliente(nit, email, true, dpi, (BigDecimal) credito);
@@ -416,13 +415,13 @@ public class ClienteUI extends javax.swing.JPanel {
         });
     }
     private void btBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarActionPerformed
-        // TODO add your handling code here:
+        
 
          fillTable(manager.getClienteDAO().getClienteForDtoWhitLike(txtSearch.getText()));
     }//GEN-LAST:event_btBuscarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        // TODO add your handling code here:
+        
         txtDpi.setEditable(true);
         txtEmail.setEditable(true);
         txtNit.setEditable(true);
@@ -457,7 +456,7 @@ public class ClienteUI extends javax.swing.JPanel {
     }
 
     private boolean checkDpiNit() {
-        return manager.getPersonaDAO().obtener(txtDpi.getText()) == null && manager.getClienteDAO().obtener(txtNit.getText()) == null;
+        return  manager.getClienteDAO().obtener(txtNit.getText()) == null;
     }
 
     private boolean checkField() {

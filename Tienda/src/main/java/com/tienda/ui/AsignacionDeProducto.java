@@ -6,9 +6,12 @@
 package com.tienda.ui;
 
 import com.tienda.dto.ProductoTableDto;
+import com.tienda.dto.TiendaTiempo;
 import com.tienda.entities.Producto;
 import com.tienda.entities.StockTienda;
 import com.tienda.mysql.Manager;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
@@ -20,7 +23,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author julio
  */
-public class AsignacionDeProducto extends javax.swing.JPanel {
+public final class AsignacionDeProducto extends javax.swing.JPanel {
 
     /**
      * Creates new form AsignacionDeProducto
@@ -31,6 +34,7 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
         eventTableTienda();
         eventTableStock();
         eventTableProductosFaltantes();
+        eventSearchTienda();
     }
 
     /**
@@ -61,8 +65,6 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
         tableTiendas = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableStock = new javax.swing.JTable();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        tableAgregados = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
         tableProductosFaltantes = new javax.swing.JTable();
         txtSearchStock = new javax.swing.JTextField();
@@ -205,26 +207,6 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
 
         add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, -1, -1));
 
-        tableAgregados.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Codigo", "Producto", "Cantidad", "Precio"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane3.setViewportView(tableAgregados);
-
-        add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 230, 470, 420));
-
         tableProductosFaltantes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -283,6 +265,12 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
 
         btnBuscarProducto.setText("Buscar");
         add(btnBuscarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 200, -1, -1));
+
+        txtSearchTienda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSearchTiendaActionPerformed(evt);
+            }
+        });
         add(txtSearchTienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 350, -1));
 
         btnSearchTienda.setText("Buscar");
@@ -302,10 +290,10 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
         add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 160, 140, -1));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void fillTableTienda() {
+    private void fillTableTienda(List<TiendaTiempo> tienda) {
         DefaultTableModel tableModel = (DefaultTableModel) tableTiendas.getModel();
         tableModel.setNumRows(0);
-        manager.getTiendaDAO().getTiempoTiendaTET().forEach(tiendax -> {
+        tienda.forEach(tiendax -> {
             tableModel.addRow(new Object[]{
                 tiendax.getCodigo(),
                 tiendax.getTienda()});
@@ -316,22 +304,22 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
     }//GEN-LAST:event_tableStockMouseClicked
 
     private void btnSearchTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchTiendaActionPerformed
-        // TODO add your handling code here:
+        
+        fillTableTienda(manager.getTiendaDAO().getTiempoTiendaTET(txtSearchTienda.getSelectedText()));
+        
     }//GEN-LAST:event_btnSearchTiendaActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        fillTableTienda();
+        
+        fillTableTienda(manager.getTiendaDAO().getTiempoTiendaTET());
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-        // TODO add your handling code here:
-        //
 
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnAddProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProductActionPerformed
-        // TODO add your handling code here:
+        
         selectTableFaltantes();
         if (codeNew != null) {
             txtCodigoProducto.setText(codeNew);
@@ -342,7 +330,7 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAddProductActionPerformed
 
     private void btnModificarStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarStockActionPerformed
-        // TODO add your handling code here:
+        
 
         selectRowTableStock();
         if (modifcarProductoCode != null) {
@@ -353,12 +341,12 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
     }//GEN-LAST:event_btnModificarStockActionPerformed
 
     private void btnCancelarDialogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarDialogActionPerformed
-        // TODO add your handling code here:
+        
         agregarProducto.dispose();
     }//GEN-LAST:event_btnCancelarDialogActionPerformed
 
     private void btnGuardarDialogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarDialogActionPerformed
-        // TODO add your handling code here:
+        
         StockTienda stockProducto;
         if (txtCantidad.getText().isEmpty()) {
             txtCantidad.setText("0");
@@ -381,6 +369,10 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnGuardarDialogActionPerformed
 
+    private void txtSearchTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchTiendaActionPerformed
+        
+    }//GEN-LAST:event_txtSearchTiendaActionPerformed
+
     public void eventTableTienda() {
         tableTiendas.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evnt) {
@@ -402,6 +394,17 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
         });
     }
 
+    public void eventSearchTienda(){
+        txtSearchTienda.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                
+                fillTableTienda(manager.getTiendaDAO().getTiempoTiendaTET(txtSearchTienda.getText()));
+                
+            }
+            
+        });
+    }
     public void eventTableStock() {
         tableStock.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evnt) {
@@ -459,9 +462,7 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
     }
 
     private void fillTableProductosFaltantes(List<Producto> faltantes) {
-        //DefaultTableModel tableModel = (DefaultTableModel) tableStock.getModel();
-
-        //tableModel.setNumRows(0);
+        
         ((DefaultTableModel) tableProductosFaltantes.getModel()).setRowCount(0);
         //stock = manager.getProductoDAO().getProductoTableDto(codigoTienda);
 
@@ -524,10 +525,8 @@ public class AsignacionDeProducto extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lblTiendaActual;
-    private javax.swing.JTable tableAgregados;
     private javax.swing.JTable tableProductosFaltantes;
     private javax.swing.JTable tableStock;
     private javax.swing.JTable tableTiendas;

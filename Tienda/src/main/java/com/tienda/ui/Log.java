@@ -31,18 +31,10 @@ public class Log extends javax.swing.JFrame {
         manager = new Manager();
         empleadoC = false;
         eventTableTienda();
-
-        txtPassword.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                //super.keyPressed(e); //To change body of generated methods, choose Tools | Templates.
-
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    logging();
-                }
-            }
-
-        });
+        setLocationRelativeTo(null);
+        setSize(385, 178);
+        
+       
         
         
         txtBuscar.addKeyListener(new KeyAdapter() {
@@ -74,13 +66,10 @@ public class Log extends javax.swing.JFrame {
         tableTiendas = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
         btnViewAll = new javax.swing.JButton();
-        lblImg = new javax.swing.JLabel();
         txtUsuario = new javax.swing.JTextField();
-        txtPassword = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        lblCrearCliente = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
 
         dialogo.setModal(true);
 
@@ -201,55 +190,35 @@ public class Log extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Crear Cuenta Cliente");
+        lblCrearCliente.setText("Crear Cuenta Cliente");
 
         jLabel3.setText("Usuario");
-
-        jLabel4.setText("Password");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(80, 80, 80)
-                .addComponent(lblImg, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(100, 100, 100)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblCrearCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(lblImg, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
+                .addContainerGap()
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(6, 6, 6)
                 .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(67, 67, 67)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addGap(51, 51, 51)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(lblCrearCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -283,36 +252,51 @@ public class Log extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void logging() {
-
-        String pass = String.copyValueOf(txtPassword.getPassword());
-        if (txtUsuario.getText().isEmpty() || pass == null) {
-
-            JOptionPane.showMessageDialog(null, "Debe Ingresar todos los datos", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-
-        } else if (manager.getUsuarioDAO().getUsuarioByUsrAndPassword(txtUsuario.getText(), pass) != null) {
-
-            Usuario usuario = manager.getUsuarioDAO().getUsuarioByUsrAndPassword(txtUsuario.getText(), pass);
-            if (usuario.getTipo() == 3) {
-                empleadoC = true;
-                //  this.setVisible(false);
-                dialogo.setSize(600, 650);
-                dialogo.setVisible(true);
-                
-                idUsuario = usuario.getIdUsuario();
-                this.dispose();
-
-            } else if (usuario.getTipo() == 3) {
-                empleadoC = false;
-                //  this.setVisible(false);
-                this.dispose();
-                dialogo.setSize(600, 650);
-                dialogo.setVisible(true);
-            }
-            // new MainFrame().setVisible(true);
-
-        } else {
-            JOptionPane.showMessageDialog(null, "Datos No Coinciden", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+        
+        
+        if (manager.getClienteDAO().obtener(txtUsuario.getText()) != null) {
+            //es un cliente solo mostrar catalogo y tracking de producto
+            
+            
+        }else if (manager.getEmpleadoDAO().getByCodeUsr(txtUsuario.getText()) != null) {
+        //es Empleado mostrar todas las funciones    
+        }else{
+        
+            JOptionPane.showMessageDialog(null, "Datos No Coinciden o No existe","Advertencia",JOptionPane.WARNING_MESSAGE);
+        
         }
+
+        
+//
+//        String pass = String.copyValueOf(txtPassword.getPassword());
+//        if (txtUsuario.getText().isEmpty() || pass == null) {
+//
+//            JOptionPane.showMessageDialog(null, "Debe Ingresar todos los datos", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+//
+//        } else if (manager.getUsuarioDAO().getUsuarioByUsrAndPassword(txtUsuario.getText(), pass) != null) {
+//
+//            Usuario usuario = manager.getUsuarioDAO().getUsuarioByUsrAndPassword(txtUsuario.getText(), pass);
+//            if (usuario.getTipo() == 3) {
+//                empleadoC = true;
+//                //  this.setVisible(false);
+//                dialogo.setSize(600, 650);
+//                dialogo.setVisible(true);
+//                
+//                idUsuario = usuario.getIdUsuario();
+//                this.dispose();
+//
+//            } else if (usuario.getTipo() == 3) {
+//                empleadoC = false;
+//                //  this.setVisible(false);
+//                this.dispose();
+//                dialogo.setSize(600, 650);
+//                dialogo.setVisible(true);
+//            }
+//            // new MainFrame().setVisible(true);
+//
+//        } else {
+//            JOptionPane.showMessageDialog(null, "Datos No Coinciden", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+//        }
 
     }
 
@@ -400,16 +384,13 @@ public class Log extends javax.swing.JFrame {
     private javax.swing.JDialog dialogo;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblImg;
+    private javax.swing.JLabel lblCrearCliente;
     private javax.swing.JTable tableTiendas;
     private javax.swing.JTextField txtBuscar;
-    private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 }

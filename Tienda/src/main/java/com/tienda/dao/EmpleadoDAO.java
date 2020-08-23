@@ -13,4 +13,9 @@ public interface EmpleadoDAO extends DAO<Empleado,Integer> {
 
 public Empleado getByCodeUsr(String codigoUsuario);
     public List<EmpleadoDTO> getByUsuarioDTO();
+    /**
+     * Metodo que serviara para saber si la base de datos esta vacia 
+     * @return 
+     */
+    public Integer verificarDatosInDB();
 }
