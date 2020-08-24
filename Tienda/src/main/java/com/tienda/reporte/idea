@@ -1,0 +1,8 @@
+
+reporte 2
+
+yo le mando la fecha
+
+ mysql -> encuentra los dias de diferencia
+luego tengo que comparar el resultado con el tiempo de cada pedido
+y si es igual o menor lo debo de mostrar al usuario

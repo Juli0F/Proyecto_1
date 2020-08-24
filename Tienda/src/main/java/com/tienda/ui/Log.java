@@ -6,6 +6,7 @@
 package com.tienda.ui;
 
 import com.tienda.dto.TiendaTiempo;
+import com.tienda.entities.Persona;
 import com.tienda.entities.Tienda;
 import com.tienda.entities.Usuario;
 import com.tienda.mysql.Manager;
@@ -21,7 +22,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author julio
  */
-public class Log extends javax.swing.JFrame {
+public final class Log extends javax.swing.JFrame {
 
     /**
      * Creates new form Log
@@ -33,19 +34,27 @@ public class Log extends javax.swing.JFrame {
         eventTableTienda();
         setLocationRelativeTo(null);
         setSize(385, 178);
-        
-       
-        
-        
+
+        eventLblCliente();
         txtBuscar.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                //super.keyPressed(e); //To change body of generated methods, choose Tools | Templates.
+        
                 accionBuscar();
+            }
+
+        });
+        
+        txtUsuario.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    logging();
+                }
             }
             
         });
-        //    lblImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/clientes32.png")));
+        
     }
 
     /**
@@ -119,6 +128,8 @@ public class Log extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tableTiendas.setRowHeight(45);
+        tableTiendas.setRowMargin(2);
         jScrollPane1.setViewportView(tableTiendas);
 
         jButton2.setText("Aceptar");
@@ -177,7 +188,7 @@ public class Log extends javax.swing.JFrame {
             dialogoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dialogoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 560, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -225,6 +236,7 @@ public class Log extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
         logging();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -235,11 +247,11 @@ public class Log extends javax.swing.JFrame {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         // TODO add your handling code here:
-       accionBuscar();
+        accionBuscar();
     }//GEN-LAST:event_btnSearchActionPerformed
 
-    private void accionBuscar(){
-         if (txtBuscar.getText().isEmpty()) {
+    private void accionBuscar() {
+        if (txtBuscar.getText().isEmpty()) {
             fillTable(manager.getTiendaDAO().obtenerTodo());
         } else {
             fillTable(manager.getTiendaDAO().getAllTiendaLike(txtBuscar.getText()));
@@ -249,55 +261,45 @@ public class Log extends javax.swing.JFrame {
         // TODO add your handling code here:
         actionBtnAceptar();
         System.out.println("Codigo: " + codigoTienda);
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void logging() {
-        
-        
-        if (manager.getClienteDAO().obtener(txtUsuario.getText()) != null) {
-            //es un cliente solo mostrar catalogo y tracking de producto
-            
-            
-        }else if (manager.getEmpleadoDAO().getByCodeUsr(txtUsuario.getText()) != null) {
-        //es Empleado mostrar todas las funciones    
-        }else{
-        
-            JOptionPane.showMessageDialog(null, "Datos No Coinciden o No existe","Advertencia",JOptionPane.WARNING_MESSAGE);
-        
+
+        if (manager.getEmpleadoDAO().verificarDatosInDB() != 0) {
+
+            if (manager.getClienteDAO().obtener(txtUsuario.getText()) != null) {
+                //es un cliente solo mostrar catalogo y tracking de producto
+
+                empleadoC = false;
+                new MainFrame(empleadoC).setVisible(true);
+                idUsuario = 1;
+                this.dispose();
+            } else if (manager.getEmpleadoDAO().getByCodeUsr(txtUsuario.getText()) != null) {
+                
+                empleadoC = true;
+                this.setVisible(false);
+                dialogo.setSize(700, 650);
+                dialogo.setVisible(true);
+
+                idUsuario = 1;
+                this.dispose();
+                //es Empleado mostrar todas las funciones    
+            } else {
+
+                JOptionPane.showMessageDialog(null, "Datos No Coinciden o No existe", "Advertencia", JOptionPane.WARNING_MESSAGE);
+
+            }
+        } else {
+            if (txtUsuario.getText().equals("Admin")) {
+                Persona persona = new Persona("dpi_test", "Persona", "", "", true);
+                Usuario usuario = new Usuario(1, "usuario", "sinPassword", 3, true, "dpi_test", "");
+                
+                manager.getPersonaDAO().insert(persona);
+                manager.getUsuarioDAO().insert(usuario);
+                new MainFrame(true).setVisible(true);
+            }
         }
-
-        
-//
-//        String pass = String.copyValueOf(txtPassword.getPassword());
-//        if (txtUsuario.getText().isEmpty() || pass == null) {
-//
-//            JOptionPane.showMessageDialog(null, "Debe Ingresar todos los datos", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-//
-//        } else if (manager.getUsuarioDAO().getUsuarioByUsrAndPassword(txtUsuario.getText(), pass) != null) {
-//
-//            Usuario usuario = manager.getUsuarioDAO().getUsuarioByUsrAndPassword(txtUsuario.getText(), pass);
-//            if (usuario.getTipo() == 3) {
-//                empleadoC = true;
-//                //  this.setVisible(false);
-//                dialogo.setSize(600, 650);
-//                dialogo.setVisible(true);
-//                
-//                idUsuario = usuario.getIdUsuario();
-//                this.dispose();
-//
-//            } else if (usuario.getTipo() == 3) {
-//                empleadoC = false;
-//                //  this.setVisible(false);
-//                this.dispose();
-//                dialogo.setSize(600, 650);
-//                dialogo.setVisible(true);
-//            }
-//            // new MainFrame().setVisible(true);
-//
-//        } else {
-//            JOptionPane.showMessageDialog(null, "Datos No Coinciden", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-//        }
-
     }
 
     private void actionBtnAceptar() {
@@ -307,6 +309,7 @@ public class Log extends javax.swing.JFrame {
             int rowSelected = tableTiendas.getSelectedRow();
             codigoTienda = (String) tableTiendas.getValueAt(rowSelected, 0);
             nombreTienda = (String) tableTiendas.getValueAt(rowSelected, 1);
+            System.out.println("Codigo Tienda: "+codigoTienda);
             dialogo.dispose();
             new MainFrame(empleadoC).
                     setVisible(true);
@@ -338,6 +341,20 @@ public class Log extends javax.swing.JFrame {
 
     }
 
+    public void eventLblCliente(){
+        lblCrearCliente.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    if (manager.getEmpleadoDAO().verificarDatosInDB() != 0 ) {
+                        JOptionPane.showMessageDialog(null, "Para Crear Cuenta debe acercarse a su Tienda Mas Cercana", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Esta Opcion no esta habilitada en Este momento", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            }
+        });
+    }
     /**
      * @param args the command line arguments
      */

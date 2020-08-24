@@ -1,6 +1,5 @@
 package com.tienda.mysql;
 
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,7 +23,6 @@ public class EmpleadoD implements EmpleadoDAO {
     private final String GETONE = GETALL + "WHERE Empleado = ?";
     private final String GETBYCODEEMPLEADO = GETALL + "WHERE codigoEmpleado = ?";
     private final String GETBYALLUSRANDPERSON = "Select p.dpi,c.nit,p.nombre,p.telefono,p.direccion,c.email,c.usuario, c.tipo from Persona p inner join Empleado c on p.dpi = c.Persona_dpi where c.tipo = 2";
-    
 
     public EmpleadoD(Connection connection) {
         this.connection = connection;
@@ -125,9 +123,9 @@ public class EmpleadoD implements EmpleadoDAO {
 
     public Empleado convertir(ResultSet rs) {
 
-        try {          
-                                                    
-            Empleado usuarioSystem = new Empleado(rs.getInt("idUsuarioSystem"), rs.getString("codigoEmpleado"), rs.getString("nit"), rs.getInt("tipo"), rs.getBoolean("estado"),rs.getString("Pesona_dpi"),rs.getString("email"));
+        try {
+                                                                                                                                                                                           //Persona_dpi   Pesona_dpi
+            Empleado usuarioSystem = new Empleado(rs.getInt("idUsuarioSystem"), rs.getString("codigoEmpleado"), rs.getString("nit"), rs.getInt("tipo"), rs.getBoolean("estado"), rs.getString("Persona_dpi"), rs.getString("email"));
 
             return usuarioSystem;
         } catch (SQLException ex) {
@@ -154,13 +152,15 @@ public class EmpleadoD implements EmpleadoDAO {
         }
         return 0;
     }
-       @Override
+
+    @Override
     public Empleado getByCodeUsr(String codigoUsuario) {
         PreparedStatement stat = null;
         ResultSet rs = null;
 
         try {
             stat = connection.prepareStatement(GETBYCODEEMPLEADO);
+            System.out.println("Ingreso el Usuario "+codigoUsuario);
             stat.setString(1, codigoUsuario);
             rs = stat.executeQuery();
             while (rs.next()) {
@@ -175,7 +175,7 @@ public class EmpleadoD implements EmpleadoDAO {
 
     @Override
     public List<EmpleadoDTO> getByUsuarioDTO() {
-         PreparedStatement stat = null;
+        PreparedStatement stat = null;
         ResultSet rs = null;
         List<EmpleadoDTO> lst = new ArrayList<>();
         try {
@@ -191,29 +191,37 @@ public class EmpleadoD implements EmpleadoDAO {
 
         return null;
     }
-    public EmpleadoDTO convertUsuarioDTO(ResultSet rs){
-          try {
-              //String dpi, String nit, String nombre, String telefono, String direccion, String email, String codigoUsuario, int tipo) {
-            EmpleadoDTO usuario = new EmpleadoDTO (rs.getString("dpi"), rs.getString("nit"), rs.getString("nombre"), rs.getString("telefono"), rs.getString("direccion"), rs.getString("email"), rs.getString("codigoEmpleado"),rs.getInt("tipo"));
+
+    public EmpleadoDTO convertUsuarioDTO(ResultSet rs) {
+        try {
+            //String dpi, String nit, String nombre, String telefono, String direccion, String email, String codigoUsuario, int tipo) {
+            EmpleadoDTO usuario = new EmpleadoDTO(rs.getString("dpi"), rs.getString("nit"), rs.getString("nombre"), rs.getString("telefono"), rs.getString("direccion"), rs.getString("email"), rs.getString("codigoEmpleado"), rs.getInt("tipo"));
 
             return usuario;
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
-        
+
     }
 
     @Override
     public Integer verificarDatosInDB() {
-        String ultimo = "SELECT last_insert_id()";
+    /*    String ultimo = """
+                        SELECT @conteo_persona:=count(dpi) from Persona
+                        SELECT @conteo_producto:=count(p.codigo) from Producto p
+                        SELECT @conteo_tienda:=count(t.codigo) from Tienda t
+                        SELECT (@conteo_persona + @conteo_producto + @conteo_tienda) AS suma
+                        """;
+      */
+    String ultimo = "SELECT COUNT(dpi) from Persona";
         PreparedStatement stat = null;
         ResultSet rs = null;
-        List<Integer> ls = new ArrayList<>();
+        
 
         try {
-            stat = connection.prepareStatement("SELECT COUNT(codigo) FROM TIENDA");
-            
+            stat = connection.prepareStatement(ultimo);
+
             rs = stat.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1);
@@ -224,5 +232,5 @@ public class EmpleadoD implements EmpleadoDAO {
         }
         return 0;
     }
-    
+
 }

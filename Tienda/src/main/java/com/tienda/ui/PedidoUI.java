@@ -23,20 +23,25 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.sql.Date;
-import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.NumberFormatter;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -53,9 +58,9 @@ public final class PedidoUI extends javax.swing.JPanel {
      */
     public PedidoUI() {
         initComponents();
+        manager = new Manager();
 
         eventTableCliente();
-        manager = new Manager();
 
         generateCode();
 
@@ -81,7 +86,7 @@ public final class PedidoUI extends javax.swing.JPanel {
 
     public void initDatePicker() {
         UtilDateModel model = new UtilDateModel();
-        model.setDate(2020, 8, 1);
+        //model.setDate(2020, 8, 1);
 
         Properties p = new Properties();
         p.put("text.today", "Hoy");
@@ -590,7 +595,7 @@ public final class PedidoUI extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        
+
         if (tableCarrito.getSelectedRow() != -1) {
             ((DefaultTableModel) tableCarrito.getModel()).removeRow(tableCarrito.getSelectedRow());
             if (tableCarrito.getRowCount() != 0) {
@@ -636,19 +641,19 @@ public final class PedidoUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnFinalizarCompraAction
 
     private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
-        
+
         fillTableCliente(manager.getClienteDAO().getClienteForDtoWhitLike(
                 (!txtBuscarCliente.getText().isEmpty()) ? txtBuscarCliente.getText() : " "
         ));
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
     private void btnAceptarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarClienteActionPerformed
-        
+
         dtCliente();
     }//GEN-LAST:event_btnAceptarClienteActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        
+
         SeleccionarCliente.dispose();
         ClienteUI crear = new ClienteUI();
         crear.setSize(800, 700);
@@ -664,17 +669,17 @@ public final class PedidoUI extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        
+
         manager = new Manager();
         fillTableCliente(manager.getClienteDAO().getClienteForDto());
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void txtCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCreditoActionPerformed
-        
+
     }//GEN-LAST:event_txtCreditoActionPerformed
 
     private void btnPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPagarActionPerformed
-        
+
         BigDecimal credito;
         BigDecimal enEfectivo = new BigDecimal("0.0");
         if (txtCredito.getText().isEmpty()) {
@@ -709,13 +714,18 @@ public final class PedidoUI extends javax.swing.JPanel {
     }
 
     public void crearPedido(BigDecimal anticipo) {
+
         String codeStoreOrigen = ((Tienda) jCOrigen.getModel().getSelectedItem()).getCodigo();
         String codeStoreDestino = ((Tienda) jCDestino.getModel().getSelectedItem()).getCodigo();
-        //    , BigDecimal anticipo,BigDecimal subtotal) {
-        //String date = (String) txtDatePicker.getModel().getValue();
+
+        int mes = txtDatePicker.getModel().getMonth() + 1;
         System.out.println("DatePicker tipo de Objeto: " + txtDatePicker.getModel().getValue().getClass().getName());
-        java.sql.Date date = new java.sql.Date(txtDatePicker.getModel().getYear(), txtDatePicker.getModel().getMonth(), txtDatePicker.getModel().getDay());
-        // java.util.Date date = (java.util.Date) txtDatePicker.getModel().getValue();
+        java.time.LocalDate localDate = LocalDate.of(txtDatePicker.getModel().getYear(), mes, txtDatePicker.getModel().getDay());
+
+        java.sql.Date date = java.sql.Date.valueOf(localDate);
+
+        System.out.println("date ==> " + date.toString());
+
         int idTiempoEnvio = manager.getTiempoEntreTiendasDAO().getTheTimeBetweenStoresWithTheCodeOfTheStoresInvolved(codeStoreOrigen, codeStoreDestino);
         Pedido pedido = new Pedido(txtCodePedido.getText(),
                 date,
@@ -741,18 +751,18 @@ public final class PedidoUI extends javax.swing.JPanel {
                     Integer.valueOf((String) tableCarrito.getValueAt(i, 2)),
                     true, (String) tableCarrito.getValueAt(i, 0),
                     txtCodePedido.getText());
-        
+
             manager.getDetallePedidoDAO().insert(detalle);
         }
-        
+
         JOptionPane.showMessageDialog(null, "Pedido Creado Satisfactoriamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
         FormaDePago.dispose();
 
-          MainFrame.dp.removeAll();
-           dp.repaint();
+        MainFrame.dp.removeAll();
+        dp.repaint();
         dp.revalidate();
         MainFrame.addPanel(new PedidoUI());
-        
+
     }
 
     public void eventTextfield(JTextField field) {
@@ -775,8 +785,10 @@ public final class PedidoUI extends javax.swing.JPanel {
 
                 String codigo = (String) tableCarrito.getValueAt(tcl.getRow(), 0);
                 Integer nValor = Integer.valueOf((String) tcl.getNewValue());
+                System.out.println("LogTienda: " + Log.codigoTienda + "codigo " + codigo);
+                Tienda origen = (Tienda) jCOrigen.getSelectedItem();
 
-                if (manager.getStockTiendaDAO().existencia(Log.codigoTienda, codigo).getCantidad() <= nValor) {
+                if (manager.getStockTiendaDAO().existencia(origen.getCodigo(), codigo).getCantidad() <= nValor) {
 
                     tableCarrito.setValueAt(tcl.getOldValue(), tcl.getRow(), tcl.getColumn());
                     JOptionPane.showMessageDialog(null, "No hay Existencia Suficiente", "Cuidado", JOptionPane.WARNING_MESSAGE);

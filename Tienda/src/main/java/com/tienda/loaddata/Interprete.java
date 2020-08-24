@@ -147,6 +147,7 @@ public class Interprete {
                             //public Usuario(int idUsuario, String usuario, String password, int tipo, boolean estado, String Persona_dpi) {
                             Empleado empleado = new Empleado(0, datos[2], datos[4], 2, true, datos[4], "");
                             manager.getEmpleadoDAO().insert(empleado);
+                            
                             imprimirJTextArea(correcto, cont, instruccion, "Correcto");
 
                         } else {
@@ -225,7 +226,8 @@ public class Interprete {
                     break;
                 case 5:
                     System.out.println("Pedido");
-
+                    System.out.println("Pedido Cliente 5: "+ datos[5]);
+                    System.out.println("Pedido Cliente 7: "+ datos[7]);
                     if (verificarCantidad(datos, 10, cont, error)) {
                         //Pedido perificarCantidad(datos, 9, coedido = new Pedido(data[0], fecha, true, cont, true, true, cont, CLIENTE);
                         Tienda tiendaPrueba = manager.getTiendaDAO().obtener(datos[2]);
@@ -236,7 +238,7 @@ public class Interprete {
 
                                 if (existenciaSuficiente(datos[2], datos[6], Integer.valueOf(datos[7]))) {
 
-                                    if (manager.getClienteDAO().obtener(datos[6]) != null) {
+                                    if (manager.getClienteDAO().obtener(datos[5]) != null) {
 
                                         if (manager.getPedidoDAO().obtener(datos[1]) != null) {
                                             //el pedido ya existe
@@ -253,7 +255,7 @@ public class Interprete {
                                             if (envio != null) {
 //public Pedido(String codigo, java.sql.Date fecha, boolean entregado, int retraso, boolean destino, boolean estado, int TiempoDeEnvio_idTiempoDeEnvio, String Cliente_nit, BigDecimal anticipo,BigDecimal subtotal) {
 
-                                                Pedido pedido = new Pedido(datos[1], java.sql.Date.valueOf(datos[4]), false, 0, false, true, envio, datos[6], BigDecimal.valueOf(Double.valueOf(datos[datos.length - 1])), BigDecimal.valueOf(Double.valueOf(datos[datos.length - 2])),datos[3]);
+                                                Pedido pedido = new Pedido(datos[1], java.sql.Date.valueOf(datos[4]), false, 0, false, true, envio, datos[5], BigDecimal.valueOf(Double.valueOf(datos[datos.length - 1])), BigDecimal.valueOf(Double.valueOf(datos[datos.length - 2])),datos[3]);
                                                 DetallePedido articulos = new DetallePedido(0, Integer.valueOf(datos[7]), true, datos[6], datos[1]);
 
                                                 manager.getPedidoDAO().insert(pedido);

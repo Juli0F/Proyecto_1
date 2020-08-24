@@ -1,5 +1,7 @@
 package com.tienda.dao;
 
+import com.tienda.dto.TiendaRepDos;
+import com.tienda.dto.TiendaRepUno;
 import com.tienda.dto.TiendaTiempo;
 import com.tienda.entities.Tienda;
 import java.util.List;
@@ -46,5 +48,53 @@ public interface TiendaDAO extends DAO<Tienda,String> {
      * @return Lista del Tipo Tienda
      */
     public List<Tienda> getTiendaSinRelacionDeTiempoConRespectoAOtra(String codigoTienda);
+    
+    /**
+     * metodo que debe traer los datos para el reporte 1
+     * datos a traer codigo de tienda, nombre de tienda, codigo de pedido y fecha del pedido
+     * @param codigoTiendaDestino
+     * @return 
+     */
+    public List<TiendaRepUno> pedidosSinFecha(String codigoTiendaDestino);
+    /**
+     * metodo que busca pedidos con una fecha en adelante
+     * @param codigoTiendaDestino
+     * @param dateInit
+     * @return 
+     */
+    public List<TiendaRepUno> pedidosFechaInicial(String codigoTiendaDestino, java.sql.Date dateInit);
+    /**
+     * busca todos los pedidos con una fecha limite, de la fecha
+     * que se le pasa por parametro para atras
+     * @param codigoTiendaDestino
+     * @param dateFinal
+     * @return 
+     */
+    public List<TiendaRepUno> pedidosFechaFinal(String codigoTiendaDestino, java.sql.Date dateFinal);
+    /**
+     * pedidos en un rango de fechas
+     * @param codigoTiendaDestino
+     * @param dateInit
+     * @param dateFinal
+     * @return 
+     */
+    public List<TiendaRepUno> pedidosEntreFechas(String codigoTiendaDestino, java.sql.Date dateInit, java.sql.Date dateFinal);
+    
+    /**
+     * devuelve todos los pedidos que estan en falta de verificacion,
+     * @param codigoTienda
+     * @param date
+     * @return Lista de objetos del tipo TiendaRepDos, objeto contiene codigo y nombre de tienda, codigo y fecha de pedido, y los dias que han pasado desde que se hizo el pedido
+     */
+    public List<TiendaRepDos> pedidosFaltaVerificacion(String codigoTienda, java.sql.Date date);
+    
+    /**
+     * encuentra todos los pedidos con  atraso 
+     * @param codigoTienda
+     * @param date
+     * @return 
+     */
+    public List<TiendaRepDos> pedidosConAtraso(String codigoTienda, java.sql.Date date);
+    
 
 }

@@ -5,6 +5,9 @@
  */
 package com.tienda.ui;
 
+import com.tienda.reporte.ui.Atrasados;
+import com.tienda.reporte.ui.AunLlegan;
+import com.tienda.reporte.ui.PedidosQueLlegaran;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
@@ -71,8 +74,11 @@ public class MainFrame extends javax.swing.JFrame {
         administracion = new javax.swing.JMenu();
         admClientes = new javax.swing.JMenuItem();
         btnEntregarPedido = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         adminProveedores = new javax.swing.JMenuItem();
-        adminReportes = new javax.swing.JMenuItem();
         configuracion = new javax.swing.JMenu();
         confUsuario = new javax.swing.JMenuItem();
         confAdminUsuario = new javax.swing.JMenuItem();
@@ -213,13 +219,36 @@ public class MainFrame extends javax.swing.JFrame {
         });
         administracion.add(btnEntregarPedido);
 
-        adminProveedores.setMnemonic('a');
-        adminProveedores.setText("Usuarios");
-        administracion.add(adminProveedores);
+        jMenu1.setText("Reportes");
 
-        adminReportes.setMnemonic('c');
-        adminReportes.setText("Reportes");
-        administracion.add(adminReportes);
+        jMenuItem1.setText("Listado de Pedidos que Llegaran");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuItem2.setText("Producto Que estan En Tiempo de Poder LLegar");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
+        jMenuItem3.setText("Pedidos Atrasados");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem3);
+
+        administracion.add(jMenu1);
+
+        adminProveedores.setMnemonic('a');
+        administracion.add(adminProveedores);
 
         menuBar.add(administracion);
 
@@ -347,6 +376,18 @@ public class MainFrame extends javax.swing.JFrame {
         addPanel(new EntregarPedido());
     }//GEN-LAST:event_btnEntregarPedidoActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        addPanel(new PedidosQueLlegaran());
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        addPanel(new AunLlegan());
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        addPanel(new Atrasados());
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
     public static void addPanel(javax.swing.JPanel panel){
         dp.removeAll();
         
@@ -403,7 +444,6 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem admClientes;
     private javax.swing.JMenuItem adminProveedores;
-    private javax.swing.JMenuItem adminReportes;
     private javax.swing.JMenu administracion;
     private javax.swing.JMenuItem btnEntregarPedido;
     private javax.swing.JMenu catalogo;
@@ -422,6 +462,10 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem ctgTiendas;
     private javax.swing.JMenuItem ctgUsuario;
     public static javax.swing.JDesktopPane dp;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu transacciones;
     private javax.swing.JMenuItem trsAsignacion;

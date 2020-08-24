@@ -75,7 +75,7 @@ public class ProductoUI extends javax.swing.JPanel {
         lblFieldNombre = new javax.swing.JLabel();
 
         jPanel1.setBackground(java.awt.Color.white);
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Tienda"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Productos"));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblCodigo.setFont(new java.awt.Font("Fira Code Light", 2, 16)); // NOI18N
@@ -284,6 +284,7 @@ public class ProductoUI extends javax.swing.JPanel {
 
                 tableModel.removeRow(row);
                 setTextField("", "", "", "", "");
+                txtCodigo.setEditable(false);
 
             }
 
@@ -310,6 +311,7 @@ public class ProductoUI extends javax.swing.JPanel {
                 } else {
                     JOptionPane.showMessageDialog(null, "El Codigo Ingresado ya Existe", "Informacion", JOptionPane.INFORMATION_MESSAGE);
                 }
+                txtCodigo.setEditable(false);
             }
         }
         txtCodigo.setEditable(false);

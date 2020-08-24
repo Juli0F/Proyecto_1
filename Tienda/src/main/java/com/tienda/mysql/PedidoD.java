@@ -19,6 +19,7 @@ public class PedidoD implements PedidoDAO {
     private final String DELETE = "DELETE Pedido WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Pedido  ";
     private final String GETONE = GETALL + "WHERE codigo = ?";
+    //private final String GET_QUE_LLEGARA_A_UNA_TIENDA ="SELECT * F"
 
     public PedidoD(Connection connection) {
         this.connection = connection;
