@@ -5,6 +5,15 @@
  */
 package com.tienda.ui.cliente;
 
+import com.tienda.dto.CatalogoDto;
+import com.tienda.entities.Tienda;
+import com.tienda.mysql.Manager;
+import java.util.List;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
 /**
  *
  * @author julio
@@ -16,6 +25,8 @@ public class Catalogo extends javax.swing.JPanel {
      */
     public Catalogo() {
         initComponents();
+        manager = new Manager();
+        fillCombo(tienda);
     }
 
     /**
@@ -28,19 +39,19 @@ public class Catalogo extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jComboBox1 = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableProducto = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        tienda = new javax.swing.JComboBox<Tienda>();
+        txtBuscarProducto = new javax.swing.JTextField();
+        btnBuscarProducto = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        ver = new javax.swing.JButton();
+        enTienda = new javax.swing.JCheckBox();
 
-        jComboBox1.setEditable(true);
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableProducto.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Tienda", "Codigo Producto", "Producto", "Precio"
@@ -54,34 +65,81 @@ public class Catalogo extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tableProducto);
 
         jButton1.setText("Buscar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        tienda.setEditable(true);
+
+        btnBuscarProducto.setText("Buscar Producto");
+        btnBuscarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarProductoActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Buscar Producto");
+
+        ver.setText("Ver Todo");
+        ver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verActionPerformed(evt);
+            }
+        });
+
+        enTienda.setText("En Tienda ");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(55, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1)))
+                        .addGap(29, 29, 29)
+                        .addComponent(tienda, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtBuscarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnBuscarProducto)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(enTienda))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 636, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(ver, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addComponent(tienda, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(36, 36, 36)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtBuscarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarProducto)
+                    .addComponent(enTienda))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ver, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -102,12 +160,86 @@ public class Catalogo extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnBuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductoActionPerformed
+        // TODO add your handling code here:
+        String codigoTienda = ((Tienda) tienda.getSelectedItem()).getCodigo();
+        if (enTienda.isSelected()) {
+
+            System.out.println("");
+            searchProduct();
+
+        } else {
+            if (txtBuscarProducto.getText().isEmpty()) {
+                fillTableProducto(manager.getStockTiendaDAO().catalogo());
+            } else {
+                fillTableProducto(manager.getStockTiendaDAO().catalogoProducto(txtBuscarProducto.getText()));
+            }
+
+        }
+    }//GEN-LAST:event_btnBuscarProductoActionPerformed
+
+    private void searchProduct() {
+        String codigoTienda = ((Tienda) tienda.getSelectedItem()).getCodigo();
+        if (txtBuscarProducto.getText().isEmpty()) {
+
+            JOptionPane.showMessageDialog(null, "No Ingreso un nombre de Producto para buscar\nse le mostraran todos los producto de la Tienda", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+            accion();
+        } else {
+            fillTableProducto(manager.getStockTiendaDAO().catalogoEnTiendaProducto(codigoTienda, txtBuscarProducto.getText()));
+        }
+    }
+    private void verActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verActionPerformed
+        // TODO add your handling code here:
+        fillTableProducto(manager.getStockTiendaDAO().catalogo());
+    }//GEN-LAST:event_verActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        accion();
+    }//GEN-LAST:event_jButton1ActionPerformed
+    public void accion() {
+        String codigoTienda = ((Tienda) tienda.getSelectedItem()).getCodigo();
+        fillTableProducto(manager.getStockTiendaDAO().catalogoEnTienda(codigoTienda));
+    }
+
+    private void fillCombo(JComboBox combo) {
+        manager.getTiendaDAO().obtenerTodo().forEach(x -> {
+            combo.addItem(x);
+        });
+        AutoCompleteDecorator.decorate(combo);
+
+    }
+
+    private void fillTableProducto(List<CatalogoDto> productos) {
+        ((DefaultTableModel) tableProducto.getModel()).setRowCount(0);
+
+        if (productos.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No hay productos con los parametros de busqueda", "Informacion",JOptionPane.INFORMATION_MESSAGE);
+        } else {
+
+            productos.forEach(producto -> {
+                ((DefaultTableModel) tableProducto.getModel()).addRow(new Object[]{
+                    producto.getTienda(),
+                    producto.getCodigoProducto(),
+                    producto.getProducto(),
+                    producto.getPrecio()
+
+                });
+            });
+        }
+    }
+    private Manager manager;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscarProducto;
+    private javax.swing.JCheckBox enTienda;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tableProducto;
+    private javax.swing.JComboBox<Tienda> tienda;
+    private javax.swing.JTextField txtBuscarProducto;
+    private javax.swing.JButton ver;
     // End of variables declaration//GEN-END:variables
 }

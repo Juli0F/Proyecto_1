@@ -13,6 +13,7 @@ import com.tienda.reporte.ui.MasVendido;
 import com.tienda.reporte.ui.NuncaVendidos;
 import com.tienda.reporte.ui.PedidosCliente;
 import com.tienda.reporte.ui.PedidosQueLlegaran;
+import com.tienda.ui.cliente.Catalogo;
 import com.tienda.ui.cliente.Tracking;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -351,6 +352,11 @@ public class MainFrame extends javax.swing.JFrame {
 
         confUsuario1.setMnemonic('t');
         confUsuario1.setText("Ver Catalogo");
+        confUsuario1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confUsuario1ActionPerformed(evt);
+            }
+        });
         ver.add(confUsuario1);
 
         confUsuario2.setMnemonic('t');
@@ -480,6 +486,11 @@ public class MainFrame extends javax.swing.JFrame {
     private void confUsuario2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confUsuario2ActionPerformed
         addPanel(new Tracking());
     }//GEN-LAST:event_confUsuario2ActionPerformed
+
+    private void confUsuario1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confUsuario1ActionPerformed
+        // TODO add your handling code here:
+        addPanel(new Catalogo());
+    }//GEN-LAST:event_confUsuario1ActionPerformed
 
     public static void addPanel(javax.swing.JPanel panel){
         cleanPane();

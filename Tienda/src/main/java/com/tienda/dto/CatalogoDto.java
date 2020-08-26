@@ -11,13 +11,13 @@ import java.util.Objects;
  *
  * @author julio
  */
-public class Catalogo {
+public class CatalogoDto {
     private String tienda;
     private String codigoProducto;
     private String producto;
     private String precio;
 
-    public Catalogo(String tienda, String codigoProducto, String producto, String precio) {
+    public CatalogoDto(String tienda, String codigoProducto, String producto, String precio) {
         this.tienda = tienda;
         this.codigoProducto = codigoProducto;
         this.producto = producto;
@@ -75,7 +75,7 @@ public class Catalogo {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Catalogo other = (Catalogo) obj;
+        final CatalogoDto other = (CatalogoDto) obj;
         if (!Objects.equals(this.codigoProducto, other.codigoProducto)) {
             return false;
         }

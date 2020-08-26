@@ -1,6 +1,7 @@
 package com.tienda.mysql;
 
 import com.tienda.dao.StockTiendaDAO;
+import com.tienda.dto.CatalogoDto;
 import com.tienda.entities.StockTienda;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,8 +22,12 @@ public class StockTiendaD implements StockTiendaDAO {
     private final String GETONE = GETALL + "WHERE idStockTienda = ?";
     private final String GETSTOCKBYIDTIENDAANDPRODUCTO = GETALL + "WHERE Tienda_codigo = ? AND  Producto_codigo = ?";
     private final String GETALLPRODUCTINSTORE = GETALL + "WHERE Tienda_codigo = ? AND estado = 1";
-    
+    private final String CATALOGO_SIN_PARAMETRO = "select t.nombre as tienda , p.codigo, p.nombre, st.precio from StockTienda st inner join Tienda t on st.Tienda_codigo = t.codigo inner join Producto p on p.codigo = st.Producto_codigo where t.codigo in (select x.codigo from Tienda x )";
 
+    private final String CATALOGO_CON_PARAMETRO_PRODUCTO = "select t.nombre as tienda , p.codigo, p.nombre, st.precio from StockTienda st inner join Tienda t on st.Tienda_codigo = t.codigo inner join Producto p on p.codigo = st.Producto_codigo where p.codigo like ? or p.nombre like ? ";
+    private final String CATALOGO_CON_PARAMETRO_TIENDA = "select t.nombre as tienda , p.codigo, p.nombre, st.precio from StockTienda st inner join Tienda t on st.Tienda_codigo = t.codigo inner join Producto p on p.codigo = st.Producto_codigo where t.codigo = ?";
+    private final String CATALOGO_CON_PARAMETRO_TIENDA_PRODUCTO = "select t.nombre as tienda , p.codigo, p.nombre, st.precio from StockTienda st inner join Tienda t on st.Tienda_codigo = t.codigo inner join Producto p on p.codigo = st.Producto_codigo where t.codigo = ? and (p.codigo like ? or p.nombre like ? )";
+   //and (p.codigo like "%O%" or p.nombre like "%O%" )
     public StockTiendaD(Connection connection) {
         this.connection = connection;
     }
@@ -150,7 +155,7 @@ public class StockTiendaD implements StockTiendaDAO {
 
     @Override
     public StockTienda existencia(String codigoTienda, String codigoProducto) {
-     
+
         PreparedStatement stat = null;
         ResultSet rs = null;
 
@@ -171,7 +176,7 @@ public class StockTiendaD implements StockTiendaDAO {
 
     @Override
     public List<StockTienda> productosEnUnaTienda(String codigoTienda) {
-         PreparedStatement stat = null;
+        PreparedStatement stat = null;
         ResultSet rs = null;
         List<StockTienda> lst = new ArrayList<>();
         try {
@@ -188,5 +193,97 @@ public class StockTiendaD implements StockTiendaDAO {
 
         return null;
     }
+
+    @Override
+    public List<CatalogoDto> catalogo() {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<CatalogoDto> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(CATALOGO_SIN_PARAMETRO);
+
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertirCatalogo(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lst;
+    }
+
+    @Override
+    public List<CatalogoDto> catalogoEnTienda(String codigoTienda) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<CatalogoDto> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(CATALOGO_CON_PARAMETRO_TIENDA);
+            stat.setString(1, codigoTienda);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertirCatalogo(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lst;
+    }
+
+    @Override
+    public List<CatalogoDto> catalogoEnTiendaProducto(String codigoTienda, String match) {
+         PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<CatalogoDto> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(CATALOGO_CON_PARAMETRO_TIENDA_PRODUCTO);
+            stat.setString(1, codigoTienda);
+            stat.setString(2, "%"+match+"%");
+            stat.setString(3, "%"+match+"%");
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertirCatalogo(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lst;
+    }
+
+    @Override
+    public List<CatalogoDto> catalogoProducto(String match) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<CatalogoDto> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(CATALOGO_CON_PARAMETRO_PRODUCTO);
+            
+            stat.setString(1, "%"+match+"%");
+            stat.setString(2, "%"+match+"%");
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertirCatalogo(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lst;
+    }
     
+    
+
+    public CatalogoDto convertirCatalogo(ResultSet rs) {
+
+        try {
+            return new CatalogoDto(rs.getString("tienda"), rs.getString("codigo"), rs.getString("nombre"), rs.getString("precio"));
+
+        } catch (SQLException ex) {
+            Logger.getLogger(StockTiendaD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }
