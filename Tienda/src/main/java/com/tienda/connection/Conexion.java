@@ -32,11 +32,16 @@ public class Conexion {
        if (connection == null) {
           
                try {
-              //     Class.forName("com.mysql.jdbc.Driver");
+                   try {
+                       Class.forName("com.mysql.jdbc.Driver");//.newInstance();
+                  
               
                connection = DriverManager.getConnection(
                        "jdbc:mysql://localhost:3306/TiendaProyecto?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
                        , "root","Usuario_Root_3");
+                } catch (ClassNotFoundException ex) {
+                       Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+                   }
 
            } catch (SQLException ex) {
                Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
