@@ -16,6 +16,19 @@ public class FacturaDto {
     private String codigoTienda;
     private String fecha;
     private String total;
+    private String descripcion;
+
+    public FacturaDto(String idFactura, String tienda, String codigoTienda, String fecha, String total, String descripcion) {
+        this.idFactura = idFactura;
+        this.tienda = tienda;
+        this.codigoTienda = codigoTienda;
+        this.fecha = fecha;
+        this.total = total;
+        this.descripcion = descripcion;
+    }
+    
+    
+    
 
     public FacturaDto(String idFactura, String tienda, String codigoTienda, String fecha, String total) {
         this.idFactura = idFactura;
@@ -25,6 +38,15 @@ public class FacturaDto {
         this.total = total;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+        
     public String getIdFactura() {
         return idFactura;
     }

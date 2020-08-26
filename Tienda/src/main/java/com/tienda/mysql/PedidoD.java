@@ -26,10 +26,19 @@ public class PedidoD implements PedidoDAO {
     "inner join Tienda t on p.Tienda_codigo = t.codigo " +
     "inner join Cliente c on p.Cliente_nit = c.nit " +
     "inner join Persona per on c.Persona_dpi = per.dpi " +
-    "where p.fecha " +
-    "between ifnull( ?  , '2000-01-01') and ifnull( ? , sysdate()) " +
-    "AND (p.Cliente_nit = ? )";
+    "where "
+            + "p.fecha " +
+    "between ifnull( ?  , '2000-01-01') and ifnull( ? , '3000-01-01') " +
+    "AND (p.Cliente_nit = ? ) and t.codigo = ?";
 
+    private final String CLIENTE = "select t.codigo as codeTienda ,t.nombre tienda , p.codigo as pedido , p.subtotal as total, date_format(p.fecha, '%d/%m/%Y') as dias  , if(p.destino = 1,if(p.entregado = 1 ,\"Entregado\", \"Recoger Producto\"),\"En camino\") \n" +
+"    from Pedido p  \n" +
+"    inner join Tienda t on p.Tienda_codigo = t.codigo  \n" +
+"    inner join Cliente c on p.Cliente_nit = c.nit  \n" +
+"    inner join Persona per on c.Persona_dpi = per.dpi  \n" +
+"    where p.fecha  \n" +
+"    between ifnull( ?  , '2000-01-01') and ifnull( ? , '3000-01-01')  \n" +
+"    AND (p.Cliente_nit = ? )  and t.codigo in (select tie.codigo from Tienda tie) ";
     //private final String GET_QUE_LLEGARA_A_UNA_TIENDA ="SELECT * F"
 
     public PedidoD(Connection connection) {
@@ -255,7 +264,9 @@ public class PedidoD implements PedidoDAO {
             stat = connection.prepareStatement(DATA_REPORTE_SEIS);
             stat.setDate(1, dateInit);
             stat.setDate(2, dateFinal);
+            
             stat.setString(3, nitCliente);
+            stat.setString(4, codigoTienda);
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertirFDTO(rs));
@@ -268,6 +279,71 @@ public class PedidoD implements PedidoDAO {
         return null;
     }
 
+     @Override
+    public List<FacturaDto> paraMostrarAlCliente(String nitCliente, String codigoTienda, Date dateInit, Date dateFinal) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<FacturaDto> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(CLIENTE);
+            stat.setDate(1, dateInit);
+            stat.setDate(2, dateFinal);
+            stat.setString(3, nitCliente);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertirFDTO(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+      @Override
+    public List<FacturaDto> paraMostrarAlClienteConLike(String nitCliente, String codigoTienda, Date dateInit, Date dateFinal,String like, String conFecha) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<FacturaDto> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(CLIENTE+ conFecha+ "   p.codigo LIKE ? order by dias asc" );
+            stat.setDate(1, dateInit);
+            stat.setDate(2, dateFinal);
+            stat.setString(3, nitCliente);
+            stat.setString(4, "%"+like+"%");
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertirFDTO(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+      @Override
+    public List<FacturaDto> paraMostrarAlClienteOrdenado(String nitCliente, String codigoTienda, Date dateInit, Date dateFinal , String orderBy) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<FacturaDto> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(CLIENTE + orderBy);
+            System.out.println("===> "+stat.toString());
+            stat.setDate(1, dateInit);
+            stat.setDate(2, dateFinal);
+            stat.setString(3, nitCliente);
+                rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertirFDTO(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
     public FacturaDto convertirFDTO(ResultSet rs) {
 
         try {

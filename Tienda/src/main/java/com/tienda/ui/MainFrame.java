@@ -13,6 +13,7 @@ import com.tienda.reporte.ui.MasVendido;
 import com.tienda.reporte.ui.NuncaVendidos;
 import com.tienda.reporte.ui.PedidosCliente;
 import com.tienda.reporte.ui.PedidosQueLlegaran;
+import com.tienda.ui.cliente.Tracking;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
@@ -354,6 +355,11 @@ public class MainFrame extends javax.swing.JFrame {
 
         confUsuario2.setMnemonic('t');
         confUsuario2.setText("Ver Pedidos");
+        confUsuario2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confUsuario2ActionPerformed(evt);
+            }
+        });
         ver.add(confUsuario2);
 
         menuBar.add(ver);
@@ -470,6 +476,10 @@ public class MainFrame extends javax.swing.JFrame {
     private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
         addPanel(new NuncaVendidos());
     }//GEN-LAST:event_jMenuItem9ActionPerformed
+
+    private void confUsuario2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confUsuario2ActionPerformed
+        addPanel(new Tracking());
+    }//GEN-LAST:event_confUsuario2ActionPerformed
 
     public static void addPanel(javax.swing.JPanel panel){
         cleanPane();

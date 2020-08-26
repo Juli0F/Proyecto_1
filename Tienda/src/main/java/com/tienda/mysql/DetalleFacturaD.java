@@ -30,7 +30,7 @@ public class DetalleFacturaD implements DetalleFacturaDAO {
             + "from Producto p "
             + "inner join DetalleFactura st on p.codigo = st.Producto_codigo "
             + "inner join Factura f on f.idFactura = st.Factura_idFactura "
-            + "where f.fecha between  ifnull(?,'2010-01-01') and  ifnull(?,sysdate()) group by p.codigo  order by  cantidad desc limit 10 ";
+            + "where f.fecha between  ifnull(?,'2000-01-01') and  ifnull(?,'3000-01-01') group by p.codigo  order by  cantidad desc limit 10 ";
     
     
     private final String REPORTE_OCHO = "SELECT p.codigo, p.nombre as producto, sum( st.cantidad) as cantidad "
@@ -38,7 +38,7 @@ public class DetalleFacturaD implements DetalleFacturaDAO {
             + "inner join DetalleFactura st on p.codigo = st.Producto_codigo "
             + "inner join Factura f on f.idFactura = st.Factura_idFactura "
             + "where f.Tienda_codigo = ?  "
-            + " and f.fecha between  ifnull(?,'2010-01-01') and  ifnull(?,sysdate()) group by p.codigo  order by  cantidad desc limit 10 ";
+            + " and f.fecha between  ifnull(?,'2000-01-01') and  ifnull(?,'3000-01-01') group by p.codigo  order by  cantidad desc limit 10 ";
     
     
     public DetalleFacturaD(Connection connection) {

@@ -40,7 +40,7 @@ public class ProductoD implements ProductoDAO {
                     + "from Factura f "
                     + "inner join DetalleFactura df on df.Factura_idFactura = f.idFactura "
                     + "where f.Tienda_codigo = ? "
-                    + "and f.fecha between ifnull(?,'2000-01-01') and ifnull(?,'2050-01-01'))";
+                    + "and f.fecha between ifnull(?,'2000-01-01') and ifnull(?,'3000-01-01'))";
 
     public ProductoD(Connection connection) {
         this.connection = connection;

@@ -284,14 +284,16 @@ public final class Log extends javax.swing.JFrame {
                 //es un cliente solo mostrar catalogo y tracking de producto
 
                 empleadoC = false;
+                nitLog = txtUsuario.getText();
                 new MainFrame(empleadoC).setVisible(true);
                 idUsuario = 1;
+                
                 this.dispose();
             } else if (manager.getEmpleadoDAO().getByCodeUsr(txtUsuario.getText()) != null) {
                 
                 empleadoC = true;
                 this.setVisible(false);
-                dialogo.setSize(700, 650);
+                dialogo.setSize(750, 650);
                 dialogo.setVisible(true);
 
                 idUsuario = 1;
@@ -402,6 +404,7 @@ public final class Log extends javax.swing.JFrame {
         });
     }
 
+    public static String nitLog;
     public static int idUsuario;
     public static String codigoTienda;
     public static String nombreTienda;

@@ -316,6 +316,9 @@
                 <Property name="mnemonic" type="int" value="116"/>
                 <Property name="text" type="java.lang.String" value="Ver Pedidos"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="confUsuario2ActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>

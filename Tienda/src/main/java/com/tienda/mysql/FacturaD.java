@@ -27,7 +27,7 @@ public class FacturaD implements FacturaDAO {
             + "inner join Cliente c on f.nit = c.nit "
             + "inner join Persona per on c.Persona_dpi = per.dpi "
             + "where f.fecha "
-            + "between ifnull(? , '2000-01-01') and ifnull(?, sysdate()) "
+            + "between ifnull(? , '2000-01-01') and ifnull(?, '3000-01-01') "
             + " AND (f.nit = ? ) ";
 
     public FacturaD(Connection connection) {
