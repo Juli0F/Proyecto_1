@@ -38,10 +38,13 @@ public final class PedidosQueLlegaran extends javax.swing.JPanel {
      */
     public PedidosQueLlegaran() {
         initComponents();
-        
+
         this.manager = new Manager();
         lblDatosTienda.setText("Codigo: " + Log.codigoTienda + ", Nombre: " + Log.nombreTienda);
         eventTablePrincipal();
+        tablasList = new ArrayList<>();
+        parrafosList = new ArrayList<>();
+        this.indice = 0;
 
     }
 
@@ -173,10 +176,9 @@ public final class PedidosQueLlegaran extends javax.swing.JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.reporte = null;
-        
-        
+
         this.reporte = new ArrayList<>();
-        
+
         if (txtDateInit.getText().isEmpty()) {
             if (txtDateFinal.getText().isEmpty()) {
 
@@ -184,11 +186,11 @@ public final class PedidosQueLlegaran extends javax.swing.JPanel {
                 verificar();
 
             } else {
-                
+
                 String[] fecha = txtDateFinal.getText().split("/");
-               
-               /// LocalDate date = LocalDate.parse(txtDateFinal.getText(),DateTimeFormatter.ofPattern("d/MMM/yyyy "));
-                System.out.println("==> fecha: "+fecha.length );
+
+                /// LocalDate date = LocalDate.parse(txtDateFinal.getText(),DateTimeFormatter.ofPattern("d/MMM/yyyy "));
+                System.out.println("==> fecha: " + fecha.length);
                 LocalDate lacalDate = LocalDate.of(Integer.valueOf(fecha[2]), Integer.valueOf(fecha[1]), Integer.valueOf(fecha[0]));
                 reporte.addAll(manager.getTiendaDAO().pedidosFechaFinal(Log.codigoTienda, java.sql.Date.valueOf(lacalDate)));
                 verificar();
@@ -198,10 +200,10 @@ public final class PedidosQueLlegaran extends javax.swing.JPanel {
             if (txtDateFinal.getText().isEmpty()) {
 
                 String[] fecha = txtDateInit.getText().split("/");
-                System.out.println("==> fecha: "+fecha.length );
+                System.out.println("==> fecha: " + fecha.length);
                 for (int i = 0; i < fecha.length; i++) {
-                    System.out.println("indice [" +i+"]"+fecha[i] );
-                    
+                    System.out.println("indice [" + i + "]" + fecha[i]);
+
                 }
                 LocalDate lacalDate = LocalDate.of(Integer.valueOf(fecha[2]), Integer.valueOf(fecha[1]), Integer.valueOf(fecha[0]));
 
@@ -212,14 +214,13 @@ public final class PedidosQueLlegaran extends javax.swing.JPanel {
             } else {
 
                 String[] fechaInit = txtDateInit.getText().split("/");
-                System.out.println("==> fecha: "+fechaInit.length );
+                System.out.println("==> fecha: " + fechaInit.length);
                 LocalDate lacalDate = LocalDate.of(Integer.valueOf(fechaInit[2]), Integer.valueOf(fechaInit[1]), Integer.valueOf(fechaInit[0]));
 
                 String[] fechaFinal = txtDateFinal.getText().split("/");
-                System.out.println("==> fecha: "+fechaFinal.length );
+                System.out.println("==> fecha: " + fechaFinal.length);
                 LocalDate localDateFinal = LocalDate.of(Integer.valueOf(fechaFinal[2]), Integer.valueOf(fechaFinal[1]), Integer.valueOf(fechaFinal[0]));
 
-                
                 reporte.addAll(manager.getTiendaDAO().pedidosEntreFechas(Log.codigoTienda, java.sql.Date.valueOf(lacalDate), java.sql.Date.valueOf(localDateFinal)));
                 verificar();
 
@@ -227,45 +228,45 @@ public final class PedidosQueLlegaran extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
-     public void verificar() {
+    public void verificar() {
 
-        if (reporte.size() != 0 ) {
-             
-             fillTable(reporte);
-        }else{
-             JOptionPane.showMessageDialog(null, "No Hay Datos Para Mostrar", "informacion", JOptionPane.INFORMATION_MESSAGE);
-         }
+        if (reporte.size() != 0) {
+
+            fillTable(reporte);
+        } else {
+            JOptionPane.showMessageDialog(null, "No Hay Datos Para Mostrar", "informacion", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-if (tablePrincipal.getRowCount() > 0) {
+        if (tablePrincipal.getRowCount() > 0) {
             Guardar ruta = new Guardar();
             String path = ruta.guardarEn();
             JTextArea area = new JTextArea();
             armarReporte(area);
             ParseHtml crearHtml = new ParseHtml();
             crearHtml.imprimirReporte(path, area, "Pedidos Que LLegaran " + LocalDate.now());
-            JOptionPane.showMessageDialog(null, "Documento Generado Exitosamente", "Informacion",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Documento Generado Exitosamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, "Documento con 0 datos");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-     public void eventTablePrincipal() {
+    public void eventTablePrincipal() {
         tablePrincipal.addKeyListener(new KeyAdapter() {
-            
+
             @Override
             public void keyReleased(KeyEvent e) {
-                System.out.println("release: "+e.getKeyCode()+"keyevent: "+KeyEvent.VK_UP);
+                System.out.println("release: " + e.getKeyCode() + "keyevent: " + KeyEvent.VK_UP);
                 if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) {
-                    
+
                     descripcionPedido = new ArrayList<>();
                     String codigoPedido = (String) tablePrincipal.getValueAt(tablePrincipal.getSelectedRow(), 2);
-                    System.out.println("CodigoPedido Reporte: "+ codigoPedido);
+                    System.out.println("CodigoPedido Reporte: " + codigoPedido);
                     descripcionPedido.addAll(manager.getDetallePedidoDAO().getCodigoProductoCantidad(codigoPedido));
                     fillTableDescripcion(descripcionPedido);
                 }
             }
-            
+
         });
     }
 
@@ -276,7 +277,7 @@ if (tablePrincipal.getRowCount() > 0) {
                 x.getCodigo(),
                 x.getProducto(),
                 x.getCantidad()
-                
+
             });
         }
         );
@@ -297,31 +298,33 @@ if (tablePrincipal.getRowCount() > 0) {
             });
         });
     }
-    
+
     public void armarParrafo() {
 
+        String[] descripcion = new String[tablePrincipal.getColumnCount()];
         for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
 
-            String[] descripcion = new String[tablePrincipal.getColumnCount()];
-            
+            indice = i;
+
             String codigoPedido = (String) tablePrincipal.getValueAt(i, 2);
-            
+
             armarTablas(manager.getDetallePedidoDAO().getCodigoProductoCantidad(codigoPedido));
+
             descripcion[0] = "Codigo De Tienda Origen: " + (String) tablePrincipal.getValueAt(i, 0);
             descripcion[1] = "Tienda Origen: " + (String) tablePrincipal.getValueAt(i, 1);
             descripcion[2] = "Codigo Pedido: " + (String) tablePrincipal.getValueAt(i, 2);
             descripcion[3] = "Total: " + (String) tablePrincipal.getValueAt(i, 3);
             descripcion[4] = "Fecha: " + (String) tablePrincipal.getValueAt(i, 4);
 
-
             parrafosList.add(descripcion);
+           
         }
 
     }
 
     public void armarTablas(List<DetallePedidoProducto> filasTabla) {
+        String[][] tabla = new String[filasTabla.size()][3];
         for (int i = 0; i < filasTabla.size(); i++) {
-            String[][] tabla = new String[filasTabla.size()][3];
 
             tabla[i][0] = filasTabla.get(i).getCodigo();
             tabla[i][1] = filasTabla.get(i).getProducto();
@@ -342,7 +345,7 @@ if (tablePrincipal.getRowCount() > 0) {
         body.openBody(area);
 
         TituloHTML tituloHTML = new TituloHTML(2);
-        tituloHTML.imprimirTitulo(area, "Pedidos Por Llegar a: "+Log.nombreTienda);
+        tituloHTML.imprimirTitulo(area, "Pedidos Por Llegar a: " + Log.nombreTienda);
         System.out.println(tablePrincipal.getRowCount() + "===>");
 
         for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
@@ -356,6 +359,7 @@ if (tablePrincipal.getRowCount() > 0) {
         body.cerrarBody(area);
 
     }
+    private int indice;
     private List<String[][]> tablasList;
     private List<String[]> parrafosList;
     private List<DetallePedidoProducto> descripcionPedido;

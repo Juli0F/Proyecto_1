@@ -40,6 +40,7 @@ public final class Atrasados extends javax.swing.JPanel {
         manager = new Manager();
         lblDatosTienda.setText("Codigo: " + Log.codigoTienda + " Nombre: " + Log.nombreTienda);
         eventTablePrincipal();
+        this.indice = 0;
         this.parrafosList = new ArrayList<>();
         this.tablasList = new ArrayList<>();
     }
@@ -282,29 +283,30 @@ public final class Atrasados extends javax.swing.JPanel {
     public void armarParrafo() {
 
         for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
-
-            String[] descripcion = new String[5];
-            String codigoPedido = (String) tablePrincipal.getValueAt(i, 2);
-            
-            armarTablas(manager.getDetallePedidoDAO().getCodigoProductoCantidad(codigoPedido));
+            indice = i;
+            String[] descripcion = new String[7];
             
             descripcion[0] ="Codigo De Tienda: "+ (String) tablePrincipal.getValueAt(i, 0);
             descripcion[1] ="Tienda Origen: " +  (String) tablePrincipal.getValueAt(i, 1);
             descripcion[2] = "Codigo Pedido: "+(String) tablePrincipal.getValueAt(i, 2);
             descripcion[3] = "Total: "+(String) tablePrincipal.getValueAt(i, 3);
             descripcion[4] = "Fecha: "+(String) tablePrincipal.getValueAt(i, 4);
-            descripcion[5] = "Dias En Transito: "+(String) tablePrincipal.getValueAt(i, 5);
-            descripcion[6] = "Tiempo Estimado: "+(String) tablePrincipal.getValueAt(i, 6);
+            descripcion[5] = "Dias En Transito: "+(Integer) tablePrincipal.getValueAt(i, 5);
+            descripcion[6] = "Tiempo Estimado: "+(Integer) tablePrincipal.getValueAt(i, 6);
 
             
-            parrafosList.add(descripcion);
+            String codigoPedido = (String) tablePrincipal.getValueAt(i, 2);
+            armarTablas(manager.getDetallePedidoDAO().getCodigoProductoCantidad(codigoPedido));
+            
+            parrafosList.add( descripcion);
+            
         }
 
     }
 
     public void armarTablas(List<DetallePedidoProducto> filasTabla) {
-        for (int i = 0; i < filasTabla.size(); i++) {
             String[][] tabla = new String[filasTabla.size()][3];
+        for (int i = 0; i < filasTabla.size(); i++) {
 
             tabla[i][0] = filasTabla.get(i).getCodigo();
             tabla[i][1] = filasTabla.get(i).getProducto();
@@ -346,7 +348,7 @@ public final class Atrasados extends javax.swing.JPanel {
     
     private List<String[][]> tablasList;
     private List<String[]> parrafosList;
-    
+    int indice;
     private Manager manager;
     private List<TiendaRepDos> pedidos;
 

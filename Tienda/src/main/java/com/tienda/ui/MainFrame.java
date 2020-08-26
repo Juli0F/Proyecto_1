@@ -10,6 +10,7 @@ import com.tienda.reporte.ui.AunLlegan;
 import com.tienda.reporte.ui.ComprasCliente;
 import com.tienda.reporte.ui.DespachadosTransito;
 import com.tienda.reporte.ui.MasVendido;
+import com.tienda.reporte.ui.NuncaVendidos;
 import com.tienda.reporte.ui.PedidosCliente;
 import com.tienda.reporte.ui.PedidosQueLlegaran;
 import java.awt.Dimension;
@@ -296,6 +297,11 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu1.add(jMenuItem8);
 
         jMenuItem9.setText("Nunca Vendidos");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem9);
 
         administracion.add(jMenu1);
@@ -460,6 +466,10 @@ public class MainFrame extends javax.swing.JFrame {
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
         addPanel(new MasVendido(true));
     }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        addPanel(new NuncaVendidos());
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
 
     public static void addPanel(javax.swing.JPanel panel){
         cleanPane();

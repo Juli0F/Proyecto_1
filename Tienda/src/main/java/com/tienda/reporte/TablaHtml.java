@@ -27,6 +27,7 @@ public class TablaHtml {
         this.tabla = fila;
         this.columnas = columnas;
         this.tableHead = tableHead;
+        
     }
 
     public void imprimirTabla(JTextArea area) {
@@ -47,7 +48,7 @@ public class TablaHtml {
         for (int i = 0; i < tabla.length; i++) {
             area.setText(area.getText() + "\n" + "<tr>");
             for (int j = 0; j < columnas; j++) {
-
+                 System.out.println("000=============>"+  tabla[i][j]);   
                 area.setText(area.getText() + "\n" + "<td>" + tabla[i][j] + "</td>");
 
             }
@@ -57,5 +58,6 @@ public class TablaHtml {
         area.setText(area.getText() + "\n" + "</table>");
 
     }
+    
 
 }

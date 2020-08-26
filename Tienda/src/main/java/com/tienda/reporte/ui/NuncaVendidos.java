@@ -5,11 +5,17 @@
  */
 package com.tienda.reporte.ui;
 
+import com.tienda.dto.DetallePedidoProducto;
 import com.tienda.dto.FacturaDto;
 import com.tienda.dto.SinVender;
 import com.tienda.entities.Tienda;
 import com.tienda.mysql.Manager;
+import com.tienda.reporte.BodyHtml;
+import com.tienda.reporte.EncabezoHtml;
+import com.tienda.reporte.ParrafoHtml;
 import com.tienda.reporte.ParseHtml;
+import com.tienda.reporte.TablaHtml;
+import com.tienda.reporte.TituloHTML;
 import com.tienda.ui.Log;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -96,6 +102,11 @@ public class NuncaVendidos extends javax.swing.JPanel {
 
         jButton1.setFont(new java.awt.Font("Dialog", 2, 18)); // NOI18N
         jButton1.setText("Exportar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -174,13 +185,30 @@ public class NuncaVendidos extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
-
+        datos();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (tablePrincipal.getRowCount() > 0) {
+            Guardar ruta = new Guardar();
+            String path = ruta.guardarEn();
+            JTextArea area = new JTextArea();
+            armarReporte(area);
+            ParseHtml crearHtml = new ParseHtml();
+            crearHtml.imprimirReporte(path, area, "Productos Nunca Vendidos " + LocalDate.now());
+            JOptionPane.showMessageDialog(null, "Documento Generado Exitosamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Documento con 0 datos");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     public void porTienda(java.sql.Date dateInit, java.sql.Date dateFinal) {
         tiendas.forEach(buscar -> {
+            System.out.println("Buscar: "+buscar);
+            
             reporte.addAll(manager.getProductoDAO().getSinVender(buscar, dateInit, dateFinal));
+            
+            
         });
     }
 
@@ -196,7 +224,7 @@ public class NuncaVendidos extends javax.swing.JPanel {
             });
 
         });
-                
+
     }
 
     public void datos() {
@@ -218,16 +246,15 @@ public class NuncaVendidos extends javax.swing.JPanel {
         }
         getListadoTiendas();
         porTienda(inicio, fechaFinal);
-        //java.sql.Date.valueOf(dateInit);
         verificar();
 
     }
 
     public void verificar() {
+       
+        if (!reporte.isEmpty()) {
 
-        if (reporte.size() != 0) {
-
-             fillTable(reporte);
+            fillTable(reporte);
         } else {
             JOptionPane.showMessageDialog(null, "No Hay Datos Para Mostrar", "informacion", JOptionPane.INFORMATION_MESSAGE);
 
@@ -242,10 +269,86 @@ public class NuncaVendidos extends javax.swing.JPanel {
 
     }
 
+    public void armarParrafo() {
+
+        String[] descripcion = new String[3];
+
+        descripcion[0] = "Listado de los 10: ";
+        descripcion[1] = "Productos Nunca Vendidos";
+        descripcion[2] = "</br> ";
+
+        parrafosList.add(descripcion);
+
+        List<SinVender> filasTabla = new ArrayList<>();
+        for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
+           
+            String codigo = (String) tablePrincipal.getValueAt(i, 0);
+            String tienda = (String) tablePrincipal.getValueAt(i, 1);
+            String codigoProducto = (String) tablePrincipal.getValueAt(i, 2);
+            String producto = (String) tablePrincipal.getValueAt(i, 3);
+            
+            //int cantidad = Integer.valueOf((String) tablePrincipal.getValueAt(i, 2));
+            filasTabla.add(new SinVender(codigo, tienda, codigoProducto, producto));
+
+        }
+        armarTablas(filasTabla);
+
+    }
+
+    public void armarTablas(List<SinVender> filasTabla) {
+        String[][] tabla  = new String[filasTabla.size()][4];
+        for (int i = 0; i < filasTabla.size(); i++) {
+             
+
+            tabla[i][0] = filasTabla.get(i).getCodigoTienda();
+            tabla[i][1] = filasTabla.get(i).getNombreTienda();
+                    
+            tabla[i][2] = filasTabla.get(i).getCodigoProducto();
+            tabla[i][3] = filasTabla.get(i).getNombreProducto();
+
+            
+
+        }
+        tablasList.add(tabla);
+       
+    }
+
+    public void armarReporte(JTextArea area) {
+        armarParrafo();
+
+        //Cliente cliente = manager.getClienteDAO().obtener(nitCliente);
+        //Persona persona = manager.getPersonaDAO().obtener(cliente.getPersona_dpi());
+        
+        
+        EncabezoHtml encabezado = new EncabezoHtml("Nunca Vendidos");
+        
+        encabezado.imprimirEncabezado(area);
+
+        BodyHtml body = new BodyHtml();
+        body.openBody(area);
+
+        TituloHTML tituloHTML = new TituloHTML(3);
+        tituloHTML.imprimirTitulo(area, "Productos Que Nunca se Vendieron");
+        
+        System.out.println(tablePrincipal.getRowCount() + "===>");
+
+            ParrafoHtml parrafoHtml = new ParrafoHtml(parrafosList.get(0));
+            parrafoHtml.printParrafo(area);
+        //for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
+
+            TablaHtml tablaHtml = new TablaHtml(tablasList.get(0), 4, "Codigo Tienda", "Nombre Tienda ", " Codigo Producto","Producto");
+            tablaHtml.imprimirTabla(area);
+
+        
+        body.cerrarBody(area);
+
+    }
+
+    private List<String[][]> tablasList = new ArrayList<>();
+    private List<String[]> parrafosList = new ArrayList<>();
+
     private List<String> tiendas;
     private Manager manager;
-    private List<String[][]> tablasList;
-    private List<String[]> parrafosList;
     private String nitCliente;
     private String dpi;
 

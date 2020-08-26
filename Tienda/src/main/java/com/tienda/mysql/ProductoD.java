@@ -30,7 +30,17 @@ public class ProductoD implements ProductoDAO {
     private final String GETPRODUCTOTABLE = "SELECT p.codigo, p.nombre, s.cantidad, s.precio FROM  Producto p inner join StockTienda s on p.codigo = s.Producto_codigo WHERE p.estado = 1 and s.estado = 1 and s.Tienda_codigo = ?";
 
     private final String GET_PRODUCTOS_QUE_NO_ESTAN_EN_LA_TIENDA = "SELECT * FROM Producto p WHERE codigo not in (select st.Producto_codigo from StockTienda st inner join Tienda t ON st.Tienda_codigo=t.codigo where t.codigo = ?) ";
-    private final String SIN_VENDER = "select st.Producto_codigo from StockTienda st where st.Tienda_codigo = ? and st.Producto_codigo not in (select df.Producto_codigo from Factura f inner join DetalleFactura df on df.Factura_idFactura = f.idFactura where f.Tienda_codigo = ? and f.fecha between ifnull(?,'2000-01-01') and ifnull(?,'2050-01-01'))";
+    private final String SIN_VENDER = "select ti.codigo, ti.nombre, st.Producto_codigo, p.nombre  "
+            + "from  StockTienda st  "
+            + "inner join Producto p on p.codigo = st.Producto_codigo "
+            + "inner join Tienda ti on ti.codigo = st.Tienda_codigo  "
+            + "where st.Tienda_codigo = ? "
+            + "and st.Producto_codigo "
+            + "not in (select df.Producto_codigo "
+                    + "from Factura f "
+                    + "inner join DetalleFactura df on df.Factura_idFactura = f.idFactura "
+                    + "where f.Tienda_codigo = ? "
+                    + "and f.fecha between ifnull(?,'2000-01-01') and ifnull(?,'2050-01-01'))";
 
     public ProductoD(Connection connection) {
         this.connection = connection;
@@ -242,8 +252,10 @@ public class ProductoD implements ProductoDAO {
     public List<SinVender> getSinVender(String codigoTienda, java.sql.Date dateInit, java.sql.Date dateFinal) {
         PreparedStatement stat = null;
         ResultSet rs = null;
+        System.out.println("en Producto sql");
         List<SinVender> lst = new ArrayList<>();
         try {
+            
             stat = connection.prepareStatement(SIN_VENDER);
             stat.setString(1, codigoTienda);
             stat.setString(2, codigoTienda);
@@ -251,7 +263,7 @@ public class ProductoD implements ProductoDAO {
             stat.setDate(4, dateFinal);
             rs = stat.executeQuery();
             while (rs.next()) {
-              //  lst.add(convertir(rs));
+               lst.add(convertirSinVender(rs));
             }
             return lst;
         } catch (Exception e) {
@@ -261,7 +273,17 @@ public class ProductoD implements ProductoDAO {
         return lst;
     }
     
-    
-    
+ public SinVender  convertirSinVender(ResultSet rs) {
+
+        try {
+
+            return new SinVender(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4));
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductoD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
 
 }

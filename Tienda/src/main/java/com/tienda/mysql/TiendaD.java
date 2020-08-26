@@ -79,7 +79,7 @@ private final String GET_DATOS_REPORTE1_UNA_FECHA = "select t.codigo, t.nombre, 
            + "inner join TiempoDeEnvio tde on p.TiempoDeEnvio_idTiempoDeEnvio = tde.idTiempoDeEnvio "
            + "inner join TiempoEntreTiendas tet on tde.idTiempoDeEnvio = tet.TiempoDeEnvio_idTiempoDeEnvio "
            + "inner join Tienda t on tet.Tienda_codigo = t.codigo "
-           + " where tet.Tienda_codigo <> ? AND p.Tienda_codigo = ? AND p.destino = 0 AND datediff(?, p.fecha) <= 0";
+           + " where tet.Tienda_codigo <> ? AND p.Tienda_codigo = ? AND p.destino = 0 AND datediff(  p.fecha,?) <= tde.tiempo";
    private final String PEDIDOS_CON_ATRASO = DATOS_REPORTE+" from Pedido p "
            + "inner join Cliente c on c.nit = p.Cliente_nit "
            + "inner join Persona per on c.Persona_dpi = per.dpi "

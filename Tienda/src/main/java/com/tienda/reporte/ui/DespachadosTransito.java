@@ -40,6 +40,7 @@ public final class DespachadosTransito extends javax.swing.JPanel {
         eventTablePrincipal();
         this.parrafosList = new ArrayList<>();
         this.tablasList = new ArrayList<>();
+        this.indice = 0;
                 
     }
 
@@ -276,28 +277,31 @@ public void verificar() {
     
     public void armarParrafo() {
 
+            String[] descripcion = new String[7];
         for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
-
-            String[] descripcion = new String[tablePrincipal.getColumnCount()];
+            indice = i;
+            
             String codigoPedido = (String) tablePrincipal.getValueAt(i, 2);
             armarTablas(manager.getDetallePedidoDAO().getCodigoProductoCantidad(codigoPedido));
+            
             descripcion[0] = "Codigo De Tienda Destino: " + (String) tablePrincipal.getValueAt(i, 0);
             descripcion[1] = "Tienda Destino: " + (String) tablePrincipal.getValueAt(i, 1);
             descripcion[2] = "Codigo Pedido: " + (String) tablePrincipal.getValueAt(i, 2);
             descripcion[3] = "Total: " + (String) tablePrincipal.getValueAt(i, 3);
             descripcion[4] = "Fecha: " + (String) tablePrincipal.getValueAt(i, 4);
-            descripcion[5] = "Dias Restantes: "+(String) tablePrincipal.getValueAt(i, 5);
-            descripcion[6] = "Tiempo Estimado: "+(String) tablePrincipal.getValueAt(i, 6);
+            descripcion[5] = "Dias Restantes: "+(Integer) tablePrincipal.getValueAt(i, 5);
+            descripcion[6] = "Tiempo Estimado: "+(Integer) tablePrincipal.getValueAt(i, 6);
 
 
             parrafosList.add(descripcion);
+           
         }
 
     }
 
     public void armarTablas(List<DetallePedidoProducto> filasTabla) {
-        for (int i = 0; i < filasTabla.size(); i++) {
             String[][] tabla = new String[filasTabla.size()][3];
+        for (int i = 0; i < filasTabla.size(); i++) {
 
             tabla[i][0] = filasTabla.get(i).getCodigo();
             tabla[i][1] = filasTabla.get(i).getProducto();
@@ -332,6 +336,7 @@ public void verificar() {
         body.cerrarBody(area);
 
     }
+    private int indice;
     private List<String[][]> tablasList;
     private List<String[]> parrafosList;
     private Manager manager;

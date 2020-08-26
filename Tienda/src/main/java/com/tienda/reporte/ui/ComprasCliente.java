@@ -43,6 +43,9 @@ public class ComprasCliente extends javax.swing.JPanel {
         eventTableCliente();
         eventTablePrincipal();
         manager = new Manager();
+        tablasList = new ArrayList<>();
+        parrafosList = new ArrayList<>();
+        indice = 0;
     }
 
     /**
@@ -89,9 +92,16 @@ public class ComprasCliente extends javax.swing.JPanel {
                 "Codigo", "Tienda", "identificador Compra", "Total", "Fecha"
             }
         ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class
+            };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false
             };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -426,8 +436,8 @@ public class ComprasCliente extends javax.swing.JPanel {
                 System.out.println("Event Realse");
                 if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) {
                     descripcionPedido = new ArrayList<>();
-                    String codigoPedido = (String) tablePrincipal.getValueAt(tablePrincipal.getSelectedRow(), 2);
-                    descripcionPedido.addAll(manager.getDetalleFacturaDAO().getCodigoProductoCantidad(codigoPedido));
+                    String idFactura =  (String) tablePrincipal.getValueAt(tablePrincipal.getSelectedRow(), 2);
+                    descripcionPedido.addAll(manager.getDetalleFacturaDAO().getCodigoProductoCantidad(idFactura));
                     fillTableDescripcion(descripcionPedido);
                 }
             }
@@ -504,6 +514,7 @@ public class ComprasCliente extends javax.swing.JPanel {
         if (rowSelected != -1) {
             nitCliente = (String) tableCliente.getValueAt(rowSelected, 0);
             dpi = (String) tableCliente.getValueAt(rowSelected, 1);
+            lblDatosTienda.setText("Cliente Seleccionado: " + nitCliente);
             System.out.println("Cliente Seleccionado: " + nitCliente);
 
         } else {
@@ -512,19 +523,18 @@ public class ComprasCliente extends javax.swing.JPanel {
 
     }
 
-     
+   
     public void armarParrafo() {
 
+            String[] descripcion = new String[5];
         for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
 
-            String[] descripcion = new String[5];
             String codigoPedido = (String) tablePrincipal.getValueAt(i, 2);
-            
-            armarTablas(manager.getDetallePedidoDAO().getCodigoProductoCantidad(codigoPedido));
+            armarTablas(manager.getDetalleFacturaDAO().getCodigoProductoCantidad(codigoPedido));
             
             descripcion[0] ="Codigo De Tienda: "+ (String) tablePrincipal.getValueAt(i, 0);
-            descripcion[1] ="Tienda Origen: " +  (String) tablePrincipal.getValueAt(i, 1);
-            descripcion[2] = "Identificador De Compra: "+(String) tablePrincipal.getValueAt(i, 2);
+            descripcion[1] ="Tienda: " +  (String) tablePrincipal.getValueAt(i, 1);
+            descripcion[2] = "Codigo Pedido: "+(String) tablePrincipal.getValueAt(i, 2);
             descripcion[3] = "Total: "+(String) tablePrincipal.getValueAt(i, 3);
             descripcion[4] = "Fecha: "+(String) tablePrincipal.getValueAt(i, 4);
 
@@ -535,8 +545,8 @@ public class ComprasCliente extends javax.swing.JPanel {
     }
 
     public void armarTablas(List<DetallePedidoProducto> filasTabla) {
-        for (int i = 0; i < filasTabla.size(); i++) {
             String[][] tabla = new String[filasTabla.size()][3];
+        for (int i = 0; i < filasTabla.size(); i++) {
 
             tabla[i][0] = filasTabla.get(i).getCodigo();
             tabla[i][1] = filasTabla.get(i).getProducto();
@@ -551,16 +561,16 @@ public class ComprasCliente extends javax.swing.JPanel {
         armarParrafo();
 
         Cliente cliente = manager.getClienteDAO().obtener(nitCliente);
-       Persona persona = manager.getPersonaDAO().obtener(cliente.getPersona_dpi());
+        Persona persona = manager.getPersonaDAO().obtener(cliente.getPersona_dpi());
 
-        EncabezoHtml encabezado = new EncabezoHtml("Pedidos De un Clinete");
+        EncabezoHtml encabezado = new EncabezoHtml("Compras De un Clinete");
         encabezado.imprimirEncabezado(area);
 
         BodyHtml body = new BodyHtml();
         body.openBody(area);
 
         TituloHTML tituloHTML = new TituloHTML(2);
-        tituloHTML.imprimirTitulo(area, "Compras Del Cliente: "+persona.getNombre()+" Nit:"+cliente.getNit());
+        tituloHTML.imprimirTitulo(area, "Nit: " + cliente.getNit() + "Cliente: " + persona.getNombre());
         System.out.println(tablePrincipal.getRowCount() + "===>");
 
         for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
@@ -575,9 +585,9 @@ public class ComprasCliente extends javax.swing.JPanel {
 
     }
 
-    
-    private List<String[][]> tablasList = new ArrayList<>();
-    private List<String[]> parrafosList = new ArrayList<>();;
+    private int indice;
+    private List<String[][]> tablasList; 
+    private List<String[]> parrafosList ;
    
     private String nitCliente;
     private String dpi;

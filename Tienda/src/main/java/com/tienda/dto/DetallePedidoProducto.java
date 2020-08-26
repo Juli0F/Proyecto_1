@@ -14,6 +14,22 @@ public class DetallePedidoProducto {
     private String codigo;
     private String producto;
     private int cantidad;
+    private String amoung;
+
+    public DetallePedidoProducto(String codigo, String producto,  String amoung) {
+        this.codigo = codigo;
+        this.producto = producto;
+        this.amoung = amoung;
+    }
+
+    public String getAmoung() {
+        return amoung;
+    }
+
+    public void setAmoung(String amoung) {
+        this.amoung = amoung;
+    }
+    
 
     public DetallePedidoProducto(String codigo, String producto, int cantidad) {
         this.codigo = codigo;

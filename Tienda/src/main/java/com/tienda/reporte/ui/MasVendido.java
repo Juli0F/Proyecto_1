@@ -6,9 +6,6 @@
 package com.tienda.reporte.ui;
 
 import com.tienda.dto.DetallePedidoProducto;
-import com.tienda.dto.FacturaDto;
-import com.tienda.entities.Cliente;
-import com.tienda.entities.Persona;
 import com.tienda.mysql.Manager;
 import com.tienda.reporte.BodyHtml;
 import com.tienda.reporte.EncabezoHtml;
@@ -77,9 +74,16 @@ public class MasVendido extends javax.swing.JPanel {
                 "Codigo", "Producto", "Cantidad"
             }
         ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.String.class
+            };
             boolean[] canEdit = new boolean [] {
                 false, false, false
             };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -197,8 +201,14 @@ public class MasVendido extends javax.swing.JPanel {
             JTextArea area = new JTextArea();
             armarReporte(area);
             ParseHtml crearHtml = new ParseHtml();
-            crearHtml.imprimirReporte(path, area, "Productos Mas Vendidos " + LocalDate.now());
-            JOptionPane.showMessageDialog(null, "Documento Generado Exitosamente", "Informacion",JOptionPane.INFORMATION_MESSAGE);
+
+            if (conTienda) {
+                crearHtml.imprimirReporte(path, area, "Productos Mas Vendidos Por Tienda" + LocalDate.now());
+            } else {
+
+                crearHtml.imprimirReporte(path, area, "Productos Mas Vendidos " + LocalDate.now());
+            }
+            JOptionPane.showMessageDialog(null, "Documento Generado Exitosamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, "Documento con 0 datos");
         }
@@ -277,29 +287,31 @@ public class MasVendido extends javax.swing.JPanel {
         }
 
         parrafosList.add(descripcion);
-        
-        List<DetallePedidoProducto> filasTabla = new ArrayList<>(); 
+
+        List<DetallePedidoProducto> filasTabla = new ArrayList<>();
         for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
             String codigo = (String) tablePrincipal.getValueAt(i, 0);
             String producto = (String) tablePrincipal.getValueAt(i, 1);
-            int cantidad = Integer.valueOf((String)tablePrincipal.getValueAt(i, 2));
-            filasTabla.add(new DetallePedidoProducto(codigo, producto, cantidad));
-            
-        }
+            //int cantidad = Integer.valueOf(tablePrincipal.getValueAt(i, 2));
+            Integer cant = (Integer) tablePrincipal.getValueAt(i, 2);
 
+            filasTabla.add(new DetallePedidoProducto(codigo, producto, cant));
+
+        }
+        armarTablas(filasTabla);
     }
 
     public void armarTablas(List<DetallePedidoProducto> filasTabla) {
+        String[][] tabla = new String[filasTabla.size()][3];;
+
         for (int i = 0; i < filasTabla.size(); i++) {
-            String[][] tabla = new String[filasTabla.size()][3];
 
             tabla[i][0] = filasTabla.get(i).getCodigo();
             tabla[i][1] = filasTabla.get(i).getProducto();
-            tabla[i][2] = String.valueOf(filasTabla.get(i).getCantidad());
-
-            tablasList.add(tabla);
+            tabla[i][2] = (filasTabla.get(i).getAmoung());
 
         }
+        tablasList.add(tabla);
     }
 
     public void armarReporte(JTextArea area) {
@@ -317,14 +329,14 @@ public class MasVendido extends javax.swing.JPanel {
         tituloHTML.imprimirTitulo(area, "Productos Mas Vendidos");
         System.out.println(tablePrincipal.getRowCount() + "===>");
 
-        for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
+        ParrafoHtml parrafoHtml = new ParrafoHtml(parrafosList.get(0));
+        parrafoHtml.printParrafo(area);
+        //  for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
 
-            ParrafoHtml parrafoHtml = new ParrafoHtml(parrafosList.get(i));
-            parrafoHtml.printParrafo(area);
-            TablaHtml tablaHtml = new TablaHtml(tablasList.get(i), 3, "Codigo", "Producto ", " Cantidad");
-            tablaHtml.imprimirTabla(area);
+        TablaHtml tablaHtml = new TablaHtml(tablasList.get(0), 3, "Codigo", "Producto ", " Cantidad");
+        tablaHtml.imprimirTabla(area);
 
-        }
+        //}
         body.cerrarBody(area);
 
     }

@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface DetalleFacturaDAO extends DAO<DetalleFactura, Integer> {
 
-    public List<DetallePedidoProducto> getCodigoProductoCantidad(String codigoPedido);
+    public List<DetallePedidoProducto> getCodigoProductoCantidad(String idFactura);
     public List<DetallePedidoProducto> reporteSiete(java.sql.Date dateInit,java.sql.Date dateFinal);
     public List<DetallePedidoProducto> reporteOcho(String tienda, Date dateInit, Date dateFinal);
 }

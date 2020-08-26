@@ -79,7 +79,7 @@ public final class PedidosCliente extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Pedidos que Estan A tiempo De llegar"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Pedidos Cliente"));
 
         txtDateFinal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
 
@@ -467,11 +467,12 @@ public final class PedidosCliente extends javax.swing.JPanel {
 
     public void armarParrafo() {
 
+            String[] descripcion = new String[5];
         for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
 
-            String[] descripcion = new String[5];
             String codigoPedido = (String) tablePrincipal.getValueAt(i, 2);
             armarTablas(manager.getDetallePedidoDAO().getCodigoProductoCantidad(codigoPedido));
+            
             descripcion[0] ="Codigo De Tienda: "+ (String) tablePrincipal.getValueAt(i, 0);
             descripcion[1] ="Tienda: " +  (String) tablePrincipal.getValueAt(i, 1);
             descripcion[2] = "Codigo Pedido: "+(String) tablePrincipal.getValueAt(i, 2);
@@ -485,8 +486,8 @@ public final class PedidosCliente extends javax.swing.JPanel {
     }
 
     public void armarTablas(List<DetallePedidoProducto> filasTabla) {
-        for (int i = 0; i < filasTabla.size(); i++) {
             String[][] tabla = new String[filasTabla.size()][3];
+        for (int i = 0; i < filasTabla.size(); i++) {
 
             tabla[i][0] = filasTabla.get(i).getCodigo();
             tabla[i][1] = filasTabla.get(i).getProducto();
@@ -565,6 +566,7 @@ public final class PedidosCliente extends javax.swing.JPanel {
         if (rowSelected != -1) {
             nitCliente = (String) tableCliente.getValueAt(rowSelected, 0);
             dpi = (String) tableCliente.getValueAt(rowSelected, 1);
+            lblDatosTienda.setText("Cliente Seleccionado: " + nitCliente);
             System.out.println("Cliente Seleccionado: " + nitCliente);
 
         } else {

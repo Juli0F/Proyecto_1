@@ -170,13 +170,15 @@ public class DetalleFacturaD implements DetalleFacturaDAO {
         return 0;
     }
     
-    public List<DetallePedidoProducto> getCodigoProductoCantidad(String codigoPedido){
+    public List<DetallePedidoProducto> getCodigoProductoCantidad(String idFactura){
          PreparedStatement stat = null;
         ResultSet rs = null;
+        System.out.println("String IdFactura"+idFactura);
         List<DetallePedidoProducto> lst = new ArrayList<>();
         try {
             stat = connection.prepareStatement(GET_CODIGO_PRODUCTO_CANTIDAD);
-            stat.setString(1, codigoPedido);
+            stat.setString(1, idFactura);
+          
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertirDetalleProducto(rs));
@@ -194,7 +196,7 @@ public class DetalleFacturaD implements DetalleFacturaDAO {
 
         try {
             DetallePedidoProducto detallePedidoProducto = new DetallePedidoProducto(rs.getString("codigo"), rs.getString("producto"), rs.getInt("cantidad"));
-
+            System.out.println("Convertir detalle Producto "+ detallePedidoProducto.getCodigo());
             return detallePedidoProducto;
         } catch (SQLException ex) {
             Logger.getLogger(DetallePedidoD.class.getName()).log(Level.SEVERE, null, ex);
