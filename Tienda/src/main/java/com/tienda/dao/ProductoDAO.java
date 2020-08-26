@@ -1,6 +1,7 @@
 package com.tienda.dao;
 
 import com.tienda.dto.ProductoTableDto;
+import com.tienda.dto.SinVender;
 import com.tienda.entities.Producto;
 import java.util.List;
 
@@ -18,5 +19,7 @@ public interface ProductoDAO extends DAO<Producto,String> {
      * @return 
      */
     public List<Producto> getProductoQueNoEstanAsignadosEnTienda(String codigoTienda);
+    
+    public List<SinVender> getSinVender(String codigoTienda, java.sql.Date dateInit, java.sql.Date dateFinal);
 
 }

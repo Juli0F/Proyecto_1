@@ -18,6 +18,18 @@ public class TiendaRepUno {
     private String codigoPedido;
     private String fecha;
     private String total;
+    private String nit;
+    private String cliente;
+
+    public TiendaRepUno(String codigoTienda, String nombre, String codigoPedido, String fecha, String total, String nit, String cliente) {
+        this.codigoTienda = codigoTienda;
+        this.nombre = nombre;
+        this.codigoPedido = codigoPedido;
+        this.fecha = fecha;
+        this.total = total;
+        this.nit = nit;
+        this.cliente = cliente;
+    }
 
     public TiendaRepUno(String codigoTienda, String nombre, String codigoPedido, String fecha, String total) {
         this.codigoTienda = codigoTienda;
@@ -27,6 +39,24 @@ public class TiendaRepUno {
         this.total = total;
     }
 
+    
+    public String getNit() {
+        return nit;
+    }
+
+    public void setNit(String nit) {
+        this.nit = nit;
+    }
+
+    public String getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(String cliente) {
+        this.cliente = cliente;
+    }
+
+    
     public String getTotal() {
         return total;
     }

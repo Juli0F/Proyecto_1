@@ -19,7 +19,7 @@ public class Guardar {
         JFileChooser jChooser = new JFileChooser();
         jChooser.setSize(700, 600);
         jChooser.showSaveDialog(null);
-        jChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        jChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         
         File file = jChooser.getCurrentDirectory();
         

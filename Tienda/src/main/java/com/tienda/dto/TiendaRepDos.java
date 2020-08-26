@@ -16,8 +16,8 @@ public class TiendaRepDos extends TiendaRepUno {
     private int diasEnTransito;
     private int tiempoEstimado;
     
-    public TiendaRepDos(String codigoTienda, String nombre, String codigoPedido, String fecha, int diasEnTransito, int tiempoEstimado, String total) {
-        super(codigoTienda, nombre, codigoPedido, fecha, total);
+    public TiendaRepDos(String codigoTienda, String nombre, String codigoPedido, String fecha, int diasEnTransito, int tiempoEstimado, String total, String nit, String cliente) {
+        super(codigoTienda, nombre, codigoPedido, fecha, total, nit , cliente);
         this.diasEnTransito = diasEnTransito;
         this.tiempoEstimado = tiempoEstimado;
     }

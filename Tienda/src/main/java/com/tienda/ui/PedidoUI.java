@@ -12,6 +12,7 @@ import com.tienda.dto.ProductoTableDto;
 import com.tienda.entities.Cliente;
 import com.tienda.entities.DetallePedido;
 import com.tienda.entities.Pedido;
+import com.tienda.entities.StockTienda;
 import com.tienda.entities.Tienda;
 import com.tienda.mysql.Manager;
 import static com.tienda.ui.MainFrame.dp;
@@ -23,19 +24,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.sql.Date;
-import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComboBox;
@@ -753,6 +745,10 @@ public final class PedidoUI extends javax.swing.JPanel {
                     txtCodePedido.getText());
 
             manager.getDetallePedidoDAO().insert(detalle);
+            
+            String codigoOrigenPedido = ((Tienda) jCOrigen.getSelectedItem()).getCodigo();
+            StockTienda st = manager.getStockTiendaDAO().existencia(codigoOrigenPedido, detalle.getProducto_codigo());
+            st.setCantidad(st.getCantidad() - detalle.getCantidad());
         }
 
         JOptionPane.showMessageDialog(null, "Pedido Creado Satisfactoriamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);

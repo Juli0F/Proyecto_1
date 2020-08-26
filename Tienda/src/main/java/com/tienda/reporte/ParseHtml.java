@@ -5,21 +5,27 @@
  */
 package com.tienda.reporte;
 
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import javax.swing.JTextArea;
+
 /**
  *
  * @author julio
  */
 public class ParseHtml {
-    
-    private String[] encabezado;
-    
-    public ParseHtml(String[] encabezado) {
-        this.encabezado = encabezado;
-    }
-    
-    
-    public String getEncabezadoIndex(int indice){
-        return this.encabezado[indice];
+    public void imprimirReporte(String path, JTextArea area, String nombreReporte){
+        
+        
+        try(FileWriter fichero =  new FileWriter(path+"/"+nombreReporte+".html"); PrintWriter pw = new PrintWriter(fichero))
+        {
+                pw.println(area.getText());
+                
+        } catch (Exception e) {
+            e.printStackTrace();
+        } 
+        
+        
     }
     
 }

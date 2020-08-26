@@ -13,8 +13,11 @@ import com.tienda.loaddata.ReadFile;
  */
 public class prueba{
     public static void main(String[] args) {
-        ReadFile readFile = new ReadFile("/home/julio/Descargas/simple data.txt");
       //  readFile.leerArchivo();
+      
+      
+      String [][] tabla =new String[10][5];
+        System.out.println("10 = "+tabla.length+ "5 "+tabla[0].length);
     }
     
 }

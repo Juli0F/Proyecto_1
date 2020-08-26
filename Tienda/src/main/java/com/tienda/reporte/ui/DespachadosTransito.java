@@ -7,8 +7,6 @@ package com.tienda.reporte.ui;
 
 import com.tienda.dto.DetallePedidoProducto;
 import com.tienda.dto.TiendaRepDos;
-import com.tienda.entities.Cliente;
-import com.tienda.entities.Persona;
 import com.tienda.mysql.Manager;
 import com.tienda.reporte.BodyHtml;
 import com.tienda.reporte.EncabezoHtml;
@@ -30,18 +28,19 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author julio
  */
-public final class AunLlegan extends javax.swing.JPanel {
+public final class DespachadosTransito extends javax.swing.JPanel {
 
     /**
-     * Creates new form AunLlegan
+     * Creates new form EnTransito
      */
-    public AunLlegan() {
+    public DespachadosTransito() {
         initComponents();
         this.manager = new Manager();
         lblDatosTienda.setText("Codigo: " + Log.codigoTienda + " Nombre: " + Log.nombreTienda);
         eventTablePrincipal();
         this.parrafosList = new ArrayList<>();
         this.tablasList = new ArrayList<>();
+                
     }
 
     /**
@@ -142,7 +141,7 @@ public final class AunLlegan extends javax.swing.JPanel {
                                 .addGap(291, 291, 291)))
                         .addGap(37, 37, 37)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 15, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -188,6 +187,7 @@ public final class AunLlegan extends javax.swing.JPanel {
         this.pedidos = null;
         this.pedidos = new ArrayList<>();
         LocalDate localDate;
+        
         if (txtFecha.getText().isEmpty()) {
             localDate = LocalDate.now();
         } else {
@@ -196,9 +196,8 @@ public final class AunLlegan extends javax.swing.JPanel {
         }
 
         this.pedidos = new ArrayList<>();
-        pedidos.addAll(manager.getTiendaDAO().pedidosFaltaVerificacion(Log.codigoTienda, java.sql.Date.valueOf(localDate)));
+        pedidos.addAll(manager.getTiendaDAO().pedidosDespachadosPorUnaTienda(Log.codigoTienda, java.sql.Date.valueOf(localDate)));;
         verificar();
-
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -209,13 +208,15 @@ public final class AunLlegan extends javax.swing.JPanel {
             JTextArea area = new JTextArea();
             armarReporte(area);
             ParseHtml crearHtml = new ParseHtml();
-            crearHtml.imprimirReporte(path, area, "Pedidos que pueden llegar a Tiempo " + LocalDate.now());
+            crearHtml.imprimirReporte(path, area, "Despachados por "+Log.nombreTienda + LocalDate.now());
             JOptionPane.showMessageDialog(null, "Documento Generado Exitosamente", "Informacion",JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, "Documento con 0 datos");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
-    public void verificar() {
+
+
+public void verificar() {
 
         if (pedidos.size() != 0) {
 
@@ -225,11 +226,11 @@ public final class AunLlegan extends javax.swing.JPanel {
 
         }
     }
-
-    public void eventTablePrincipal() {
+ public void eventTablePrincipal() {
         tablePrincipal.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
+                System.out.println("Event Realse");
                 if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) {
                     descripcionPedido = new ArrayList<>();
                     String codigoPedido = (String) tablePrincipal.getValueAt(tablePrincipal.getSelectedRow(), 2);
@@ -248,12 +249,13 @@ public final class AunLlegan extends javax.swing.JPanel {
                 x.getCodigo(),
                 x.getProducto(),
                 x.getCantidad()
-
+                
             });
         }
         );
 
     }
+   
 
     public void fillTable(List<TiendaRepDos> pedidosEnTransito) {
         ((DefaultTableModel) tablePrincipal.getModel()).setRowCount(0);
@@ -271,7 +273,7 @@ public final class AunLlegan extends javax.swing.JPanel {
         });
 
     }
-
+    
     public void armarParrafo() {
 
         for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
@@ -279,8 +281,8 @@ public final class AunLlegan extends javax.swing.JPanel {
             String[] descripcion = new String[tablePrincipal.getColumnCount()];
             String codigoPedido = (String) tablePrincipal.getValueAt(i, 2);
             armarTablas(manager.getDetallePedidoDAO().getCodigoProductoCantidad(codigoPedido));
-            descripcion[0] = "Codigo De Tienda: " + (String) tablePrincipal.getValueAt(i, 0);
-            descripcion[1] = "Tienda: " + (String) tablePrincipal.getValueAt(i, 1);
+            descripcion[0] = "Codigo De Tienda Destino: " + (String) tablePrincipal.getValueAt(i, 0);
+            descripcion[1] = "Tienda Destino: " + (String) tablePrincipal.getValueAt(i, 1);
             descripcion[2] = "Codigo Pedido: " + (String) tablePrincipal.getValueAt(i, 2);
             descripcion[3] = "Total: " + (String) tablePrincipal.getValueAt(i, 3);
             descripcion[4] = "Fecha: " + (String) tablePrincipal.getValueAt(i, 4);
@@ -316,7 +318,7 @@ public final class AunLlegan extends javax.swing.JPanel {
         body.openBody(area);
 
         TituloHTML tituloHTML = new TituloHTML(2);
-        tituloHTML.imprimirTitulo(area, "Pedidos Por Llegar a: "+Log.nombreTienda);
+        tituloHTML.imprimirTitulo(area, "Pedidos Despachados: "+Log.nombreTienda);
         System.out.println(tablePrincipal.getRowCount() + "===>");
 
         for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
@@ -332,7 +334,6 @@ public final class AunLlegan extends javax.swing.JPanel {
     }
     private List<String[][]> tablasList;
     private List<String[]> parrafosList;
-
     private Manager manager;
     private List<TiendaRepDos> pedidos;
     private List<DetallePedidoProducto> descripcionPedido;

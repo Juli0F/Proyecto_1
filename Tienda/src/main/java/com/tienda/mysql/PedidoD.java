@@ -1,8 +1,10 @@
 package com.tienda.mysql;
 
 import com.tienda.dao.PedidoDAO;
+import com.tienda.dto.FacturaDto;
 import com.tienda.entities.Pedido;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,6 +21,15 @@ public class PedidoD implements PedidoDAO {
     private final String DELETE = "DELETE Pedido WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Pedido  ";
     private final String GETONE = GETALL + "WHERE codigo = ?";
+    private final String DATA_REPORTE_SEIS = "select t.codigo as codeTienda ,t.nombre tienda , p.codigo as pedido , p.subtotal as total, date_format(p.fecha, '%d/%m/%Y') as dias  " +
+    "from Pedido p " +
+    "inner join Tienda t on p.Tienda_codigo = t.codigo " +
+    "inner join Cliente c on p.Cliente_nit = c.nit " +
+    "inner join Persona per on c.Persona_dpi = per.dpi " +
+    "where p.fecha " +
+    "between ifnull( ?  , '2000-01-01') and ifnull( ? , sysdate()) " +
+    "AND (p.Cliente_nit = ? )";
+
     //private final String GET_QUE_LLEGARA_A_UNA_TIENDA ="SELECT * F"
 
     public PedidoD(Connection connection) {
@@ -127,7 +138,7 @@ public class PedidoD implements PedidoDAO {
     public Pedido convertir(ResultSet rs) {
 
         try {
-            Pedido pedido = new Pedido(rs.getString("codigo"), rs.getDate("fecha"), rs.getBoolean("entregado"), rs.getInt("retraso"), rs.getBoolean("destino"), rs.getBoolean("estado"), rs.getInt("TiempoDeEnvio_idTiempoDeEnvio"), rs.getString("Cliente_nit"), rs.getBigDecimal("anticipo"),rs.getBigDecimal("subtotal"),rs.getString("Tienda_codigo"));
+            Pedido pedido = new Pedido(rs.getString("codigo"), rs.getDate("fecha"), rs.getBoolean("entregado"), rs.getInt("retraso"), rs.getBoolean("destino"), rs.getBoolean("estado"), rs.getInt("TiempoDeEnvio_idTiempoDeEnvio"), rs.getString("Cliente_nit"), rs.getBigDecimal("anticipo"), rs.getBigDecimal("subtotal"), rs.getString("Tienda_codigo"));
 
             return pedido;
         } catch (SQLException ex) {
@@ -156,12 +167,13 @@ public class PedidoD implements PedidoDAO {
     }
 
     @Override
-    public List<Pedido> sinEntregarEnDestino() {
+    public List<Pedido> sinEntregarEnDestino(String destino) {
         PreparedStatement stat = null;
         ResultSet rs = null;
         List<Pedido> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL + " WHERE destino = 0");
+            stat = connection.prepareStatement(GETALL + " WHERE destino = 0 AND Tienda_codigo = ?");
+            stat.setString(1, destino);
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertir(rs));
@@ -176,13 +188,53 @@ public class PedidoD implements PedidoDAO {
 
     @Override
     public List<Pedido> buscarCoincidenciaSinEntregarEnDestino(String matchParameter) {
-       PreparedStatement stat = null;
+        PreparedStatement stat = null;
         ResultSet rs = null;
         List<Pedido> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL +" WHERE (Cliente_nit  LIKE ? OR  codigo LIKE ?) AND  destino = 0 ");
-            stat.setString(1, "%"+matchParameter+"%");
-            stat.setString(2, "%"+matchParameter+"%");
+            stat = connection.prepareStatement(GETALL + " WHERE (Cliente_nit  LIKE ? OR  codigo LIKE ?) AND  destino = 0 ");
+            stat.setString(1, "%" + matchParameter + "%");
+            stat.setString(2, "%" + matchParameter + "%");
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertir(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<Pedido> buscarCoincidenciaPedidosEntregadosEnTiendaDestino(String matchParameter) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<Pedido> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GETALL + " WHERE (Cliente_nit  LIKE ? OR  codigo LIKE ?) AND  destino = 1 ");
+            stat.setString(1, "%" + matchParameter + "%");
+            stat.setString(2, "%" + matchParameter + "%");
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertir(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public List<Pedido> paraRecogerSeEncuentraEnDestino(String tiendaDestino) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<Pedido> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GETALL + " WHERE destino = 1 AND entregado = 0 AND Tienda_codigo = ?");
+            stat.setString(1, tiendaDestino);
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertir(rs));
@@ -195,17 +247,18 @@ public class PedidoD implements PedidoDAO {
         return null;
     }
     @Override
-    public List<Pedido> buscarCoincidenciaPedidosEntregadosEnTiendaDestino(String matchParameter) {
-       PreparedStatement stat = null;
+    public List<FacturaDto> reporteSeis(String nitCliente, String codigoTienda, Date dateInit, Date dateFinal) {
+        PreparedStatement stat = null;
         ResultSet rs = null;
-        List<Pedido> lst = new ArrayList<>();
+        List<FacturaDto> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL +" WHERE (Cliente_nit  LIKE ? OR  codigo LIKE ?) AND  destino = 1 ");
-            stat.setString(1, "%"+matchParameter+"%");
-            stat.setString(2, "%"+matchParameter+"%");
+            stat = connection.prepareStatement(DATA_REPORTE_SEIS);
+            stat.setDate(1, dateInit);
+            stat.setDate(2, dateFinal);
+            stat.setString(3, nitCliente);
             rs = stat.executeQuery();
             while (rs.next()) {
-                lst.add(convertir(rs));
+                lst.add(convertirFDTO(rs));
             }
             return lst;
         } catch (Exception e) {
@@ -214,21 +267,15 @@ public class PedidoD implements PedidoDAO {
 
         return null;
     }
-     public List<Pedido> paraRecogerSeEncuentraEnDestino() {
-        PreparedStatement stat = null;
-        ResultSet rs = null;
-        List<Pedido> lst = new ArrayList<>();
-        try {
-            stat = connection.prepareStatement(GETALL + " WHERE destino = 1 AND entregado = 0");
-            rs = stat.executeQuery();
-            while (rs.next()) {
-                lst.add(convertir(rs));
-            }
-            return lst;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
+    public FacturaDto convertirFDTO(ResultSet rs) {
+
+        try {
+            return new FacturaDto(rs.getString("pedido"), rs.getString("tienda"), rs.getString("codeTienda"), rs.getString("dias"), rs.getString("total"));
+
+        } catch (SQLException ex) {
+            Logger.getLogger(FacturaD.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
     }
 }

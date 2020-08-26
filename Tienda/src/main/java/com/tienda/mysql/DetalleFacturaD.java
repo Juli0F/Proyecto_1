@@ -1,8 +1,10 @@
 package com.tienda.mysql;
 
 import com.tienda.dao.DetalleFacturaDAO;
+import com.tienda.dto.DetallePedidoProducto;
 import com.tienda.entities.DetalleFactura;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +21,26 @@ public class DetalleFacturaD implements DetalleFacturaDAO {
     private final String DELETE = "DELETE DetalleFactura WHERE idDetalleFactura = ? ";
     private final String GETALL = "SELECT * FROM  DetalleFactura  ";
     private final String GETONE = GETALL + "WHERE idDetalleFactura = ?";
+    private final String GET_CODIGO_PRODUCTO_CANTIDAD = "SELECT p.codigo codigo, p.nombre producto, dp.cantidad "
+            + "FROM Producto p "
+            + "INNER JOIN DetalleFactura dp ON dp.Producto_codigo = p.codigo "
+            + "WHERE  dp.Factura_idFactura = ?";
 
+    private final String REPORTE_SIETE = "SELECT p.codigo, p.nombre as producto, sum( st.cantidad) as cantidad "
+            + "from Producto p "
+            + "inner join DetalleFactura st on p.codigo = st.Producto_codigo "
+            + "inner join Factura f on f.idFactura = st.Factura_idFactura "
+            + "where f.fecha between  ifnull(?,'2010-01-01') and  ifnull(?,sysdate()) group by p.codigo  order by  cantidad desc limit 10 ";
+    
+    
+    private final String REPORTE_OCHO = "SELECT p.codigo, p.nombre as producto, sum( st.cantidad) as cantidad "
+            + "from Producto p "
+            + "inner join DetalleFactura st on p.codigo = st.Producto_codigo "
+            + "inner join Factura f on f.idFactura = st.Factura_idFactura "
+            + "where f.Tienda_codigo = ?  "
+            + " and f.fecha between  ifnull(?,'2010-01-01') and  ifnull(?,sysdate()) group by p.codigo  order by  cantidad desc limit 10 ";
+    
+    
     public DetalleFacturaD(Connection connection) {
         this.connection = connection;
     }
@@ -148,4 +169,88 @@ public class DetalleFacturaD implements DetalleFacturaDAO {
         }
         return 0;
     }
+    
+    public List<DetallePedidoProducto> getCodigoProductoCantidad(String codigoPedido){
+         PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<DetallePedidoProducto> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GET_CODIGO_PRODUCTO_CANTIDAD);
+            stat.setString(1, codigoPedido);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertirDetalleProducto(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        
+     return null;   
+    }
+    
+    public DetallePedidoProducto convertirDetalleProducto(ResultSet rs) {
+
+        try {
+            DetallePedidoProducto detallePedidoProducto = new DetallePedidoProducto(rs.getString("codigo"), rs.getString("producto"), rs.getInt("cantidad"));
+
+            return detallePedidoProducto;
+        } catch (SQLException ex) {
+            Logger.getLogger(DetallePedidoD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    @Override
+    public List<DetallePedidoProducto> reporteSiete(Date dateInit, Date dateFinal) {
+            
+         PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<DetallePedidoProducto> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(REPORTE_SIETE);
+            stat.setDate(1, dateInit);
+            stat.setDate(2, dateFinal);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertirDetalleProducto(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        
+     return null;   
+    
+    }
+    
+    
+    @Override
+    public List<DetallePedidoProducto> reporteOcho(String tienda, Date dateInit, Date dateFinal) {
+            
+         PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<DetallePedidoProducto> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(REPORTE_OCHO);
+            stat.setString(1, tienda);
+            stat.setDate(2, dateInit);
+            stat.setDate(3, dateFinal);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertirDetalleProducto(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        
+     return null;   
+    
+    }
+    
+
 }

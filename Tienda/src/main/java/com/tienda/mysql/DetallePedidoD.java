@@ -20,8 +20,11 @@ public class DetallePedidoD implements DetallePedidoDAO {
     private final String DELETE = "DELETE DetallePedido WHERE idDetallePedido = ? ";
     private final String GET_ALL = "SELECT * FROM  DetallePedido  ";
     private final String GET_ONE = GET_ALL + "WHERE idDetallePedido = ?";
-    private final String GET_DETALLE_POR_CODIGO_DE_PRODUCTO = GET_ALL+" WHERE DetallePedido = ?";
-    private final String GET_CODIGO_PRODUTO_CANTIDAD = "SELECT p.codigo codigo, p.nombre producto, dp.cantidad FROM Producto p INNER JOIN DetallePedido dp ON dp.Producto_codigo = p.codigo WHERE  dp.Pedido_codigo = ?";
+    private final String GET_DETALLE_POR_CODIGO_DE_PRODUCTO = GET_ALL+" WHERE idDetallePedido = ?";
+    private final String GET_CODIGO_PRODUTO_CANTIDAD = "SELECT p.codigo codigo, p.nombre producto, dp.cantidad "
+            + "FROM Producto p "
+            + "INNER JOIN DetallePedido dp ON dp.Producto_codigo = p.codigo "
+            + "WHERE  dp.Pedido_codigo = ? ";
 
     public DetallePedidoD(Connection connection) {
         this.connection = connection;

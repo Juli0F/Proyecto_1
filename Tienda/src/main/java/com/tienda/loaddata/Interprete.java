@@ -226,8 +226,7 @@ public class Interprete {
                     break;
                 case 5:
                     System.out.println("Pedido");
-                    System.out.println("Pedido Cliente 5: "+ datos[5]);
-                    System.out.println("Pedido Cliente 7: "+ datos[7]);
+                    
                     if (verificarCantidad(datos, 10, cont, error)) {
                         //Pedido perificarCantidad(datos, 9, coedido = new Pedido(data[0], fecha, true, cont, true, true, cont, CLIENTE);
                         Tienda tiendaPrueba = manager.getTiendaDAO().obtener(datos[2]);

@@ -28,6 +28,17 @@ public final class Log extends javax.swing.JFrame {
      * Creates new form Log
      */
     public Log() {
+        
+      String [][] tabla =new String[10][5];
+      
+        System.out.println("10 = "+tabla.length+ "5 "+tabla[0].length);
+        for (int i = 0; i < tabla.length; i++) {
+            for (int j = 0; j < tabla.length; j++) {
+                System.out.print("["+i+"],"+"["+j+"] ");
+                
+            }
+            System.out.println("");
+        }
         initComponents();
         manager = new Manager();
         empleadoC = false;
@@ -47,7 +58,8 @@ public final class Log extends javax.swing.JFrame {
         
         txtUsuario.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyTyped(KeyEvent e) {
+            public void keyPressed(KeyEvent e) {
+                System.out.println("Enter: "+KeyEvent.VK_ENTER+" KeyCode"+e.getKeyCode() );
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     logging();
                 }

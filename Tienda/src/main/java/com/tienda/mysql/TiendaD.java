@@ -43,18 +43,61 @@ public class TiendaD implements TiendaDAO {
                                                                    + "NOT IN (SELECT auxTet.Tienda_codigo as codigo FROM TiempoEntreTiendas tet INNER JOIN TiempoEntreTiendas auxTet ON tet.TiempoDeEnvio_idTiempoDeEnvio = auxTet.TiempoDeEnvio_idTiempoDeEnvio  INNER JOIN Tienda t ON auxTet.Tienda_codigo = t.codigo INNER JOIN TiempoDeEnvio tiempo ON tiempo.idTiempoDeEnvio = auxTet.TiempoDeEnvio_idTiempoDeEnvio WHERE tet.Tienda_codigo = ? AND auxTet.Tienda_codigo <> ? ORDER BY tiempo.tiempo DESC)  ";
             
    
+   private final String DATOS_CLIENTE = " inner join Cliente c on p.Cliente_nit = c.nit\n" +
+            "inner join Persona per on c.Persona_dpi = per.dpi ";
+   //////private final String GET_DATOS_REPORTE_UNO_SIN_FECHA = "select t.codigo, t.nombre, p.codigo as codigoPedido, date_format(p.fecha,'%d/%m/%Y')  AS fecha  ,p.subtotal as total, c.nit as nit, per.nombre   from Pedido p, Tienda t " +DATOS_CLIENTE+" where t.codigo in (select tet.Tienda_codigo from   TiempoEntreTiendas tet where (tet.TiempoDeEnvio_idTiempoDeEnvio in (SELECT p.TiempoDeEnvio_idTiempoDeEnvio FROM Pedido p2 where p2.Tienda_codigo = ? ) and tet.Tienda_codigo <> ?) and (p.entregado = 0 and p.destino = 0 ))";
    private final String GET_DATOS_REPORTE_UNO_SIN_FECHA = "select t.codigo, t.nombre, p.codigo as codigoPedido, date_format(p.fecha,'%d/%m/%Y')  AS fecha  ,p.subtotal as total  from Pedido p, Tienda t where t.codigo in (select tet.Tienda_codigo from   TiempoEntreTiendas tet where (tet.TiempoDeEnvio_idTiempoDeEnvio in (SELECT p.TiempoDeEnvio_idTiempoDeEnvio FROM Pedido p2 where p2.Tienda_codigo = ? ) and tet.Tienda_codigo <> ?) and (p.entregado = 0 and p.destino = 0 ))";
-   private final String GET_DATOS_REPORTE1_UNA_FECHA = "select t.codigo, t.nombre, p.codigo as codigoPedido, date_format(p.fecha,'%d/%m/%Y')  AS fecha, p.subtotal as total  from Pedido p, Tienda t where p.fecha >= ?  and t.codigo in (select tet.Tienda_codigo from   TiempoEntreTiendas tet where (tet.TiempoDeEnvio_idTiempoDeEnvio in (SELECT p.TiempoDeEnvio_idTiempoDeEnvio FROM Pedido p2 where p2.Tienda_codigo = ?) and tet.Tienda_codigo <> ?) and (p.entregado = 0 and p.destino = 0 )) order by fecha asc";
+private final String GET_DATOS_REPORTE1_UNA_FECHA = "select t.codigo, t.nombre, p.codigo as codigoPedido, date_format(p.fecha,'%d/%m/%Y')  AS fecha, p.subtotal as total  from Pedido p, Tienda t where p.fecha >= ?  and t.codigo in (select tet.Tienda_codigo from   TiempoEntreTiendas tet where (tet.TiempoDeEnvio_idTiempoDeEnvio in (SELECT p.TiempoDeEnvio_idTiempoDeEnvio FROM Pedido p2 where p2.Tienda_codigo = ?) and tet.Tienda_codigo <> ?) and (p.entregado = 0 and p.destino = 0 )) order by fecha asc";
    private final String GET_DATOS_REPORTE1_FECHA_FINAL = "select t.codigo, t.nombre, p.codigo as codigoPedido, date_format(p.fecha,'%d/%m/%Y') as fecha, p.subtotal as total from Pedido p, Tienda t where p.fecha <= ?  and t.codigo in (select tet.Tienda_codigo from   TiempoEntreTiendas tet where (tet.TiempoDeEnvio_idTiempoDeEnvio in (SELECT p.TiempoDeEnvio_idTiempoDeEnvio FROM Pedido p2 where p2.Tienda_codigo = ?) and tet.Tienda_codigo <> ?) and (p.entregado = 0 and p.destino = 0 )) order by fecha asc";
-   private final String GET_DATOS_REPORTE1_ENTRE_FECHAS = "select t.codigo, t.nombre, p.codigo as codigoPedido, date_format(p.fecha,'%d/%m/%Y')  AS fecha, p.subtotal as total   FROM Pedido p, Tienda t where p.fecha between ? AND ?  and t.codigo in (select tet.Tienda_codigo from   TiempoEntreTiendas tet where (tet.TiempoDeEnvio_idTiempoDeEnvio in (SELECT p.TiempoDeEnvio_idTiempoDeEnvio FROM Pedido p2 where p2.Tienda_codigo = ?) and tet.Tienda_codigo <> ?) and (p.entregado = 0 and p.destino = 0 ))  order by fecha asc";
+  private final String GET_DATOS_REPORTE1_ENTRE_FECHAS = "select t.codigo, t.nombre, p.codigo as codigoPedido, date_format(p.fecha,'%d/%m/%Y')  AS fecha, p.subtotal as total   FROM Pedido p, Tienda t where p.fecha between ? AND ?  and t.codigo in (select tet.Tienda_codigo from   TiempoEntreTiendas tet where (tet.TiempoDeEnvio_idTiempoDeEnvio in (SELECT p.TiempoDeEnvio_idTiempoDeEnvio FROM Pedido p2 where p2.Tienda_codigo = ?) and tet.Tienda_codigo <> ?) and (p.entregado = 0 and p.destino = 0 ))  order by fecha asc";
    
    
-   //create temporary CREATE TEMPORARY TABLE IF NOT EXISTS tempTable1 select t.codigo, t.nombre, p.fecha , datediff('2020-06-06', p.fecha) as dias, tde.tiempo from Pedido p inner join TiempoDeEnvio tde on p.TiempoDeEnvio_idTiempoDeEnvio = tde.idTiempoDeEnvio inner join TiempoEntreTiendas tet on tde.idTiempoDeEnvio = tet.TiempoDeEnvio_idTiempoDeEnvio inner join Tienda t on tet.Tienda_codigo = t.codigo where tet.Tienda_codigo <> "ABC-2" AND p.Tienda_codigo = "ABC-2";
-//select codigo, nombre, fecha ,dias from Tempo temp where dias >= 0
    
-   private final String FALTA_VERIFICACION = "select t.codigo, t.nombre, date_format(p.fecha, '%d/%m/%Y') as fecha ,p.codigo as codigoPedido, datediff(?, p.fecha) as dias, tde.tiempo  ,p.subtotal as total from Pedido p inner join TiempoDeEnvio tde on p.TiempoDeEnvio_idTiempoDeEnvio = tde.idTiempoDeEnvio inner join TiempoEntreTiendas tet on tde.idTiempoDeEnvio = tet.TiempoDeEnvio_idTiempoDeEnvio inner join Tienda t on tet.Tienda_codigo = t.codigo where tet.Tienda_codigo <> ? AND p.Tienda_codigo = ? AND p.destino = 0 AND datediff(?, p.fecha) <= 0";
-   private final String PEDIDOS_CON_ATRASO = "select t.codigo, t.nombre,p.codigo as codigoPedido, date_format(p.fecha, '%d/%m/%Y') as fecha , datediff(?, p.fecha) as dias, tde.tiempo , p.subtotal as total from Pedido p inner join TiempoDeEnvio tde on p.TiempoDeEnvio_idTiempoDeEnvio = tde.idTiempoDeEnvio inner join TiempoEntreTiendas tet on tde.idTiempoDeEnvio = tet.TiempoDeEnvio_idTiempoDeEnvio inner join Tienda t on tet.Tienda_codigo = t.codigo where tet.Tienda_codigo <> ? AND p.Tienda_codigo = ? AND p.destino = 0 AND (datediff(?, p.fecha) - tde.tiempo) > 0";
+   
+   private final String DATOS_REPORTE ="select t.codigo, t.nombre, date_format(p.fecha, '%d/%m/%Y') as fecha ,p.codigo as codigoPedido, datediff(?, p.fecha) as dias, tde.tiempo  ,p.subtotal as total, c.nit as nit, per.nombre  as cliente ";
+/*   private final String DATOS_REPORTE_1 ="select t.codigo, t.nombre, date_format(p.fecha, '%d/%m/%Y') as fecha ,p.codigo as codigoPedido, datediff(?, p.fecha) as dias ,p.subtotal as total, c.nit as nit, per.nombre  as cliente";
+   private final String GET_DATOS_REPORTE_UNO_SIN_FECHA = DATOS_REPORTE_1+" from Pedido p, Tienda t "
+           +DATOS_CLIENTE+
+            " where t.codigo in (select tet.Tienda_codigo from   TiempoEntreTiendas tet where (tet.TiempoDeEnvio_idTiempoDeEnvio in (SELECT p.TiempoDeEnvio_idTiempoDeEnvio FROM Pedido p2 where p2.Tienda_codigo = ? ) and tet.Tienda_codigo <> ?) and (p.entregado = 0 and p.destino = 0 ))";
+
+   private final String GET_DATOS_REPORTE1_UNA_FECHA = DATOS_REPORTE+ "from Pedido p, Tienda t"
+           +DATOS_CLIENTE
+           + " where p.fecha >= ?  and t.codigo in (select tet.Tienda_codigo from   TiempoEntreTiendas tet where (tet.TiempoDeEnvio_idTiempoDeEnvio in (SELECT p.TiempoDeEnvio_idTiempoDeEnvio FROM Pedido p2 where p2.Tienda_codigo = ?) and tet.Tienda_codigo <> ?) and (p.entregado = 0 and p.destino = 0 )) order by fecha asc";
+   private final String GET_DATOS_REPORTE1_FECHA_FINAL = DATOS_REPORTE+ "from Pedido p, Tienda t "
+            +DATOS_CLIENTE
+           + " where p.fecha <= ?  and t.codigo in (select tet.Tienda_codigo from   TiempoEntreTiendas tet where (tet.TiempoDeEnvio_idTiempoDeEnvio in (SELECT p.TiempoDeEnvio_idTiempoDeEnvio FROM Pedido p2 where p2.Tienda_codigo = ?) and tet.Tienda_codigo <> ?) and (p.entregado = 0 and p.destino = 0 )) order by fecha asc";
+   
+   private final String GET_DATOS_REPORTE1_ENTRE_FECHAS =DATOS_REPORTE+ "FROM Pedido p, Tienda t "
+           +DATOS_CLIENTE
+           + "where p.fecha between ? AND ?  and t.codigo in (select tet.Tienda_codigo from   TiempoEntreTiendas tet where (tet.TiempoDeEnvio_idTiempoDeEnvio in (SELECT p.TiempoDeEnvio_idTiempoDeEnvio FROM Pedido p2 where p2.Tienda_codigo = ?) and tet.Tienda_codigo <> ?) and (p.entregado = 0 and p.destino = 0 ))  order by fecha asc";
+   
+   */
+   private final String FALTA_VERIFICACION = DATOS_REPORTE+
+           " from Pedido p "
+           +DATOS_CLIENTE
            
+           + "inner join TiempoDeEnvio tde on p.TiempoDeEnvio_idTiempoDeEnvio = tde.idTiempoDeEnvio "
+           + "inner join TiempoEntreTiendas tet on tde.idTiempoDeEnvio = tet.TiempoDeEnvio_idTiempoDeEnvio "
+           + "inner join Tienda t on tet.Tienda_codigo = t.codigo "
+           + " where tet.Tienda_codigo <> ? AND p.Tienda_codigo = ? AND p.destino = 0 AND datediff(?, p.fecha) <= 0";
+   private final String PEDIDOS_CON_ATRASO = DATOS_REPORTE+" from Pedido p "
+           + "inner join Cliente c on c.nit = p.Cliente_nit "
+           + "inner join Persona per on c.Persona_dpi = per.dpi "
+           + "inner join TiempoDeEnvio tde on p.TiempoDeEnvio_idTiempoDeEnvio = tde.idTiempoDeEnvio "
+           + "inner join TiempoEntreTiendas tet on tde.idTiempoDeEnvio = tet.TiempoDeEnvio_idTiempoDeEnvio "
+           + "inner join Tienda t on tet.Tienda_codigo = t.codigo"
+           + " where tet.Tienda_codigo <> ? AND p.Tienda_codigo = ? AND p.destino = 0 AND (datediff(?, p.fecha) - tde.tiempo) > 0";
+    
+   private final String PEDIDOS_QUE_SALIERON_DE_UNA_TIENDA = DATOS_REPORTE +//FECHA TIENDA FECHA
+         " from Pedido p "
+           + "inner join TiempoDeEnvio tde on tde.idTiempoDeEnvio=p.TiempoDeEnvio_idTiempoDeEnvio "
+           + "inner join Tienda t on t.codigo = p.Tienda_codigo inner join Cliente c on c.nit = p.Cliente_nit "
+           + "inner join Persona per on per.dpi = c.Persona_dpi  "
+           + "where p.Tienda_codigo <>  ? "
+           + "and p.destino = 0 "
+           + "and p.fecha <= ? "
+           + "and p.TiempoDeEnvio_idTiempoDeEnvio "
+           + "in (select tet.TiempoDeEnvio_idTiempoDeEnvio from TiempoEntreTiendas tet Where tet.Tienda_codigo = ?)";
    
    //between "2020-06-02" AND "3918-09-05"
     public TiendaD(Connection connection) {
@@ -356,6 +399,7 @@ public class TiendaD implements TiendaDAO {
         List<TiendaRepUno> lst = new ArrayList<>();
         try {
             stat = connection.prepareStatement(GET_DATOS_REPORTE_UNO_SIN_FECHA);
+            
             stat.setString(1, codigoTiendaDestino);
             stat.setString(2, codigoTiendaDestino);
             rs = stat.executeQuery();
@@ -369,6 +413,18 @@ public class TiendaD implements TiendaDAO {
 
         return null;
     }
+    public TiendaRepUno convertirTiendaRepUnoTest(ResultSet rs){
+        
+        try {
+            return new TiendaRepUno(rs.getString("codigo"), rs.getString("nombre"), rs.getString("codigoPedido"), rs.getString("fecha"), rs.getString("total"),rs.getString("nit"),rs.getString("cliente"));
+
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(TiendaD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
     public TiendaRepUno convertirTiendaRepUno(ResultSet rs){
         
         try {
@@ -496,13 +552,38 @@ public class TiendaD implements TiendaDAO {
 
         return null;
     }
+
+    @Override
+    public List<TiendaRepDos> pedidosDespachadosPorUnaTienda(String codigoTiendaOrigen, Date date) {
+                
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<TiendaRepDos> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(PEDIDOS_QUE_SALIERON_DE_UNA_TIENDA);
+            stat.setDate(1, date);
+            stat.setString(2, codigoTiendaOrigen);
+            stat.setDate(3, date);
+            stat.setString(4, codigoTiendaOrigen);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertirTiendaRepDos(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    
     
     
     
     public TiendaRepDos convertirTiendaRepDos(ResultSet rs){
         
         try {
-            return new TiendaRepDos(rs.getString("codigo"), rs.getString("nombre"), rs.getString("codigoPedido"), rs.getString("fecha"),rs.getInt("dias"),rs.getInt("tiempo"),rs.getString("total"));
+            return new TiendaRepDos(rs.getString("codigo"), rs.getString("nombre"), rs.getString("codigoPedido"), rs.getString("fecha"),rs.getInt("dias"),rs.getInt("tiempo"),rs.getString("total"),rs.getString("nit"), rs.getString("cliente"));
 
             
         } catch (SQLException ex) {

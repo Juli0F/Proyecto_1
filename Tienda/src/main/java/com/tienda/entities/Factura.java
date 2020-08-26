@@ -2,6 +2,7 @@ package com.tienda.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Date;
 
 /**
  *
@@ -16,8 +17,8 @@ public class Factura implements Serializable {
     private String Tienda_codigo;
     private String nit;
     private BigDecimal total;
-    
-    public Factura(int idFactura, String descripcion, boolean estado, int Usuario_idUsuario, String Tienda_codigo, String nit,BigDecimal total) {
+    private java.sql.Date date;
+    public Factura(int idFactura, String descripcion, boolean estado, int Usuario_idUsuario, String Tienda_codigo, String nit,BigDecimal total , java.sql.Date date) {
 
         this.idFactura = idFactura;
         this.descripcion = descripcion;
@@ -26,8 +27,18 @@ public class Factura implements Serializable {
         this.Tienda_codigo = Tienda_codigo;
         this.nit = nit;
         this.total = total;
+        this.date = date;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    
     public BigDecimal getTotal() {
         return total;
     }

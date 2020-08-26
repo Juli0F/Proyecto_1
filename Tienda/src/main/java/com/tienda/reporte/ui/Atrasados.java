@@ -7,7 +7,15 @@ package com.tienda.reporte.ui;
 
 import com.tienda.dto.DetallePedidoProducto;
 import com.tienda.dto.TiendaRepDos;
+import com.tienda.entities.Cliente;
+import com.tienda.entities.Persona;
 import com.tienda.mysql.Manager;
+import com.tienda.reporte.BodyHtml;
+import com.tienda.reporte.EncabezoHtml;
+import com.tienda.reporte.ParrafoHtml;
+import com.tienda.reporte.ParseHtml;
+import com.tienda.reporte.TablaHtml;
+import com.tienda.reporte.TituloHTML;
 import com.tienda.ui.Log;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -15,13 +23,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author julio
  */
-public class Atrasados extends javax.swing.JPanel {
+public final class Atrasados extends javax.swing.JPanel {
 
     /**
      * Creates new form Atrasados
@@ -31,6 +40,8 @@ public class Atrasados extends javax.swing.JPanel {
         manager = new Manager();
         lblDatosTienda.setText("Codigo: " + Log.codigoTienda + " Nombre: " + Log.nombreTienda);
         eventTablePrincipal();
+        this.parrafosList = new ArrayList<>();
+        this.tablasList = new ArrayList<>();
     }
 
     /**
@@ -79,6 +90,11 @@ public class Atrasados extends javax.swing.JPanel {
 
         jButton1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jButton1.setText("Exportar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Buscar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -187,14 +203,33 @@ public class Atrasados extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
-     public void eventTablePrincipal() {
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (tablePrincipal.getRowCount() > 0) {
+            Guardar ruta = new Guardar();
+            String path = ruta.guardarEn();
+            JTextArea area = new JTextArea();
+            armarReporte(area);
+            ParseHtml crearHtml = new ParseHtml();
+            crearHtml.imprimirReporte(path, area, "Pedidos Atrasados " + LocalDate.now());
+            JOptionPane.showMessageDialog(null, "Documento Generado Exitosamente", "Informacion",JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Documento con 0 datos");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    public void eventTablePrincipal() {
         tablePrincipal.addKeyListener(new KeyAdapter() {
+
             @Override
-            public void keyTyped(KeyEvent e) {
+            public void keyReleased(KeyEvent e) {
+                System.out.println("release: " + e.getKeyCode() + "keyevent: " + KeyEvent.VK_UP);
                 if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) {
+
                     descripcionPedido = new ArrayList<>();
                     String codigoPedido = (String) tablePrincipal.getValueAt(tablePrincipal.getSelectedRow(), 2);
+                    System.out.println("CodigoPedido Reporte: " + codigoPedido);
                     descripcionPedido.addAll(manager.getDetallePedidoDAO().getCodigoProductoCantidad(codigoPedido));
+                    fillTableDescripcion(descripcionPedido);
                 }
             }
 
@@ -208,12 +243,13 @@ public class Atrasados extends javax.swing.JPanel {
                 x.getCodigo(),
                 x.getProducto(),
                 x.getCantidad()
-                
+
             });
         }
         );
 
     }
+
     public void fillTable(List<TiendaRepDos> pedidosEnTransito) {
         ((DefaultTableModel) tablePrincipal.getModel()).setRowCount(0);
 
@@ -233,13 +269,84 @@ public class Atrasados extends javax.swing.JPanel {
 
     public void verificar() {
 
-        if (pedidos == null) {
+        if (pedidos.size() == 0) {
             JOptionPane.showMessageDialog(null, "No Hay Datos Para Mostrar", "informacion", JOptionPane.INFORMATION_MESSAGE);
 
         } else {
             fillTable(pedidos);
         }
     }
+    
+    
+    
+    public void armarParrafo() {
+
+        for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
+
+            String[] descripcion = new String[5];
+            String codigoPedido = (String) tablePrincipal.getValueAt(i, 2);
+            
+            armarTablas(manager.getDetallePedidoDAO().getCodigoProductoCantidad(codigoPedido));
+            
+            descripcion[0] ="Codigo De Tienda: "+ (String) tablePrincipal.getValueAt(i, 0);
+            descripcion[1] ="Tienda Origen: " +  (String) tablePrincipal.getValueAt(i, 1);
+            descripcion[2] = "Codigo Pedido: "+(String) tablePrincipal.getValueAt(i, 2);
+            descripcion[3] = "Total: "+(String) tablePrincipal.getValueAt(i, 3);
+            descripcion[4] = "Fecha: "+(String) tablePrincipal.getValueAt(i, 4);
+            descripcion[5] = "Dias En Transito: "+(String) tablePrincipal.getValueAt(i, 5);
+            descripcion[6] = "Tiempo Estimado: "+(String) tablePrincipal.getValueAt(i, 6);
+
+            
+            parrafosList.add(descripcion);
+        }
+
+    }
+
+    public void armarTablas(List<DetallePedidoProducto> filasTabla) {
+        for (int i = 0; i < filasTabla.size(); i++) {
+            String[][] tabla = new String[filasTabla.size()][3];
+
+            tabla[i][0] = filasTabla.get(i).getCodigo();
+            tabla[i][1] = filasTabla.get(i).getProducto();
+            tabla[i][2] = String.valueOf(filasTabla.get(i).getCantidad());
+
+            tablasList.add(tabla);
+
+        }
+    }
+
+    public void armarReporte(JTextArea area) {
+        armarParrafo();
+
+      //  Cliente cliente = manager.getClienteDAO().obtener(nitCliente);
+        //Persona persona = manager.getPersonaDAO().obtener(cliente.getPersona_dpi());
+
+        EncabezoHtml encabezado = new EncabezoHtml("Pedidos De un Clinete");
+        encabezado.imprimirEncabezado(area);
+
+        BodyHtml body = new BodyHtml();
+        body.openBody(area);
+
+        TituloHTML tituloHTML = new TituloHTML(2);
+        tituloHTML.imprimirTitulo(area, "Pedidos Atrasados En Llegar, Codigo De Tienda  "+Log.codigoTienda +"Nombre Tienda: "+ Log.nombreTienda);
+        System.out.println(tablePrincipal.getRowCount() + "===>");
+
+        for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
+
+            ParrafoHtml parrafoHtml = new ParrafoHtml(parrafosList.get(i));
+            parrafoHtml.printParrafo(area);
+            TablaHtml tablaHtml = new TablaHtml(tablasList.get(i), 3, "Codigo", "Producto ", " Cantidad");
+            tablaHtml.imprimirTabla(area);
+
+        }
+        body.cerrarBody(area);
+
+    }
+
+    
+    private List<String[][]> tablasList;
+    private List<String[]> parrafosList;
+    
     private Manager manager;
     private List<TiendaRepDos> pedidos;
 

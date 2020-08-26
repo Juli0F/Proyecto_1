@@ -2,6 +2,7 @@ package com.tienda.mysql;
 
 import com.tienda.dao.ProductoDAO;
 import com.tienda.dto.ProductoTableDto;
+import com.tienda.dto.SinVender;
 import com.tienda.entities.Producto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,6 +30,7 @@ public class ProductoD implements ProductoDAO {
     private final String GETPRODUCTOTABLE = "SELECT p.codigo, p.nombre, s.cantidad, s.precio FROM  Producto p inner join StockTienda s on p.codigo = s.Producto_codigo WHERE p.estado = 1 and s.estado = 1 and s.Tienda_codigo = ?";
 
     private final String GET_PRODUCTOS_QUE_NO_ESTAN_EN_LA_TIENDA = "SELECT * FROM Producto p WHERE codigo not in (select st.Producto_codigo from StockTienda st inner join Tienda t ON st.Tienda_codigo=t.codigo where t.codigo = ?) ";
+    private final String SIN_VENDER = "select st.Producto_codigo from StockTienda st where st.Tienda_codigo = ? and st.Producto_codigo not in (select df.Producto_codigo from Factura f inner join DetalleFactura df on df.Factura_idFactura = f.idFactura where f.Tienda_codigo = ? and f.fecha between ifnull(?,'2000-01-01') and ifnull(?,'2050-01-01'))";
 
     public ProductoD(Connection connection) {
         this.connection = connection;
@@ -231,6 +233,35 @@ public class ProductoD implements ProductoDAO {
         }
 
         return null;
+        
+        
+        
     }
+
+    @Override
+    public List<SinVender> getSinVender(String codigoTienda, java.sql.Date dateInit, java.sql.Date dateFinal) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<SinVender> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(SIN_VENDER);
+            stat.setString(1, codigoTienda);
+            stat.setString(2, codigoTienda);
+            stat.setDate(3, dateInit);
+            stat.setDate(4, dateFinal);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+              //  lst.add(convertir(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lst;
+    }
+    
+    
+    
 
 }

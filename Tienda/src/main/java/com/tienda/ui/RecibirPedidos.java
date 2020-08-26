@@ -13,7 +13,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Date;
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import javax.swing.JOptionPane;
@@ -36,6 +38,8 @@ public final class RecibirPedidos extends javax.swing.JPanel {
         txtBuscarEvent();
         eventTablePedidosAEntregar();
         initDatePicker();
+        this.manager = new Manager();
+        this.listado = new ArrayList<>();
 
     }
 
@@ -148,16 +152,16 @@ public final class RecibirPedidos extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        
+
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnVerTodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerTodoActionPerformed
 
-        fillTablePedidosAEntregar(manager.getPedidoDAO().sinEntregarEnDestino());
+        fillTablePedidosAEntregar(manager.getPedidoDAO().sinEntregarEnDestino(Log.codigoTienda));
     }//GEN-LAST:event_btnVerTodoActionPerformed
 
     private void btnRecibirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecibirActionPerformed
-        
+
         pedidoAEntregar();
 
     }//GEN-LAST:event_btnRecibirActionPerformed
@@ -170,7 +174,6 @@ public final class RecibirPedidos extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnTerminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTerminarActionPerformed
-        
 
         System.out.println("Local");
         if (txtDatePicker.getModel().getValue() != null) {
@@ -189,7 +192,11 @@ public final class RecibirPedidos extends javax.swing.JPanel {
 
             Pedido aRecibir = manager.getPedidoDAO().obtener((String) tablePedidosRecibidos.getValueAt(i, 0));
             int diasPrometidosDeEntrega = manager.getTiempoDeEnvioDAO().obtener(aRecibir.getTiempoDeEnvio_idTiempoDeEnvio()).getTiempo();
-            int diasQueSeTardo = calcularDias(aRecibir.getFecha(), (Date) txtDatePicker.getModel().getValue());
+
+            int mes = txtDatePicker.getModel().getMonth() + 1;
+            LocalDate localDate = LocalDate.of(txtDatePicker.getModel().getYear(), mes, txtDatePicker.getModel().getDay());
+            int diasQueSeTardo = manager.getTiempoDeEnvioDAO().datediff(aRecibir.getFecha(), java.sql.Date.valueOf(localDate));
+            
             if (diasPrometidosDeEntrega < diasQueSeTardo) {
 
                 aRecibir.setRetraso(0);
@@ -204,17 +211,6 @@ public final class RecibirPedidos extends javax.swing.JPanel {
 
         }
         JOptionPane.showMessageDialog(null, "Se ha Registrado la llegada de Pedidos", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    public int calcularDias(Date pedido, Date entrega) {
-
-        long pedidoLong = pedido.getTime();
-        long entregaLong = entrega.getTime();
-
-        int dias = (int) ((Math.abs(pedidoLong - entregaLong) / (1000 * 3600 * 24)));
-
-        return dias;
-
     }
 
     public void eventTablePedidoRecibido() {
@@ -251,18 +247,27 @@ public final class RecibirPedidos extends javax.swing.JPanel {
     }
 
     public void pedidoAEntregar() {
+
         if (tablePedidosAEntregar.getSelectedRow() != -1) {
 
-            for (int i = 0; i < 5; i++) {
+            String codigo = (String) tablePedidosAEntregar.getValueAt(tablePedidosAEntregar.getSelectedRow(), 0);
+            if (listado.contains(codigo)) {
+                JOptionPane.showMessageDialog(null, "Pedido ya se encuentra en la lista para Entregar", "informacion", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                listado.add(codigo);
+                int rowSelect = tablePedidosAEntregar.getSelectedRow();
+                //for (int i = 0; i < 5; i++) {
 
                 ((DefaultTableModel) tablePedidosRecibidos.getModel()).addRow(new Object[]{
-                    tablePedidosAEntregar.getValueAt(i, 0),
-                    tablePedidosAEntregar.getValueAt(i, 1),
-                    tablePedidosAEntregar.getValueAt(i, 2),
-                    tablePedidosAEntregar.getValueAt(i, 3),
-                    tablePedidosAEntregar.getValueAt(i, 4),});
+                    tablePedidosAEntregar.getValueAt(rowSelect, 0),
+                    tablePedidosAEntregar.getValueAt(rowSelect, 1),
+                    tablePedidosAEntregar.getValueAt(rowSelect, 2),
+                    tablePedidosAEntregar.getValueAt(rowSelect, 3),
+                    tablePedidosAEntregar.getValueAt(rowSelect, 4),});
 
+                //}
             }
+
         }
     }
 
@@ -308,6 +313,8 @@ public final class RecibirPedidos extends javax.swing.JPanel {
         add(txtDatePicker, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 20, 230, 50));
         //this.add(txtDatePicker, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE);
     }
+
+    private List<String> listado;
     private JDatePickerImpl txtDatePicker;
     private Manager manager;
 //.addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)

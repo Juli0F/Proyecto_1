@@ -3,6 +3,7 @@ package com.tienda.mysql;
 import com.tienda.dao.TiempoDeEnvioDAO;
 import com.tienda.entities.TiempoDeEnvio;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -167,6 +168,27 @@ public class TiempoDeEnvioD implements TiempoDeEnvioDAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public int datediff(Date diaPedido, Date diaEntrega) {
+     String dia = "SELECT datediff(?,?)";
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(dia);
+            stat.setDate(1, diaEntrega);
+            stat.setDate(2, diaPedido);
+            rs = stat.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(TiempoDeEnvioD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;   
     }
 
     

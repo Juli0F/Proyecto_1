@@ -6,3 +6,29 @@ yo le mando la fecha
  mysql -> encuentra los dias de diferencia
 luego tengo que comparar el resultado con el tiempo de cada pedido
 y si es igual o menor lo debo de mostrar al usuario
+
+
+reporte 4
+
+obtener (idTiempo)  los registros de TiendaEntreTiempo que coincidan con la tienda en cuestion
+con el resultado anterior traer todas las coincidencias de idTiempo en la tabla Pedidos
+
+
+reporte 5
+codigo y nombre de tienda, id de factura total y la fecha de la compra
+
+reporte 9
+necesito los productos de la tienda que no aparecen en el detalle de sus facturas;
+1.    necesito saber que productos tiene la tienda
+    compararlos con los producto que aparecen en los detalles de factura
+    y quedarme con los productos que no aparecen  (hacer los pasos al reves)
+
+
+1. select st.Producto_codigo from StockTienda st where st.Tienda_codigo = "ABC-1" and st.Producto_codigo not in select df.Producto_codigo from Factura f inner join DetalleFactura df on df.Factura_idFactura = f.idFactura where f.Tienda_codigo = "ABC-1" and between ifnull(fecha,'2000-01-01') and ifnull(fecha,'2050-01-01')
+2. select df.Producto_codigo from Factura f inner join DetalleFactura df on df.Factura_idFactura = f.idFactura where f.Tienda_codigo = "ABC-1" and between ifnull(fecha,'2000-01-01') and ifnull(fecha,'2050-01-01')
+
+
+
+select * from StockTienda st where st.Tienda_codigo in (select stT.Tienda_codigo from StockTienda stT ) and st.Producto_codigo not in (select df.Producto_codigo from DetalleFactura df inner join Factura f on df.Factura_idFactura = f.idFactura where f.Tienda_codigo in (select stT.Tienda_codigo from StockTienda stT ))
+
+

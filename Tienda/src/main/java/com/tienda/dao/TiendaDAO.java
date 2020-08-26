@@ -95,6 +95,12 @@ public interface TiendaDAO extends DAO<Tienda,String> {
      * @return 
      */
     public List<TiendaRepDos> pedidosConAtraso(String codigoTienda, java.sql.Date date);
-    
+    /**
+     * pedidos que abastace una tienda
+     * @param codigoTiendaOrigen
+     * @param date
+     * @return 
+     */
+    public List<TiendaRepDos> pedidosDespachadosPorUnaTienda(String codigoTiendaOrigen, java.sql.Date date);
 
 }

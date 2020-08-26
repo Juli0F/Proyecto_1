@@ -9,6 +9,12 @@ import com.mysql.cj.result.LocalDateTimeValueFactory;
 import com.tienda.dto.DetallePedidoProducto;
 import com.tienda.dto.TiendaRepUno;
 import com.tienda.mysql.Manager;
+import com.tienda.reporte.BodyHtml;
+import com.tienda.reporte.EncabezoHtml;
+import com.tienda.reporte.ParrafoHtml;
+import com.tienda.reporte.ParseHtml;
+import com.tienda.reporte.TablaHtml;
+import com.tienda.reporte.TituloHTML;
 import com.tienda.ui.Log;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -18,13 +24,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author julio
  */
-public class PedidosQueLlegaran extends javax.swing.JPanel {
+public final class PedidosQueLlegaran extends javax.swing.JPanel {
 
     /**
      * Creates new form PedidosQueLlegaran
@@ -222,7 +229,7 @@ public class PedidosQueLlegaran extends javax.swing.JPanel {
 
      public void verificar() {
 
-        if (reporte != null) {
+        if (reporte.size() != 0 ) {
              
              fillTable(reporte);
         }else{
@@ -230,21 +237,35 @@ public class PedidosQueLlegaran extends javax.swing.JPanel {
          }
     }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Guardar reporte = new Guardar();
-        reporte.guardarEn();
+if (tablePrincipal.getRowCount() > 0) {
+            Guardar ruta = new Guardar();
+            String path = ruta.guardarEn();
+            JTextArea area = new JTextArea();
+            armarReporte(area);
+            ParseHtml crearHtml = new ParseHtml();
+            crearHtml.imprimirReporte(path, area, "Pedidos Que LLegaran " + LocalDate.now());
+            JOptionPane.showMessageDialog(null, "Documento Generado Exitosamente", "Informacion",JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Documento con 0 datos");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
      public void eventTablePrincipal() {
         tablePrincipal.addKeyListener(new KeyAdapter() {
+            
             @Override
-            public void keyTyped(KeyEvent e) {
+            public void keyReleased(KeyEvent e) {
+                System.out.println("release: "+e.getKeyCode()+"keyevent: "+KeyEvent.VK_UP);
                 if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    
                     descripcionPedido = new ArrayList<>();
                     String codigoPedido = (String) tablePrincipal.getValueAt(tablePrincipal.getSelectedRow(), 2);
+                    System.out.println("CodigoPedido Reporte: "+ codigoPedido);
                     descripcionPedido.addAll(manager.getDetallePedidoDAO().getCodigoProductoCantidad(codigoPedido));
+                    fillTableDescripcion(descripcionPedido);
                 }
             }
-
+            
         });
     }
 
@@ -276,6 +297,67 @@ public class PedidosQueLlegaran extends javax.swing.JPanel {
             });
         });
     }
+    
+    public void armarParrafo() {
+
+        for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
+
+            String[] descripcion = new String[tablePrincipal.getColumnCount()];
+            
+            String codigoPedido = (String) tablePrincipal.getValueAt(i, 2);
+            
+            armarTablas(manager.getDetallePedidoDAO().getCodigoProductoCantidad(codigoPedido));
+            descripcion[0] = "Codigo De Tienda Origen: " + (String) tablePrincipal.getValueAt(i, 0);
+            descripcion[1] = "Tienda Origen: " + (String) tablePrincipal.getValueAt(i, 1);
+            descripcion[2] = "Codigo Pedido: " + (String) tablePrincipal.getValueAt(i, 2);
+            descripcion[3] = "Total: " + (String) tablePrincipal.getValueAt(i, 3);
+            descripcion[4] = "Fecha: " + (String) tablePrincipal.getValueAt(i, 4);
+
+
+            parrafosList.add(descripcion);
+        }
+
+    }
+
+    public void armarTablas(List<DetallePedidoProducto> filasTabla) {
+        for (int i = 0; i < filasTabla.size(); i++) {
+            String[][] tabla = new String[filasTabla.size()][3];
+
+            tabla[i][0] = filasTabla.get(i).getCodigo();
+            tabla[i][1] = filasTabla.get(i).getProducto();
+            tabla[i][2] = String.valueOf(filasTabla.get(i).getCantidad());
+
+            tablasList.add(tabla);
+
+        }
+    }
+
+    public void armarReporte(JTextArea area) {
+        armarParrafo();
+
+        EncabezoHtml encabezado = new EncabezoHtml("Pedidos que Llegaran");
+        encabezado.imprimirEncabezado(area);
+
+        BodyHtml body = new BodyHtml();
+        body.openBody(area);
+
+        TituloHTML tituloHTML = new TituloHTML(2);
+        tituloHTML.imprimirTitulo(area, "Pedidos Por Llegar a: "+Log.nombreTienda);
+        System.out.println(tablePrincipal.getRowCount() + "===>");
+
+        for (int i = 0; i < tablePrincipal.getRowCount(); i++) {
+
+            ParrafoHtml parrafoHtml = new ParrafoHtml(parrafosList.get(i));
+            parrafoHtml.printParrafo(area);
+            TablaHtml tablaHtml = new TablaHtml(tablasList.get(i), 3, "Codigo", "Producto ", " Cantidad");
+            tablaHtml.imprimirTabla(area);
+
+        }
+        body.cerrarBody(area);
+
+    }
+    private List<String[][]> tablasList;
+    private List<String[]> parrafosList;
     private List<DetallePedidoProducto> descripcionPedido;
     private Manager manager;
     private List<TiendaRepUno> reporte;
